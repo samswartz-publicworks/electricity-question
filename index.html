@@ -127,6 +127,13 @@ figcaption{font-size:14px;color:var(--ink-2);margin-top:8px;max-width:62ch}
 svg{display:block;width:100%;height:auto;overflow:visible}
 .chart-wrap{position:relative}
 .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font:13px var(--mono);padding:6px 8px;border-radius:4px;white-space:nowrap;transform:translate(-50%,-110%);display:none}
+.people{width:100%;border-collapse:collapse;font-size:15.5px;margin-top:10px}
+.people th,.people td{padding:10px 6px;text-align:left;border-bottom:1px solid var(--line);vertical-align:baseline}
+.people th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+.people td.num,.people th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.people th.num{font-family:var(--mono)}
+.people td small{display:block;color:var(--ink-3);font-size:12.5px}
+.people tr.harm td.num{color:var(--harm)}
 .matrix{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
 .matrix th,.matrix td{padding:9px 6px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
 .matrix th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
@@ -182,7 +189,8 @@ details[open] summary::after{content:"–"}
   <p class="byline">A usable model and mental framework, meant to be transparent and straightforward. The core assumptions are built in as sliders, with formulas included at the bottom. You start with a gut assessment, then work through the sub-questions one at a time. As a check, the model reproduces a published estimate.</p>
 
   <p class="lede">It's really hard to have conversations about AI, and about this question in particular. People use the same words but arrive at very different answers, often because they're talking about different things.</p>
-  <p>This breaks the big question into a few smaller ones that are easier to talk about: How much of our work could AI do? How much of that will actually change? How much cheaper does it get? Could it speed up discovery itself? And what could go wrong? If two people land in different places, the sliders show exactly where.</p>
+  <p>This breaks the big question into a few smaller ones that are easier to talk about: How much of our work could AI do? How much of that will actually change? How much cheaper does it get? Could it speed up discovery itself? What could go wrong? And what does it mean for people, now and down the line? If two people land in different places, the sliders show exactly where.</p>
+  <p>That last question is the reason this matters. How big AI turns out to be shapes how much work changes, how much better off people get, and how much is at risk along the way.</p>
 
   <h2>First, your gut</h2>
   <p>Nate Silver's Technological Richter Scale, from <em>On the Edge</em>. Like the earthquake scale, each step up is roughly ten times bigger than the one below. It measures size, not direction: Silver puts nuclear weapons at 9. Looking back from 25 years out, where does AI land?</p>
@@ -256,6 +264,14 @@ details[open] summary::after{content:"–"}
     <div class="stat"><b id="v-elec">–</b><span>of runs beat electricity</span></div>
     <div class="stat harm"><b id="v-harm">–</b><span>of runs leave the economy smaller</span></div>
   </div>
+
+  <h3>What it means for people</h3>
+  <p class="note">The same results, in human terms. Dollar figures use US output per person, about $85,000 a year today.</p>
+  <table class="people" id="people" aria-label="What the results mean for people at 10 and 25 years">
+    <thead><tr><th></th><th class="num">In 10 years</th><th class="num">In 25 years</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <p class="note" style="margin-top:10px">What the model can't tell you is who gains and who loses: which jobs change, how fast people can move to new ones, and whether the gains are shared. Those depend on choices people and governments make, which is part of why getting the size roughly right matters.</p>
 
   <h3>Where the runs land</h3>
   <p class="note">Each band is one half-step on the scale, which is roughly a tripling in size.</p>
@@ -569,6 +585,17 @@ function render(){
   let nNet=0,nEl=0,nH=0; for(let i=0;i<N;i++){ const v=y25[i]; if(v>bi)nNet++; if(v>be)nEl++; if(v<0)nH++; }
   $('v-median').textContent=signed(m); $('v-p10').textContent=signed(lo); $('v-p90').textContent=signed(hi);
   $('v-net').textContent=share(nNet/N); $('v-elec').textContent=share(nEl/N); $('v-harm').textContent=share(nH/N);
+  // what it means for people
+  const GDPPC=85000, broad=1-S.concentration/100;
+  const c10=central(S,10), c25=central(S,T);
+  let h10=0; for(let i=0;i<N;i++){ if(y10[i]<0)h10++; }
+  const usd=v=>{ const a=Math.abs(v); const r=a>=10000?Math.round(a/1000)*1000:a>=1000?Math.round(a/100)*100:Math.round(a/10)*10; return (v<0?'−':'')+'$'+r.toLocaleString(); };
+  const prow=(l,sub,a,b,cls)=>`<tr class="${cls||''}"><td>${l}<small>${sub}</small></td><td class="num">${a}</td><td class="num">${b}</td></tr>`;
+  $('people').querySelector('tbody').innerHTML =
+    prow('Share of today\'s work done differently','the work AI is doing, at your settings',pctS(c10.E*c10.A),pctS(c25.E*c25.A)) +
+    prow('Extra income per person, per year','typical outcome, if gains were shared evenly',usd(med[10]*GDPPC),usd(m*GDPPC)) +
+    prow('The part that reaches most people',`after the ${share(1-broad)} you said a few capture`,usd(Math.max(0,med[10])*broad*GDPPC+Math.min(0,med[10])*GDPPC),usd(Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC)) +
+    prow('Chance things are worse than without AI','in that year: a recent incident or a catastrophe outweighs the gains',share(h10/N),share(nH/N),'harm');
 
   // matrix (bands in rating terms)
   const at=r=>bi*Math.pow(10,r-8);
