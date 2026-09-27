@@ -138,9 +138,12 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .whatis ul{margin:0;padding-left:20px}
 .whatis li{margin-bottom:3px}
 .whatis li::marker{color:var(--ink-3)}
+.qstack{margin:22px 0 16px;font-family:var(--display);font-size:clamp(23px,5.8vw,29px);line-height:1.25;color:var(--ink);text-wrap:balance}
+.qstack span{display:block;margin-bottom:6px}
+.purpose{font-size:17px;color:var(--ink-2);margin:0 0 26px}
 .qlist{margin:0 0 16px;padding-left:22px;font-size:17.5px;max-width:62ch}
 .qlist li{margin-bottom:8px;padding-left:4px}
-.qlist li::marker{color:var(--ink-3)}
+.qlist li::marker{color:var(--ink-3);font-family:var(--mono);font-size:.85em}
 .summary{list-style:none;margin:12px 0 8px;padding:0;border-top:3px solid var(--ink)}
 .summary li{font-family:var(--display);font-size:19px;line-height:1.4;padding:12px 0 12px 22px;border-bottom:1px solid var(--line);position:relative}
 .summary li::before{content:"";position:absolute;left:2px;top:22px;width:8px;height:8px;border-radius:50%;background:var(--ink-3)}
@@ -206,27 +209,34 @@ details[open] summary::after{content:"–"}
 <div class="wrap">
   <div class="eyebrow">A model, sub-questions, numerical answers</div>
   <h1>The Electricity Question</h1>
-  <p class="dek">How big is AI? As important as the internet? On par with electricity? A rounding error with some useful applications, like the blockchain? A lot of conversations circle back to this question. This is an attempt to help ask, answer, and hopefully have better conversations on the topic.</p>
+  <div class="qstack">
+    <span>How big is AI?</span>
+    <span>As important as the internet?</span>
+    <span>On par with electricity?</span>
+    <span>A rounding error with some useful applications, like the blockchain?</span>
+  </div>
+  <p class="purpose">A lot of conversations circle back to this question. This is an attempt to help ask, answer, and hopefully have better conversations on the topic.</p>
   <div class="whatis">
     <div class="whatis-h"><b>What this is</b></div>
     <ul>
       <li>A usable model and mental framework</li>
       <li>Meant to be transparent and straightforward</li>
-      <li>Core assumptions are built in as sliders, and the formulas are included at the bottom</li>
-      <li>The model produces estimates from your answers, and checks itself against a published estimate</li>
+      <li>Core assumptions are built in as sliders, with formulas at the bottom</li>
+      <li>Starts with a gut assessment, then walks through a few questions</li>
+      <li>Produces estimates from your answers, and compares them with published estimates</li>
     </ul>
   </div>
 
   <p class="lede" style="margin-bottom:8px">This model breaks the big question into a few smaller ones:</p>
-  <ul class="qlist">
+  <ol class="qlist">
     <li>How much of our work could AI do? How much of that work would actually change, and how fast? How much cheaper would that work get?</li>
     <li>Could it speed up discovery and invention?</li>
     <li>What could go wrong?</li>
     <li>And what might this mean for people, now and in the future?</li>
-  </ul>
+  </ol>
   <p class="fn-host">These questions form the basis of <b>the <span class="fn" tabindex="0" role="button" aria-describedby="fn-model">model<span class="fn-pop" id="fn-model" role="tooltip"><b>The model, in one line</b>Work AI can do × share that switches × how much cheaper it gets + faster invention − what goes wrong</span></span></b>. The approach is adapted from the work of economists Charles Hulten and Daron Acemoglu, with two additions: it allows for AI to speed up discovery itself, and for things to go badly wrong.</p>
 
-  <h2>First, your gut</h2>
+  <h2>First, your gut assessment</h2>
   <p>Before working through the questions, where would you put AI, looking back from 25 years out? At the end, your answer is compared with what your numbers suggest.</p>
   <p>The scale is Nate Silver's Technological Richter Scale, from <em>On the Edge</em>. Like the earthquake scale, each step up is roughly ten times bigger than the one below. It measures size, not direction: Silver puts nuclear weapons at 9.</p>
   <div class="ladder" id="ladder"></div>
@@ -239,7 +249,7 @@ details[open] summary::after{content:"–"}
     </div>
   </div>
 
-  <h2>Breaking the question down</h2>
+  <h2>Breaking down the question</h2>
   <p>Economists who study new technologies tend to start with the work a technology touches rather than the technology itself. The approach treats the economy as a very long list of tasks, such as drafting a contract, answering a customer or reading a scan, and asks what happens when some of those tasks get cheaper.</p>
   <div class="formula">
     <span>Work AI can do</span> <span class="op">×</span> <span>share that switches</span> <span class="op">×</span> <span>how much cheaper it gets</span> <span class="op">+</span> <span>faster invention</span> <span class="op">−</span> <span>what goes wrong</span>
