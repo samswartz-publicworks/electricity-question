@@ -128,10 +128,10 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .chart-wrap{position:relative}
 .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font:13px var(--mono);padding:6px 8px;border-radius:4px;white-space:nowrap;transform:translate(-50%,-110%);display:none}
 .fn-host{position:relative}
-.fn{position:static;border-bottom:1.5px dotted var(--ink-2);cursor:help;outline:none}
+.fn{position:static;cursor:pointer;outline:none;font-size:.7em;line-height:0;vertical-align:super;color:var(--ai);font-family:var(--mono);padding:0 2px}
 .fn:focus-visible{outline:2px solid var(--ai);outline-offset:2px;border-radius:2px}
-.fn-pop{font-weight:400;display:none;position:absolute;left:0;right:0;bottom:calc(100% + 6px);max-width:420px;background:var(--ink);color:var(--paper);font:14px/1.45 var(--body);padding:10px 12px;border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.18);z-index:10}
-.fn-pop b{display:block;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin-bottom:4px}
+.fn-pop{font-weight:400;display:none;position:absolute;left:0;right:0;top:calc(100% + 6px);max-width:460px;background:var(--paper-2);color:var(--ink);border:1px solid var(--line-2);vertical-align:baseline;text-align:left;font:14px/1.5 var(--body);padding:10px 12px;border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.08);z-index:10}
+.fn-pop .fn-num{font-family:var(--mono);opacity:.7;margin-right:6px}
 .fn:hover .fn-pop,.fn:focus .fn-pop,.fn.open .fn-pop{display:block}
 .whatis{margin:4px 0 24px;font-size:17px;color:var(--ink)}
 .whatis-h{color:var(--ink);margin-bottom:4px}
@@ -234,7 +234,7 @@ details[open] summary::after{content:"–"}
     <li>What could go wrong?</li>
     <li>And what might this mean for people, now and in the future?</li>
   </ol>
-  <p class="fn-host">These questions form the basis of <b>the <span class="fn" tabindex="0" role="button" aria-describedby="fn-model">model<span class="fn-pop" id="fn-model" role="tooltip"><b>The model, in one line</b>Work AI can do × share that switches × how much cheaper it gets + faster invention − what goes wrong</span></span></b>. The approach is adapted from the work of economists Charles Hulten and Daron Acemoglu, with two additions: it allows for AI to speed up discovery itself, and for things to go badly wrong.</p>
+  <p class="fn-host">Each question is a piece of the model, and your answers are its inputs.<sup class="fn" tabindex="0" role="button" aria-label="Note 1" aria-describedby="fn-model">1<span class="fn-pop" id="fn-model" role="tooltip"><span class="fn-num">1</span>Hulten (1978); Acemoglu (2024). The invention term follows Aghion, Jones and Jones (2019). Full specification under &ldquo;The math, in full&rdquo; at the bottom of the page.</span></sup></p>
 
   <h2>First, your gut assessment</h2>
   <p>Before working through the questions, where would you put AI, looking back from 25 years out? At the end, your answer is compared with what your answers suggest.</p>
@@ -251,7 +251,7 @@ details[open] summary::after{content:"–"}
 
   <h2>Breaking down the question</h2>
   <p>Economists often treat the economy as a very long list of tasks, such as drafting a contract, answering a customer or reading a scan, and ask what happens when some of them get cheaper.</p>
-  <p>These models, and the adapted version below, multiply the share of work AI can do by the share of that work that actually switches over and by how much cheaper it gets, to estimate how much more productive the economy becomes.</p>
+  <p>The standard version, developed by Charles Hulten and applied to AI by Daron Acemoglu, multiplies three things: the share of work AI can do, the share that actually switches over, and how much cheaper it gets. This model adds how quickly that happens, whether AI speeds up discovery, and what could go wrong.</p>
   <p>A 2024 estimate by the MIT economist Daron Acemoglu came out modest: roughly 1 percent of GDP over 10 years. Others put the numbers higher, and some argue the calculation leaves things out.</p>
 
   <p class="note">Start from one of these positions, then adjust the sliders to match your own view.</p>
@@ -408,7 +408,7 @@ details[open] summary::after{content:"–"}
   <div class="toast" id="toast"></div>
   <div class="copybox" id="copybox" hidden></div>
 
-  <p class="sources">Sources: <a href="https://www.nber.org/papers/w32487">Acemoglu, The Simple Macroeconomics of AI (2024)</a> · <a href="https://budgetmodel.wharton.upenn.edu/p/2025-09-08-the-projected-impact-of-generative-ai-on-future-productivity-growth/">Penn Wharton Budget Model (2025)</a> · <a href="https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent">Goldman Sachs (2023)</a> · <a href="https://www.lse.ac.uk/Economic-History/Assets/Documents/Research/LSTC/wp7503.pdf">Crafts, Steam as a General Purpose Technology</a> · <a href="https://thezvi.wordpress.com/2024/09/04/ai-and-the-technological-richter-scale/">Silver's scale, via Zvi Mowshowitz</a></p>
+  <p class="sources">Sources: Hulten, &ldquo;Growth Accounting with Intermediate Inputs,&rdquo; <em>Review of Economic Studies</em> (1978) · <a href="https://www.nber.org/papers/w24174">Aghion, Jones &amp; Jones, Artificial Intelligence and Economic Growth (2019)</a> · <a href="https://www.nber.org/papers/w32487">Acemoglu, The Simple Macroeconomics of AI (2024)</a> · <a href="https://budgetmodel.wharton.upenn.edu/p/2025-09-08-the-projected-impact-of-generative-ai-on-future-productivity-growth/">Penn Wharton Budget Model (2025)</a> · <a href="https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent">Goldman Sachs (2023)</a> · <a href="https://www.lse.ac.uk/Economic-History/Assets/Documents/Research/LSTC/wp7503.pdf">Crafts, Steam as a General Purpose Technology</a> · <a href="https://thezvi.wordpress.com/2024/09/04/ai-and-the-technological-richter-scale/">Silver's scale, via Zvi Mowshowitz</a></p>
 </div>
 
 <div class="bar" aria-live="polite">
