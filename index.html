@@ -215,7 +215,7 @@ details[open] summary::after{content:"–"}
   <div class="formula">
     <span>Work AI can do</span> <span class="op">×</span> <span>share that switches</span> <span class="op">×</span> <span>how much cheaper it gets</span> <span class="op">+</span> <span>faster invention</span> <span class="op">−</span> <span>what goes wrong</span>
   </div>
-  <p>The first three terms are the standard way economists add up a new technology, called Hulten's theorem: if 5% of the economy's work gets 14% cheaper, the economy gets about 5% × 14% ≈ 0.7% more productive. Those are roughly Daron Acemoglu's numbers, and that calculation is the core of the case for a small effect. The question is whether any of the three numbers is too low, or whether something is missing.</p>
+  <p>The first three terms are the standard way economists add up the effect of a new technology: if 5% of the economy's work gets 14% cheaper, the economy gets about 5% × 14% ≈ 0.7% more productive. Those are roughly Daron Acemoglu's numbers, and that calculation is the core of the case for a small effect. The question is whether any of the three numbers is too low, or whether something is missing.</p>
 
   <p class="note">Start from one of these published positions, then adjust the sliders.</p>
   <div class="presets" role="group" aria-label="Starting positions">
@@ -252,14 +252,14 @@ details[open] summary::after{content:"–"}
   <h2 id="results">What your numbers say</h2>
   <div class="verdict">
     <div class="big" id="v-trs-wrap"><span id="v-trs">–</span><small id="v-trs-sub"> on the scale</small></div>
-    <div style="font-size:14px;color:var(--ink-2)">The median of 2,000 runs, 25 years out, sized on the Richter scale.</div>
+    <div style="font-size:14px;color:var(--ink-2)">The typical result across 2,000 runs, 25 years out, placed on the scale.</div>
     <div class="reveal" id="reveal">–</div>
     <div class="verdict-line" id="v-line">–</div>
   </div>
 
   <figure>
     <div class="chart-wrap"><svg id="scale" viewBox="0 0 640 190" role="img" aria-label="Your rating, your model's result, historical benchmarks and published forecasts on the Richter scale"></svg></div>
-    <figcaption>Purple: your instinct. Blue: your model's median, with a band from the 10th to 90th percentile of runs. Below the line, in color: the historical benchmarks. In gray: published forecasts, placed the same way (horizons differ; see the checks at the bottom).</figcaption>
+    <figcaption>Purple: your instinct. Blue: your numbers' typical result, with a band covering the middle 80% of runs. Below the line, in color: the historical benchmarks. In gray: published forecasts, placed the same way (horizons differ; see the checks at the bottom).</figcaption>
   </figure>
 
   <h3>What it means for people</h3>
@@ -275,7 +275,7 @@ details[open] summary::after{content:"–"}
     <summary>More detail: the range of outcomes and the path over time</summary>
     <div class="more-body">
   <div class="stats">
-    <div class="stat"><b id="v-median">–</b><span>median change in GDP, year 25</span></div>
+    <div class="stat"><b id="v-median">–</b><span>typical change in GDP, year 25</span></div>
     <div class="stat"><b id="v-p10">–</b><span>pessimistic case (10th percentile)</span></div>
     <div class="stat"><b id="v-p90">–</b><span>optimistic case (90th percentile)</span></div>
     <div class="stat"><b id="v-net">–</b><span>of runs beat the internet</span></div>
@@ -292,7 +292,7 @@ details[open] summary::after{content:"–"}
 
   <h3>The path</h3>
   <figure>
-    <div class="legend"><span style="--c:var(--ai)">AI, your median</span><span style="--c:var(--ai-soft)">10th–90th pct.</span><span style="--c:var(--elec)">Electricity, mature</span><span style="--c:var(--net)">Internet, mature</span></div>
+    <div class="legend"><span style="--c:var(--ai)">AI, typical result</span><span style="--c:var(--ai-soft)">10th–90th pct.</span><span style="--c:var(--elec)">Electricity, mature</span><span style="--c:var(--net)">Internet, mature</span></div>
     <div class="chart-wrap"><svg id="curve" viewBox="0 0 640 340" role="img" aria-label="Change in GDP from AI over 25 years, median and band, against benchmark lines"></svg><div class="tip" id="tip"></div></div>
     <figcaption>Change in the size of the economy versus a world without AI, by year. Drag across the chart to read values.</figcaption>
   </figure>
@@ -303,7 +303,7 @@ details[open] summary::after{content:"–"}
   <p>The sections above measure how big AI is. Whether that's good also depends on your values. Two matter most here: how much weight you give to bad outcomes, and who you think gets the gains.</p>
   <div class="group" id="g-values"></div>
   <div class="verdict2">
-    <div class="big" id="ce-wrap"><span id="v-ce">–</span><small> sure-thing equivalent</small></div>
+    <div class="big" id="ce-wrap"><span id="v-ce">–</span><small> as a guaranteed gain</small></div>
     <p class="verdict-line" id="v-ce-line" style="margin-bottom:0">–</p>
   </div>
 
@@ -311,7 +311,7 @@ details[open] summary::after{content:"–"}
   <p class="note">Each assumption halved and doubled, with everything else held at your settings. A longer bar means your answer depends more on that assumption.</p>
   <div class="toggle" role="group" aria-label="Measure">
     <button class="chip" data-tmode="size" aria-pressed="true">Size (rating)</button>
-    <button class="chip" data-tmode="value" aria-pressed="false">Worth (sure-thing %)</button>
+    <button class="chip" data-tmode="value" aria-pressed="false">Worth to you</button>
   </div>
   <figure>
     <div class="chart-wrap"><svg id="tornado" viewBox="0 0 640 420" role="img" aria-label="Sensitivity of the result to each assumption"></svg></div>
@@ -351,7 +351,7 @@ details[open] summary::after{content:"–"}
       <p><b>Catastrophe.</b> A constant annual hazard <code>h</code> set so that <code>1 − (1 − h)^25</code> equals your 25-year probability, scaled each year by <code>m(t)</code>. If it happens, GDP is permanently <code>−severity</code> relative to a world without AI, replacing any gains.</p>
       <p><b>Risk and footprint.</b> <code>m(t) = (1 − link) + link × F(t) / 20%</code>, where <code>F(t) = exposure × A(t)</code> is the share of the economy's work AI is doing. At link 0 your probabilities apply as entered. At 100%, they're the probabilities for an AI doing a fifth of the economy's work, and scale in proportion to how much it actually does.</p>
       <p><b>Uncertainty.</b> Each run multiplies exposure, saving, years-to-halfway and science by independent log-normal noise with spread <code>σ = 0.7 × uncertainty</code>. The same 2,000 random draws are reused every time, so moving a slider changes the answer, not the dice.</p>
-      <p><b>Is it worth it.</b> Each run's gain is weighted: gains captured by a concentrated group count at <code>(1 − discount)</code>, so a gain of <code>x</code> counts as <code>x × (1 − concentration × discount)</code>. Losses count in full. Then a certainty equivalent with constant relative risk aversion <code>η</code>: <code>CE = (mean[(1 + x)^(1−η)])^(1/(1−η)) − 1</code>, which at <code>η = 1</code> is <code>exp(mean[ln(1 + x)]) − 1</code>. At <code>η = 0</code> it's the plain average.</p>
+      <p><b>Is it worth it.</b> Each run's gain is weighted: gains captured by a concentrated group count at <code>(1 − discount)</code>, so a gain of <code>x</code> counts as <code>x × (1 − concentration × discount)</code>. Losses count in full. Then a certainty equivalent with constant relative risk aversion <code>η</code> (the "bad outcomes" slider): <code>CE = (mean[(1 + x)^(1−η)])^(1/(1−η)) − 1</code>, which at <code>η = 1</code> is <code>exp(mean[ln(1 + x)]) − 1</code>. At <code>η = 0</code> it's the plain average.</p>
       <p><b>What it leaves out.</b></p>
       <ul>
         <li><b>Bottlenecks.</b> Unit elasticity means cheaper tasks don't shrink as a share of the economy. If tasks are strong complements, the things AI can't do become the bottleneck (Baumol's cost disease), and large savings matter less. This is the main reason the higher estimates may be too high.</li>
@@ -440,8 +440,8 @@ const DEFS = [
    why:'How much each run nudges your inputs. At "very sure" the runs cluster around your numbers. At "wide open," a typical run has each input off by a factor of two.',ticks:['very sure','wide open']},
   {g:'g-people',k:'displace',label:'Of the work AI takes over, how much means someone loses their job?',unit:'%',min:0,max:100,step:5,
    why:'The rest is jobs that change but don\'t disappear, like an accountant who now uses AI for the routine parts. Only the job losses below depend on this; it doesn\'t change the size of the economy.',ticks:['0%','100%']},
-  {g:'g-values',k:'aversion',short:'Risk aversion',label:'How much do you fear bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>'η = '+v.toFixed(1),valueTorn:true,
-   why:'Relative risk aversion, the standard measure. 0 cares only about the average. Economists typically use 1 to 2 for household decisions. Higher values let a small chance of disaster dominate.',ticks:['only the average','very cautious']},
+  {g:'g-values',k:'aversion',short:'Risk aversion',label:'How much do you fear bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>v.toFixed(1)+(v<0.5?' · average only':v<=2?' · typical':v<=3.5?' · cautious':' · very cautious'),valueTorn:true,
+   why:'Economists call this risk aversion. At 0, only the average outcome matters. Economists typically use 1 to 2 for household decisions. Higher values let a small chance of disaster count for a lot.',ticks:['only the average','very cautious']},
   {g:'g-values',k:'concentration',short:'Concentration',label:'Share of the gains captured by a few firms or countries',unit:'%',min:0,max:100,step:5,valueTorn:true,
    why:'Who you think ends up with the gains. This doesn\'t change GDP; it changes how much of it you count.',ticks:['0%','100%']},
   {g:'g-values',k:'discount',short:'Discount on concentrated gains',label:'How much less a concentrated gain is worth to you',unit:'%',min:0,max:100,step:5,valueTorn:true,
@@ -577,7 +577,7 @@ function render(){
     rl('×','How far adoption has got by year 25','step 3',c.prog>0.985&&c.prog<1?(c.prog*100).toFixed(1)+'%':share(c.prog)) +
     rl('=','Share of all work done by AI','',pctS(c.E*c.A),'sub') +
     rl('×','Cost saving on that work','step 2',share(c.sv)) +
-    rl('=','Productivity gain from existing work','Hulten: share × saving, compounded',signed(Math.exp(c.taskLog)-1),'sub') +
+    rl('=','Productivity gain from existing work','share of work × cost saving',signed(Math.exp(c.taskLog)-1),'sub') +
     rl('+','Productivity gain from faster invention','step 4, accumulated over 25 years',signed(Math.exp(c.sciLog)-1)) +
     rl('×','Investment follows productivity','capital catches up: × 1 / (1 − 0.35) in logs','× 1.54') +
     rl('=','Bigger economy in year 25, before risk','',signed(c.gdp),'total');
@@ -593,11 +593,11 @@ function render(){
   if(Math.abs(gap)<0.25) rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers say <b class="m">${trsM.toFixed(1)}</b>. They roughly agree.`;
   else if(gap>0) rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers say <b class="m">${trsM.toFixed(1)}</b>. Your assumptions point ${gap>=1?'about ten times ':''}higher than your gut.`;
   else rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers say <b class="m">${trsM.toFixed(1)}</b>. Your gut points ${gap<=-1?'about ten times ':''}higher than your assumptions.`;
-  if(neg) rv += ' And in the median run, the economy ends up smaller.';
+  if(neg) rv += ' And in the typical run, the economy ends up smaller.';
   $('reveal').innerHTML = rv;
   const where = trsWord(trsM);
   $('v-line').textContent = neg
-    ? `The median run is a loss of ${pctS(m)} of GDP. Half the runs land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`
+    ? `The typical run is a loss of ${pctS(m)} of GDP. Half the runs land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`
     : `That's ${where}: the economy is ${pctS(m)} bigger than it would be without AI. Half the runs land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`;
   $('b-line').textContent = neg ? 'Net harm' : where.charAt(0).toUpperCase()+where.slice(1);
 
@@ -650,8 +650,8 @@ function render(){
   $('ce-wrap').classList.toggle('harm', ce<0);
   const eta=S.aversion;
   $('v-ce-line').textContent = ce>=0
-    ? `Counting risk at η = ${eta.toFixed(1)} and your view on who gains, this gamble is worth the same to you as a guaranteed ${pctS(ce)} bigger economy: a ${trsOf(ce,bi).toFixed(1)} on the scale.`
-    : `Counting risk at η = ${eta.toFixed(1)} and your view on who gains, you'd accept a guaranteed ${pctS(ce)} smaller economy to avoid this gamble.`;
+    ? `Given how much weight you put on bad outcomes and who gets the gains, this is worth the same to you as a guaranteed ${pctS(ce)} bigger economy: a ${trsOf(ce,bi).toFixed(1)} on the scale.`
+    : `Given how much weight you put on bad outcomes and who gets the gains, you'd accept a guaranteed ${pctS(ce)} smaller economy to avoid this.`;
 
   drawScale(S.gut,trsM,trsLo,trsHi,bi,be,neg);
   drawCurve(med,p10,p90,bi,be);
@@ -794,8 +794,8 @@ function drawTornado(){
   });
   svg.innerHTML=g;
   $('torn-cap').textContent = tmode==='size'
-    ? 'Change in the median rating when each input is halved (gray) or doubled (blue). An input at zero is raised to a quarter of its range instead. Risk inputs barely move the median, because rare events don\'t change the typical run. Switch to "Worth" to see them matter.'
-    : 'Change in the sure-thing equivalent, in percentage points of GDP, when each input is halved (gray) or doubled (blue). This measure counts rare disasters, so the risk inputs show up here.';
+    ? 'Change in the rating when each input is halved (gray) or doubled (blue). An input at zero is raised to a quarter of its range instead. Risk inputs barely move the rating, because rare events don\'t change the typical run. Switch to "Worth to you" to see them matter.'
+    : 'Change in what the outcome is worth to you, as a guaranteed gain in percentage points of GDP, when each input is halved (gray) or doubled (blue). This measure counts rare disasters, so the risk inputs show up here.';
 }
 
 // hover / touch on curve
