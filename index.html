@@ -708,9 +708,9 @@ function render(){
   $('v-ce').textContent = signed(ce);
   $('ce-wrap').classList.toggle('harm', ce<0);
   const eta=S.aversion;
-  $('v-ce-line').textContent = ce>=0
+  $('v-ce-line').textContent = (ce>=0
     ? `Given how much weight you put on bad outcomes and who gets the gains, this would be worth about the same to you as a guaranteed ${pctS(ce)} bigger economy: a ${trsOf(ce,bi).toFixed(1)} on the scale.`
-    : `Given how much weight you put on bad outcomes and who gets the gains, you'd accept a guaranteed ${pctS(ce)} smaller economy to avoid this.`;
+    : `Given how much weight you put on bad outcomes and who gets the gains, you'd accept a guaranteed ${pctS(ce)} smaller economy to avoid this.`) + (S.pExt>0 ? ' This does not include the extinction-level risk you entered; the model does not try to put an economic value on that outcome.' : '');
 
   drawScale(S.gut,trsM,trsLo,trsHi,bi,be,neg);
   drawCurve(med,p10,p90,bi,be);
@@ -816,7 +816,7 @@ function renderSummary(){
   items.push({t:`Your inputs imply ${(P.harm||0)<0.005?'<b>under a 1%</b>':`about ${aOr(share(P.harm))} <b>${share(P.harm)}</b>`} chance that, 25 years out, things are worse than without AI.`,cls:'harm'});
   if(SUM.catShare>=0.01) items.push({t:`Your settings imply about ${aOr(share(SUM.catShare))} <b>${share(SUM.catShare)}</b> chance of an irreversible catastrophe within 25 years, ${SUM.catShare>=0.5?'more likely than not':'roughly one in '+Math.max(2,Math.round(1/SUM.catShare))}. At your severity setting, the economy would end up about ${pctS(S.sevCat/100)} smaller, permanently.`,cls:'harm'});
   if(S.pExt>0) items.push({t:`You put ${aOr(S.pExt)} <b>${S.pExt}%</b> chance on human extinction or a permanent loss of civilization within 25 years, ${S.pExt>=50?'more likely than not':'roughly one in '+Math.max(2,Math.round(100/S.pExt))}. The economic numbers here don't try to price that outcome.`,cls:'harm'});
-  items.push({t:SUM.ce>=0?`Counting your caution about risk and who benefits, this would be worth about the same to you as a guaranteed <b>${pctS(SUM.ce)}</b> bigger economy.`:`Counting your caution about risk and who benefits, you'd accept a guaranteed <b>${pctS(SUM.ce)}</b> smaller economy to avoid it.`});
+  items.push({t:(SUM.ce>=0?`Counting your caution about risk and who benefits, this would be worth about the same to you as a guaranteed <b>${pctS(SUM.ce)}</b> bigger economy.`:`Counting your caution about risk and who benefits, you'd accept a guaranteed <b>${pctS(SUM.ce)}</b> smaller economy to avoid it.`)+(S.pExt>0?' This does not include the extinction-level risk you entered.':'')});
   if(activePreset==='mainstream') items.push({t:'Your settings match the mainstream forecasts. Move a slider to see where you differ.'});
   else if(SUM.diff && Math.abs(SUM.diff.delta)>=0.05){ const D=SUM.diff; items.push({t:`Of the ways you differ from mainstream forecasts, the one that matters most is <b>${lc(D.d.short)}</b> (you: ${fmtVal(D.d,D.mine)}; mainstream: ${fmtVal(D.d,D.theirs)}). That alone moves your answer ${D.delta>0?'up':'down'} by ${Math.abs(D.delta).toFixed(1)} on the scale.`}); }
   $('summary').innerHTML=items.map(i=>`<li class="${i.cls||''}">${i.t}</li>`).join('');
@@ -865,7 +865,7 @@ function drawTornado(){
   svg.innerHTML=g;
   $('torn-cap').textContent = tmode==='size'
     ? 'Change in the rating when each input is halved (gray) or doubled (blue). An input at zero is raised to a quarter of its range instead. Risk inputs barely move the rating, because rare events don\'t change the typical run. Switch to "Worth to you" to see them matter.'
-    : 'Change in what the outcome is worth to you, as a guaranteed gain in percentage points of GDP, when each input is halved (gray) or doubled (blue). This measure counts rare disasters, so the risk inputs show up here.';
+    : 'Change in what the outcome is worth to you, as a guaranteed gain in percentage points of GDP, when each input is halved (gray) or doubled (blue). This measure counts the modeled economic disasters, so those risk inputs show up here. Extinction-level risk is shown separately and isn\'t priced by the model.';
 }
 
 // hover / touch on curve
