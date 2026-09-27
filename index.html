@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Rate AI on the Technological Richter Scale by instinct, then put in your own numbers and see if they agree.">
+<title>The Electricity Question</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#fbfbf9; --paper-2:#f1f1ec; --line:#dcdcd4; --line-2:#c9c9bf;
+  --ink:#16171b; --ink-2:#55585f; --ink-3:#8a8d95;
+  --ai:#2a78d6; --ai-soft:rgba(42,120,214,.16);
+  --net:#eb6834; --elec:#1baf7a; --chain:#eda100; --gut:#4a3aa7;
+  --harm:#e34948; --harm-soft:rgba(227,73,72,.14);
+  --track:#e3e3dc; --thumb:#16171b;
+  --display:"Newsreader",Georgia,"Times New Roman",serif;
+  --body:"Source Sans 3","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#141517; --paper-2:#1d1e22; --line:#2e3036; --line-2:#3d3f47;
+    --ink:#f2f2ee; --ink-2:#b5b7be; --ink-3:#7c7f88;
+    --ai:#3987e5; --ai-soft:rgba(57,135,229,.22);
+    --net:#d95926; --elec:#199e70; --chain:#c98500; --gut:#9085e9;
+    --harm:#e66767; --harm-soft:rgba(230,103,103,.18);
+    --track:#2e3036; --thumb:#f2f2ee;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#141517; --paper-2:#1d1e22; --line:#2e3036; --line-2:#3d3f47;
+  --ink:#f2f2ee; --ink-2:#b5b7be; --ink-3:#7c7f88;
+  --ai:#3987e5; --ai-soft:rgba(57,135,229,.22);
+  --net:#d95926; --elec:#199e70; --chain:#c98500; --gut:#9085e9;
+  --harm:#e66767; --harm-soft:rgba(230,103,103,.18);
+  --track:#2e3036; --thumb:#f2f2ee;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:640px;margin:0 auto;padding-inline:18px;padding-block:28px 130px}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(40px,10vw,58px);letter-spacing:-.01em}
+h2{font-size:28px;margin-top:56px;margin-bottom:10px}
+h3{font-size:20px;margin-top:34px;margin-bottom:6px}
+p{margin:0 0 16px;max-width:62ch}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.step{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px;font-weight:500}
+.dek{font-family:var(--display);font-size:22px;line-height:1.35;color:var(--ink-2);margin:16px 0 10px;font-style:italic;font-weight:400}
+.byline{font-size:14px;color:var(--ink-3);margin-bottom:28px}
+.lede{font-size:18px}
+.note{font-size:15px;color:var(--ink-2);margin:0 0 8px}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+.chip{font:600 14px var(--body);color:var(--ink);background:var(--paper-2);border:1px solid var(--line-2);border-radius:999px;padding:8px 14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--ai);outline-offset:2px}
+.preset-note{font-size:14px;color:var(--ink-2);min-height:22px;margin-top:6px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--ink-2);margin:6px 0 10px}
+.legend span::before{content:"";display:inline-block;width:12px;height:3px;border-radius:2px;background:var(--c);vertical-align:middle;margin-right:6px}
+
+/* the one-line model */
+.formula{font-family:var(--display);font-size:21px;line-height:1.45;border-top:3px solid var(--ink);border-bottom:1px solid var(--line);padding:14px 0 16px;margin:14px 0 18px}
+.formula span{white-space:nowrap}
+.formula .op{color:var(--ink-3);font-family:var(--mono);font-size:17px;padding:0 3px}
+
+/* ladder */
+.ladder{border-top:1px solid var(--line);margin:18px 0 6px;font-size:15px}
+.rung{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.rung b{font-family:var(--mono);font-weight:500;font-size:16px;font-variant-numeric:tabular-nums}
+.rung span{color:var(--ink-2)}
+.rung em{font-style:normal;color:var(--ink);font-weight:600}
+.rung.on{background:var(--paper-2);margin-inline:-10px;padding-inline:10px}
+
+/* sliders */
+.group{margin-top:12px}
+.ctl{padding:14px 0 10px;border-top:1px solid var(--line)}
+.group .ctl:last-child{border-bottom:1px solid var(--line)}
+.ctl-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.ctl-head label{font-weight:600;font-size:16px}
+.ctl-val{font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
+.ctl-why{font-size:14px;color:var(--ink-3);margin:2px 0 8px;max-width:60ch}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:36px;background:transparent;margin:0;display:block}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:var(--track);border-radius:2px}
+input[type=range]::-moz-range-track{height:4px;background:var(--track);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--thumb);border:3px solid var(--paper);box-shadow:0 0 0 1px var(--line-2);margin-top:-11px;cursor:pointer}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--thumb);border:3px solid var(--paper);box-shadow:0 0 0 1px var(--line-2);cursor:pointer}
+.ctl.risk input[type=range]::-webkit-slider-thumb{background:var(--harm)}
+.ctl.risk input[type=range]::-moz-range-thumb{background:var(--harm)}
+.ctl.gut input[type=range]::-webkit-slider-thumb{background:var(--gut)}
+.ctl.gut input[type=range]::-moz-range-thumb{background:var(--gut)}
+.ticks{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:-6px}
+.gutbox{border:1px solid var(--line-2);border-radius:8px;padding:6px 16px 10px;margin-top:10px}
+.gutbox .ctl{border:0;padding-top:8px}
+.gut-read{font-family:var(--display);font-size:20px;margin-top:6px}
+.gut-read b{font-family:var(--mono);font-weight:500;color:var(--gut)}
+
+/* receipt */
+.receipt{margin:14px 0 8px;border-top:3px solid var(--ink);font-size:15.5px}
+.rl{display:grid;grid-template-columns:22px 1fr auto;gap:6px 8px;padding:9px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.rl .o{font-family:var(--mono);color:var(--ink-3);text-align:center}
+.rl .v{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.rl small{display:block;color:var(--ink-3);font-size:13px}
+.rl.sub{background:var(--paper-2);margin-inline:-10px;padding-inline:10px}
+.rl.sub .v{font-weight:500}
+.rl.total{border-bottom:3px solid var(--ink)}
+.rl.total span:nth-child(2){font-weight:600}
+.rl.total .v{font-size:19px;font-weight:500}
+
+/* results */
+.verdict{border-top:3px solid var(--ink);padding-top:14px;margin-top:20px}
+.big{font-family:var(--display);font-size:clamp(34px,9vw,50px);font-weight:600;line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.big small{font-size:.45em;color:var(--ink-2);font-weight:400}
+.big.harm{color:var(--harm)}
+.verdict-line{font-family:var(--display);font-size:21px;line-height:1.35;margin:10px 0 14px}
+.reveal{font-family:var(--display);font-size:23px;line-height:1.3;margin:14px 0;padding:14px 16px;background:var(--paper-2);border-radius:8px}
+.reveal b{font-family:var(--mono);font-weight:500}
+.reveal .g{color:var(--gut)} .reveal .m{color:var(--ai)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:8px 0 8px}
+.stat{padding:10px 0;border-top:1px solid var(--line)}
+.stat b{display:block;font-family:var(--mono);font-size:20px;font-weight:500;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--ink-2);line-height:1.3;display:block}
+.stat.harm b{color:var(--harm)}
+figure{margin:18px 0 6px}
+figcaption{font-size:14px;color:var(--ink-2);margin-top:8px;max-width:62ch}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.chart-wrap{position:relative}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font:13px var(--mono);padding:6px 8px;border-radius:4px;white-space:nowrap;transform:translate(-50%,-110%);display:none}
+.matrix{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
+.matrix th,.matrix td{padding:9px 6px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+.matrix th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+.matrix td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;width:58px}
+.matrix td.bar{width:26%}
+.matrix .b{height:12px;background:var(--ai);border-radius:0 3px 3px 0;min-width:2px}
+.matrix tr.harm .b{background:var(--harm)}
+.matrix td.lbl small{display:block;color:var(--ink-3);font-size:12px}
+.verdict2{border:1px solid var(--line-2);border-radius:8px;padding:14px 16px;margin-top:18px}
+.verdict2 .big{font-size:clamp(30px,8vw,42px)}
+.toggle{display:flex;gap:8px;margin:10px 0 2px}
+details{border-top:1px solid var(--line);margin-top:0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+.dgroup{margin-top:28px}
+summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--mono);color:var(--ink-3)}
+details[open] summary::after{content:"–"}
+.math{font-size:15px;color:var(--ink-2);padding-bottom:16px}
+.math code{font-family:var(--mono);font-size:13.5px;background:var(--paper-2);padding:1px 5px;border-radius:3px;color:var(--ink)}
+.math p{margin-bottom:10px}
+.math ul{margin:0 0 10px;padding-left:20px}
+.math li{margin-bottom:6px}
+.math .group{margin-top:8px}
+.check{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:15px;padding:8px 0;border-bottom:1px solid var(--line)}
+.check .v{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.btn{font:600 15px var(--body);background:var(--ink);color:var(--paper);border:0;border-radius:6px;padding:12px 16px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line-2)}
+.toast{font-size:14px;color:var(--ink-2);margin-top:10px;min-height:20px}
+.copybox{width:100%;font:13px var(--mono);background:var(--paper-2);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:10px;margin-top:10px;white-space:pre-wrap}
+.sources{font-size:13px;color:var(--ink-3);margin-top:28px}
+.sources a{color:var(--ink-2)}
+
+/* sticky verdict */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--paper);padding:10px 18px calc(10px + env(safe-area-inset-bottom,0px));z-index:5;box-shadow:0 -6px 24px rgba(0,0,0,.12)}
+.bar-in{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.bar-l{font-size:13px;opacity:.75;line-height:1.2}
+.bar-n{font-family:var(--mono);font-size:24px;font-weight:500;line-height:1.05;font-variant-numeric:tabular-nums}
+.bar-n small{font-size:13px;opacity:.7;font-family:var(--body)}
+.bar-r{font-family:var(--display);font-size:16px;text-align:right;line-height:1.2}
+.bar a{color:inherit;font:13px var(--body);opacity:.7}
+@media (prefers-reduced-motion:no-preference){.matrix .b{transition:width .25s ease}}
+@media (max-width:420px){.stats{grid-template-columns:1fr 1fr}.formula{font-size:19px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">An argument, with sliders</div>
+  <h1>The Electricity Question</h1>
+  <p class="dek">Is AI bigger than the internet? On par with electricity? A rounding error like blockchain? Rate it on instinct, then put in your own numbers and see whether the two agree.</p>
+  <p class="byline">A small, transparent model. Every assumption is a slider, every formula is written out at the bottom, and it reproduces a published estimate as a check.</p>
+
+  <p class="lede">Arguments about AI's importance are usually arguments about adjectives. Underneath, they turn on a handful of quantities: how much of the economy's work AI can do, how much cheaper it makes that work, how fast anyone switches over, and how often it breaks something along the way. If two people disagree about AI, they disagree about at least one of those numbers.</p>
+  <p>So this page runs in two passes. First you rate AI on a scale, by feel. Then you set the numbers, one at a time, and the model works out what they imply. The interesting result is when your instinct and your numbers don't match.</p>
+
+  <h2>First, your gut</h2>
+  <p>Nate Silver's Technological Richter Scale, from <em>On the Edge</em>. Like the earthquake scale, each step up is roughly ten times bigger than the one below. It measures size, not direction: Silver puts nuclear weapons at 9. Looking back from 25 years out, where does AI land?</p>
+  <div class="ladder" id="ladder"></div>
+  <div class="gutbox">
+    <div class="ctl gut">
+      <div class="ctl-head"><label for="in-gut">Your rating for AI, instinct only</label><span class="ctl-val" id="val-gut"></span></div>
+      <input type="range" id="in-gut" min="1" max="10" step="0.1" value="7.5">
+      <div class="ticks"><span>1 shower thought</span><span>10 new epoch</span></div>
+      <div class="gut-read" id="gut-read"></div>
+    </div>
+  </div>
+
+  <h2>Now, the numbers</h2>
+  <p>The whole model fits on one line. Each term gets its own step below.</p>
+  <div class="formula">
+    <span>Work AI can do</span> <span class="op">×</span> <span>share that switches</span> <span class="op">×</span> <span>how much cheaper it gets</span> <span class="op">+</span> <span>faster invention</span> <span class="op">−</span> <span>what goes wrong</span>
+  </div>
+  <p>The first three terms are the standard way economists add up a new technology, called Hulten's theorem: if 5% of the economy's work gets 14% cheaper, the economy gets about 5% × 14% ≈ 0.7% more productive. Those happen to be Daron Acemoglu's numbers, and that multiplication is the entire case for AI being small. The question is whether any of the three numbers is too low, or whether something is missing.</p>
+
+  <p class="note">Start from a published position, then argue with it one slider at a time.</p>
+  <div class="presets" role="group" aria-label="Starting positions">
+    <button class="chip" data-preset="acemoglu" aria-pressed="false">Acemoglu (skeptic)</button>
+    <button class="chip" data-preset="mainstream" aria-pressed="true">Mainstream forecasts</button>
+    <button class="chip" data-preset="electricity" aria-pressed="false">Electricity-scale</button>
+    <button class="chip" data-preset="transformative" aria-pressed="false">Transformative</button>
+  </div>
+  <div class="preset-note" id="preset-note"></div>
+
+  <h3><span class="step">Step 1</span>How much of the economy's work can AI do?</h3>
+  <div class="group" id="g-reach"></div>
+
+  <h3><span class="step">Step 2</span>How much cheaper does that work get?</h3>
+  <div class="group" id="g-saving"></div>
+
+  <h3><span class="step">Step 3</span>How fast?</h3>
+  <p class="note">Capability isn't impact. Electricity took forty years to rewire factories. The internet took about ten to reach half of US households.</p>
+  <div class="group" id="g-speed"></div>
+
+  <h3><span class="step">Step 4</span>Does it speed up invention itself?</h3>
+  <p class="note">Steps 1–3 describe AI doing existing work more cheaply: a one-time jump in the level of the economy. This step is different. If AI makes research faster, it raises the growth rate, and that compounds. It's the lever that separates "a big tool" from "electricity."</p>
+  <div class="group" id="g-science"></div>
+
+  <h3><span class="step">Step 5</span>What can go wrong?</h3>
+  <p class="note">These shape the downside. Red thumbs are risk sliders.</p>
+  <div class="group" id="g-risk"></div>
+
+  <h2>Your numbers, multiplied out</h2>
+  <p class="note">The arithmetic at your central values, 25 years from now, before anything goes wrong.</p>
+  <div class="receipt" id="receipt"></div>
+  <p class="note">The model then reruns this 2,000 times, each time nudging your inputs up or down by the amount of uncertainty you chose, and rolling the dice on accidents and catastrophes. That's where the results below come from.</p>
+
+  <h2 id="results">What your numbers say</h2>
+  <div class="verdict">
+    <div class="big" id="v-trs-wrap"><span id="v-trs">–</span><small id="v-trs-sub"> on the scale</small></div>
+    <div style="font-size:14px;color:var(--ink-2)">The median of 2,000 runs, 25 years out, sized on the Richter scale.</div>
+    <div class="reveal" id="reveal">–</div>
+    <div class="verdict-line" id="v-line">–</div>
+  </div>
+
+  <figure>
+    <div class="chart-wrap"><svg id="scale" viewBox="0 0 640 190" role="img" aria-label="Your rating, your model's result, historical benchmarks and published forecasts on the Richter scale"></svg></div>
+    <figcaption>Purple: your instinct. Blue: your model's median, with a band from the 10th to 90th percentile of runs. Below the line, in color: the historical benchmarks. In gray: published forecasts, placed the same way (horizons differ; see the checks at the bottom).</figcaption>
+  </figure>
+
+  <div class="stats">
+    <div class="stat"><b id="v-median">–</b><span>median change in GDP, year 25</span></div>
+    <div class="stat"><b id="v-p10">–</b><span>pessimistic case (10th percentile)</span></div>
+    <div class="stat"><b id="v-p90">–</b><span>optimistic case (90th percentile)</span></div>
+    <div class="stat"><b id="v-net">–</b><span>of runs beat the internet</span></div>
+    <div class="stat"><b id="v-elec">–</b><span>of runs beat electricity</span></div>
+    <div class="stat harm"><b id="v-harm">–</b><span>of runs leave the economy smaller</span></div>
+  </div>
+
+  <h3>Where the runs land</h3>
+  <p class="note">Each band is one half-step on the scale, which is roughly a tripling in size.</p>
+  <table class="matrix" id="matrix" aria-label="Share of runs in each outcome band at 10 and 25 years">
+    <thead><tr><th>Outcome</th><th class="num">10 yrs</th><th class="num">25 yrs</th><th></th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <h3>The path</h3>
+  <figure>
+    <div class="legend"><span style="--c:var(--ai)">AI, your median</span><span style="--c:var(--ai-soft)">10th–90th pct.</span><span style="--c:var(--elec)">Electricity, mature</span><span style="--c:var(--net)">Internet, mature</span></div>
+    <div class="chart-wrap"><svg id="curve" viewBox="0 0 640 340" role="img" aria-label="Change in GDP from AI over 25 years, median and band, against benchmark lines"></svg><div class="tip" id="tip"></div></div>
+    <figcaption>Change in the size of the economy versus a world without AI, by year. Drag across the chart to read values.</figcaption>
+  </figure>
+
+  <h2>Is it worth it?</h2>
+  <p>Everything above is about how big AI is. Whether it's good is a separate question, and it depends on your values as well as the numbers. Two values matter most: how much you fear the bad outcomes, and whether you care who gets the gains.</p>
+  <div class="group" id="g-values"></div>
+  <div class="verdict2">
+    <div class="big" id="ce-wrap"><span id="v-ce">–</span><small> sure-thing equivalent</small></div>
+    <p class="verdict-line" id="v-ce-line" style="margin-bottom:0">–</p>
+  </div>
+
+  <h2>What actually moves the answer</h2>
+  <p class="note">Each assumption halved and doubled, with everything else held at your settings. Long bars are the assumptions worth arguing about. Short bars aren't.</p>
+  <div class="toggle" role="group" aria-label="Measure">
+    <button class="chip" data-tmode="size" aria-pressed="true">Size (rating)</button>
+    <button class="chip" data-tmode="value" aria-pressed="false">Worth (sure-thing %)</button>
+  </div>
+  <figure>
+    <div class="chart-wrap"><svg id="tornado" viewBox="0 0 640 420" role="img" aria-label="Sensitivity of the result to each assumption"></svg></div>
+    <figcaption id="torn-cap">Change in the median rating when each input is halved (gray) or doubled (blue). An input set to zero is raised to a quarter of its range instead.</figcaption>
+  </figure>
+
+  <div class="dgroup">
+  <details>
+    <summary>How the scale is calibrated</summary>
+    <div class="math">
+      <p>The scale is Silver's. Turning GDP into a rating is our addition, and it works like the earthquake scale: <code>rating = 8 + log10(size ÷ internet)</code>. With the internet at 10% of GDP, that puts 1% at 7, 10% at 8, and 100% (a doubling of living standards) at 9. Silver puts electricity and the internet both at 8. This mapping spreads them out, so electricity lands around 8.5.</p>
+      <p>The benchmark sizes are back-of-envelope: peak contribution to productivity growth × years at that pace. Crafts finds that steam never added more than about 0.4 points a year to British productivity growth, while electricity and computing each added closer to 1 point a year at their peaks. Change them if you read the history differently; everything re-scores.</p>
+      <div class="group" id="g-bench"></div>
+    </div>
+  </details>
+  <details>
+    <summary>Checks: does it reproduce known results?</summary>
+    <div class="math">
+      <p>A model like this is only worth arguing with if it gets known cases right. With Acemoglu's inputs (20% of tasks exposed, 23% of those profitable to automate, 14.4% cost saving), it should reproduce his estimate.</p>
+      <div id="checks"></div>
+      <p style="margin-top:12px">The small gap on productivity comes from compounding: we use the exact log form of Hulten's rule, which is slightly larger than Acemoglu's linear approximation. Published forecasts cover different horizons and methods (Goldman is global, over 10 years; Penn Wharton runs to 2055), so treat their placement on the scale as a rough guide.</p>
+    </div>
+  </details>
+  <details>
+    <summary>The math, in full</summary>
+    <div class="math">
+      <p>Everything is the change in GDP relative to a world without AI. Time <code>t</code> runs from 0 to 25 years.</p>
+      <p><b>Adoption.</b> An S-curve: <code>A(t) = ceiling / (1 + exp(−k(t − T)))</code>, where <code>T</code> is the years-to-halfway slider and <code>k = 2·ln 9 / T</code>, so adoption goes from 10% to 90% of its ceiling between <code>T/2</code> and <code>1.5T</code>.</p>
+      <p><b>Productivity from doing existing work.</b> Hulten's theorem: the log productivity gain is the share of the economy affected times the log productivity gain on it: <code>exposure × A(t) × ln(1 / (1 − saving))</code>. For small savings, <code>ln(1/(1−s)) ≈ s</code>, which gives the familiar "share × saving." This is exact if the economy combines tasks with a unit elasticity of substitution (Cobb-Douglas).</p>
+      <p><b>Faster invention.</b> Adds <code>science × A(t)/ceiling</code> to the productivity growth rate each year, so it accumulates: <code>Σ science × A(τ)/ceiling</code>.</p>
+      <p><b>Investment follows.</b> When productivity rises, firms invest until the capital stock catches up, which raises output by a further factor of <code>1 / (1 − α)</code>, with capital share <code>α = 0.35</code>. So <code>ln GDP gain = (task gain + invention gain) / 0.65</code>. Acemoglu's own step from productivity to GDP implies a similar factor.</p>
+      <p><b>Incidents.</b> Each year, a major incident happens with probability <code>p × m(t)</code>, knocks <code>severity</code> off GDP, and fades with a five-year half-life. Losses stack.</p>
+      <p><b>Catastrophe.</b> A constant annual hazard <code>h</code> set so that <code>1 − (1 − h)^25</code> equals your 25-year probability, scaled each year by <code>m(t)</code>. If it happens, GDP is permanently <code>−severity</code> relative to a world without AI, replacing any gains.</p>
+      <p><b>Risk and footprint.</b> <code>m(t) = (1 − link) + link × F(t) / 20%</code>, where <code>F(t) = exposure × A(t)</code> is the share of the economy's work AI is doing. At link 0 your probabilities apply as entered. At 100%, they're the probabilities for an AI doing a fifth of the economy's work, and scale in proportion to how much it actually does.</p>
+      <p><b>Uncertainty.</b> Each run multiplies exposure, saving, years-to-halfway and science by independent log-normal noise with spread <code>σ = 0.7 × uncertainty</code>. The same 2,000 random draws are reused every time, so moving a slider changes the answer, not the dice.</p>
+      <p><b>Is it worth it.</b> Each run's gain is weighted: gains captured by a concentrated group count at <code>(1 − discount)</code>, so a gain of <code>x</code> counts as <code>x × (1 − concentration × discount)</code>. Losses count in full. Then a certainty equivalent with constant relative risk aversion <code>η</code>: <code>CE = (mean[(1 + x)^(1−η)])^(1/(1−η)) − 1</code>, which at <code>η = 1</code> is <code>exp(mean[ln(1 + x)]) − 1</code>. At <code>η = 0</code> it's the plain average.</p>
+      <p><b>What it leaves out.</b></p>
+      <ul>
+        <li><b>Bottlenecks.</b> Unit elasticity means cheaper tasks don't shrink as a share of the economy. If tasks are strong complements, the things AI can't do become the bottleneck (Baumol's cost disease), and large savings matter less. This is the best reason to doubt the top-end numbers.</li>
+        <li><b>Who wins.</b> Wages, prices and inequality are not modeled, except through the concentration sliders.</li>
+        <li><b>Costs.</b> Energy, chips and the investment itself are treated as paid for out of the gains.</li>
+        <li><b>The long run.</b> Nothing after 25 years. Slow scenarios are not finished by then.</li>
+      </ul>
+    </div>
+  </details>
+  </div>
+
+  <div class="actions">
+    <button class="btn" id="copy">Copy my numbers</button>
+    <button class="btn ghost" id="reset">Reset to mainstream</button>
+  </div>
+  <div class="toast" id="toast"></div>
+  <div class="copybox" id="copybox" hidden></div>
+
+  <p class="sources">Sources: <a href="https://www.nber.org/papers/w32487">Acemoglu, The Simple Macroeconomics of AI (2024)</a> · <a href="https://budgetmodel.wharton.upenn.edu/p/2025-09-08-the-projected-impact-of-generative-ai-on-future-productivity-growth/">Penn Wharton Budget Model (2025)</a> · <a href="https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent">Goldman Sachs (2023)</a> · <a href="https://www.lse.ac.uk/Economic-History/Assets/Documents/Research/LSTC/wp7503.pdf">Crafts, Steam as a General Purpose Technology</a> · <a href="https://thezvi.wordpress.com/2024/09/04/ai-and-the-technological-richter-scale/">Silver's scale, via Zvi Mowshowitz</a></p>
+</div>
+
+<div class="bar" aria-live="polite">
+  <div class="bar-in">
+    <div><div class="bar-l">Instinct <span id="b-gut">–</span> · Your numbers</div><div class="bar-n" id="b-trs">–</div></div>
+    <div class="bar-r"><span id="b-line">–</span><br><a href="#results">see results</a></div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+const N = 2000, T = 25, ALPHA = 0.35, KMULT = 1/(1-ALPHA), FREF = 0.20;
+const $ = id=>document.getElementById(id);
+
+// ---------- the scale ----------
+const LADDER = [
+  [10,'A new epoch for the planet, not just for people.','a runaway singularity'],
+  [9,'Changed the course of human history.','fire, the wheel, agriculture, the printing press, nuclear weapons'],
+  [8,'Candidate for technology of the century.','automobiles, electricity, the internet'],
+  [7,'One of the leading inventions of the decade.','credit cards (low 7), social media (high 7)'],
+  [6,'Disrupts its field, ripples beyond it.','Post-it notes (6.0), the VCR (6.8)'],
+  [5,'Commercially successful, important in its category.','Cool Ranch Doritos'],
+  [4,'Someone actually buys it.',''],
+  [3,'Shows up in the record: a patent, a prototype.',''],
+  [2,'An idea realized privately.','the family brining recipe'],
+  [1,'A half-formed thought in the shower.',''],
+];
+LADDER.forEach(([n,d,ex])=>{ const r=document.createElement('div'); r.className='rung'; r.dataset.n=n; r.innerHTML=`<b>${n}</b><span><em>${d}</em>${ex?' '+ex:''}</span>`; $('ladder').appendChild(r); });
+function trsWord(v){
+  if(v>=9.5) return 'an epoch-defining technology';
+  if(v>=9) return 'in the company of fire and the printing press';
+  if(v>=8.65) return 'bigger than electricity';
+  if(v>=8.35) return 'about electricity';
+  if(v>=8.1) return 'between the internet and electricity';
+  if(v>=7.9) return 'about the internet';
+  if(v>=7.5) return 'a bit short of the internet';
+  if(v>=7) return 'a leading invention of the decade';
+  if(v>=6) return 'a field-level disruption';
+  if(v>=5) return 'a successful product';
+  return 'not much';
+}
+
+// ---------- inputs ----------
+const DEFS = [
+  {g:'g-reach',k:'exposure',short:'Work AI can do',label:'Share of the economy\'s work AI can do or substantially assist',unit:'%',min:5,max:100,step:1,torn:true,
+   why:'Measured by value, not headcount. Acemoglu uses 20% of tasks. Penn Wharton counts 40% of labor income as exposed. Eloundou et al. (2023) find about 80% of US workers have at least a tenth of their tasks exposed.',ticks:['5%','100%']},
+  {g:'g-reach',k:'amax',short:'Share that switches',label:'Share of that work that ever actually switches to AI',unit:'%',min:5,max:100,step:1,torn:true,
+   why:'Being able to do a task isn\'t the same as being worth it. Acemoglu estimates 23% of exposed tasks are profitable to automate. Regulation, liability and habit also cap this.',ticks:['5%','100%']},
+  {g:'g-saving',k:'saving',short:'Cost saving',label:'How much cheaper those tasks get',unit:'%',min:2,max:95,step:1,torn:true,
+   why:'Field studies measure time saved: 14% for call-center agents, 40% for writing tasks, 56% for a coding task. Labor is only part of a task\'s cost, so time savings shrink when converted: Acemoglu turns 27% labor savings into 14% cost savings. Full automation would be near the top of the range.',ticks:['2%','95%']},
+  {g:'g-speed',k:'t50',short:'Years to halfway',label:'Years until adoption is halfway to its ceiling',unit:' yrs',min:2,max:40,step:1,torn:true,
+   why:'Internet: about 10 years to half of US households. Electricity: about 30 years to half of factory power.',ticks:['2','40']},
+  {g:'g-science',k:'science',short:'Faster invention',label:'Extra productivity growth from faster R&D, once fully adopted',unit:' pts/yr',min:0,max:3,step:0.05,torn:true,
+   why:'US productivity has grown about 1.5% a year over the long run. 0.1 would be a modest boost; 1.0 would be a historic one; the explosive-growth literature (Aghion, Jones & Jones; Davidson) considers far more.',ticks:['0','+3']},
+  {g:'g-risk',k:'pMajor',short:'Incident chance',label:'Yearly chance of a major AI-caused incident',unit:'%',min:0,max:25,step:0.5,risk:true,torn:true,
+   why:'A serious cyberattack, market failure or infrastructure failure enabled by AI. On the scale of a recession, not the end of the world.',ticks:['0%','25%']},
+  {g:'g-risk',k:'sevMajor',short:'Incident cost',label:'Cost of such an incident',unit:'% of GDP',min:0,max:10,step:0.5,risk:true,torn:true,
+   why:'The 2008 financial crisis cost the US roughly 4% of GDP at its trough. Covid cost about 3% in 2020. Losses fade with a five-year half-life.',ticks:['0%','10%']},
+  {g:'g-risk',k:'pCat',short:'Catastrophe chance',label:'Chance of an irreversible catastrophe within 25 years',unit:'%',min:0,max:30,step:0.5,risk:true,torn:true,
+   why:'Loss of control, an engineered pandemic, AI-enabled war. In a 2023 survey, AI researchers gave a median 5% chance of outcomes as bad as human extinction, with no time limit, so a 25-year figure should be lower. Most economists put it far lower still.',ticks:['0%','30%']},
+  {g:'g-risk',k:'sevCat',short:'Catastrophe cost',label:'How bad is that outcome',unit:'% of GDP, permanent',min:10,max:95,step:5,risk:true,torn:true,
+   why:'95% is "the economy barely survives." Sliding this down says the catastrophe is survivable.',ticks:['−10%','−95%']},
+  {g:'g-risk',k:'link',short:'Risk grows with AI',label:'Does risk grow with how much AI is doing?',unit:'%',min:0,max:100,step:5,risk:true,torn:true,
+   why:'At 0, the chances above are fixed. At 100%, they are the chances for an AI doing a fifth of the economy\'s work, and double if it does twice that. This keeps optimists honest: a bigger AI is also a riskier one.',ticks:['fixed','fully linked']},
+  {g:'g-risk',k:'uncert',label:'How sure are you about all of the above?',unit:'',min:0.1,max:1,step:0.05,fmt:v=>v<=0.3?'very sure':v<=0.6?'somewhat sure':'wide open',
+   why:'How much each run nudges your inputs. At "very sure" the runs cluster around your numbers. At "wide open," a typical run has each input off by a factor of two.',ticks:['very sure','wide open']},
+  {g:'g-values',k:'aversion',short:'Risk aversion',label:'How much do you fear bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>'η = '+v.toFixed(1),valueTorn:true,
+   why:'Relative risk aversion, the standard measure. 0 cares only about the average. Economists typically use 1 to 2 for household decisions. Higher values let a small chance of disaster dominate.',ticks:['only the average','very cautious']},
+  {g:'g-values',k:'concentration',short:'Concentration',label:'Share of the gains captured by a few firms or countries',unit:'%',min:0,max:100,step:5,valueTorn:true,
+   why:'Your belief about who wins. This doesn\'t change GDP; it changes how much of it you count.',ticks:['0%','100%']},
+  {g:'g-values',k:'discount',short:'Discount on concentrated gains',label:'How much less a concentrated gain is worth to you',unit:'%',min:0,max:100,step:5,valueTorn:true,
+   why:'0 means a dollar is a dollar wherever it lands. 100 means gains that concentrate count for nothing.',ticks:['0%','100%']},
+  {g:'g-bench',k:'bInternet',label:'Internet: mature effect on GDP',unit:'%',min:3,max:30,step:1,
+   why:'Roughly 0.5–1 point a year of extra productivity growth for 10–15 years around 1995–2010: about 10%. All of computing, back to the 1970s, would be larger.',ticks:['3%','30%']},
+  {g:'g-bench',k:'bElec',label:'Electricity: mature effect on GDP',unit:'%',min:10,max:100,step:1,
+   why:'Paul David: US factory productivity growth roughly doubled in the 1920s once plants were rewired. Around 1 point a year at the peak, with a long tail before and after: 30–40%.',ticks:['10%','100%']},
+];
+const PRESETS = {
+  acemoglu:{exposure:20,amax:23,saving:14,t50:4,science:0,pMajor:2,sevMajor:1,pCat:0.5,sevCat:30,link:50,uncert:0.3,aversion:1,concentration:40,discount:30,bInternet:10,bElec:35,
+    note:'Acemoglu (2024): 20% of tasks exposed, 23% of those profitable, 14% cheaper, fully adopted within 10 years, no boost to invention.'},
+  mainstream:{exposure:40,amax:30,saving:20,t50:10,science:0.05,pMajor:3,sevMajor:1.5,pCat:1,sevCat:50,link:50,uncert:0.5,aversion:1,concentration:40,discount:30,bInternet:10,bElec:35,
+    note:'Set to land between the Penn Wharton Budget Model and Goldman Sachs forecasts: broader exposure than Acemoglu, a modest boost to invention.'},
+  electricity:{exposure:50,amax:65,saving:35,t50:8,science:0.3,pMajor:4,sevMajor:2,pCat:3,sevCat:60,link:60,uncert:0.6,aversion:1,concentration:40,discount:30,bInternet:10,bElec:35,
+    note:'Half the economy\'s work exposed, most of it switches, a real boost to invention. Roughly what "on par with electricity" requires.'},
+  transformative:{exposure:75,amax:80,saving:60,t50:6,science:1,pMajor:6,sevMajor:3,pCat:8,sevCat:80,link:80,uncert:0.5,aversion:1,concentration:60,discount:30,bInternet:10,bElec:35,
+    note:'AI does most work and speeds up research sharply, with much higher risk. The world of the explosive-growth papers.'},
+};
+function applyPreset(name){ const p=PRESETS[name]; const gut=S?S.gut:7.5; S={gut}; for(const k in p){ if(k!=='note') S[k]=p[k]; } }
+let S=null; applyPreset('mainstream');
+try{ const saved = JSON.parse(localStorage.getItem('eq-state3')||'null'); if(saved && typeof saved==='object'){ S = Object.assign({}, S, saved); var loadedSaved=true; } }catch(e){}
+let activePreset = (typeof loadedSaved!=='undefined') ? null : 'mainstream';
+
+const fmtVal = (d,v)=> d.fmt ? d.fmt(v) : (Number.isInteger(d.step)? v : d.step>=0.1? v.toFixed(1): v.toFixed(2)) + d.unit;
+
+DEFS.forEach(d=>{
+  const el = document.createElement('div'); el.className='ctl'+(d.risk?' risk':'');
+  el.innerHTML = `<div class="ctl-head"><label for="in-${d.k}">${d.label}</label><span class="ctl-val" id="val-${d.k}"></span></div>
+  <div class="ctl-why">${d.why}</div>
+  <input type="range" id="in-${d.k}" min="${d.min}" max="${d.max}" step="${d.step}" value="${S[d.k]}">
+  <div class="ticks"><span>${d.ticks[0]}</span><span>${d.ticks[1]}</span></div>`;
+  $(d.g).appendChild(el);
+  const inp = el.querySelector('input');
+  inp.addEventListener('input', ()=>{ S[d.k]=parseFloat(inp.value); activePreset=null; schedule(); });
+});
+$('in-gut').addEventListener('input',()=>{ S.gut=parseFloat($('in-gut').value); schedule(); });
+function syncInputs(){
+  DEFS.forEach(d=>{ $('in-'+d.k).value=S[d.k]; $('val-'+d.k).textContent=fmtVal(d,S[d.k]); });
+  $('in-gut').value=S.gut; $('val-gut').textContent=S.gut.toFixed(1);
+  $('gut-read').innerHTML=`<b>${S.gut.toFixed(1)}</b>: ${trsWord(S.gut)}.`;
+  document.querySelectorAll('.rung').forEach(r=>r.classList.toggle('on', Math.min(10,Math.floor(S.gut))==+r.dataset.n));
+  document.querySelectorAll('[data-preset]').forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.preset===activePreset)));
+  $('preset-note').textContent = activePreset ? PRESETS[activePreset].note : 'Your own settings.';
+}
+document.querySelectorAll('[data-preset]').forEach(c=>c.addEventListener('click',()=>{ applyPreset(c.dataset.preset); activePreset=c.dataset.preset; schedule(); }));
+$('reset').addEventListener('click',()=>{ applyPreset('mainstream'); activePreset='mainstream'; schedule(); });
+
+// ---------- fixed random draws ----------
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rng = mulberry32(20260926);
+function gauss(){ let u=0,v=0; while(u===0)u=rng(); while(v===0)v=rng(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+const Z = [];
+for(let i=0;i<N;i++){ const z=[gauss(),gauss(),gauss(),gauss()]; const u=new Float32Array(T); for(let t=0;t<T;t++)u[t]=rng(); Z.push({z,u,cu:rng()}); }
+
+// ---------- engine ----------
+function adoption(t, amax, t50){ const k=2*Math.log(9)/t50; return amax/(1+Math.exp(-k*(t-t50))); }
+
+// deterministic path at central values, no risk
+function central(s, tEnd){
+  const amax=s.amax/100, E=s.exposure/100, sv=Math.min(0.95,s.saving/100), sci=s.science/100;
+  let sciLog=0; for(let t=1;t<=tEnd;t++) sciLog += sci*adoption(t,amax,s.t50)/amax;
+  const A=adoption(tEnd,amax,s.t50);
+  const taskLog = E*A*Math.log(1/(1-sv));
+  const tfpLog = taskLog+sciLog;
+  return {E, amax, A, prog:A/amax, sv, taskLog, sciLog, tfpLog, gdp:Math.exp(tfpLog*KMULT)-1, tfp:Math.exp(tfpLog)-1};
+}
+
+function simulate(s, n){
+  n = n||N;
+  const sig = s.uncert*0.7;
+  const cols=[]; for(let t=0;t<=T;t++) cols.push(new Float32Array(n));
+  const amax=s.amax/100, link=s.link/100;
+  const h0 = s.pCat>0 ? 1-Math.pow(1-s.pCat/100, 1/T) : 0;
+  for(let i=0;i<n;i++){
+    const r=Z[i];
+    const E = Math.min(1, s.exposure/100*Math.exp(sig*r.z[0]));
+    const sv = Math.min(0.95, s.saving/100*Math.exp(sig*r.z[1]));
+    const t50 = s.t50*Math.exp(sig*r.z[2]);
+    const sci = s.science/100*Math.exp(sig*r.z[3]);
+    const lnSave = Math.log(1/(1-sv));
+    let sciLog=0, surv=1, catYear=T+1; const events=[];
+    for(let t=0;t<=T;t++){
+      const A = adoption(t,amax,t50);
+      if(t>0) sciLog += sci*A/amax;
+      const m = (1-link) + link*(E*A)/FREF;
+      if(t>0){
+        if(r.u[t-1] < Math.min(1, s.pMajor/100*m)) events.push(t);
+        if(catYear>T){ surv *= 1-Math.min(1,h0*m); if(1-surv > r.cu) catYear=t; }
+      }
+      let loss=0; for(const ey of events) loss += s.sevMajor/100*Math.pow(0.5,(t-ey)/5);
+      loss=Math.min(0.95,loss);
+      let x = Math.exp((E*A*lnSave + sciLog)*KMULT)*(1-loss) - 1;
+      if(t>=catYear) x = -s.sevCat/100;
+      cols[t][i]=x;
+    }
+  }
+  return cols;
+}
+function q(sorted,p){ const i=(sorted.length-1)*p, lo=Math.floor(i), hi=Math.ceil(i); return sorted[lo]+(sorted[hi]-sorted[lo])*(i-lo); }
+function certEq(arr, s){
+  const eta=s.aversion, w=1-(s.concentration/100)*(s.discount/100); let acc=0;
+  for(let i=0;i<arr.length;i++){ let x=arr[i]; if(x>0) x*=w; const y=Math.max(0.01,1+x); acc += Math.abs(eta-1)<1e-6 ? Math.log(y) : Math.pow(y,1-eta); }
+  acc/=arr.length;
+  return Math.abs(eta-1)<1e-6 ? Math.exp(acc)-1 : Math.pow(acc,1/(1-eta))-1;
+}
+const trsOf = (v,bi)=> Math.abs(v)<1e-9 ? 1 : Math.max(1, Math.min(10, 8+Math.log10(Math.abs(v)/bi)));
+
+// ---------- formatting ----------
+const pctS = v => { const a=Math.abs(v*100); return (a>=100? Math.round(a).toLocaleString() : a.toFixed(a<10?1:0))+'%'; };
+const signed = v => (v>=0?'+':'−')+pctS(v);
+const share = v => Math.round(v*100)+'%';
+
+let lastCols=null;
+function render(){
+  const bi=S.bInternet/100, be=S.bElec/100;
+  const cols = simulate(S);
+  lastCols = cols;
+  const med=[],p10=[],p90=[];
+  for(let t=0;t<=T;t++){ const a=cols[t].slice().sort(); med.push(q(a,.5)); p10.push(q(a,.1)); p90.push(q(a,.9)); }
+  const y25=cols[T], y10=cols[10];
+  const m=med[T], lo=p10[T], hi=p90[T];
+  const trsM=trsOf(m,bi), trsLo=trsOf(Math.max(lo,1e-6),bi), trsHi=trsOf(hi,bi);
+  const neg = m<0;
+
+  // receipt
+  const c = central(S,T);
+  const rl=(o,label,sub,v,cls)=>`<div class="rl ${cls||''}"><span class="o">${o}</span><span>${label}${sub?`<small>${sub}</small>`:''}</span><span class="v">${v}</span></div>`;
+  $('receipt').innerHTML =
+    rl('','Work AI can do','step 1',share(c.E)) +
+    rl('×','Share that switches','step 1',share(c.amax)) +
+    rl('×','How far adoption has got by year 25','step 3',c.prog>0.985&&c.prog<1?(c.prog*100).toFixed(1)+'%':share(c.prog)) +
+    rl('=','Share of all work done by AI','',pctS(c.E*c.A),'sub') +
+    rl('×','Cost saving on that work','step 2',share(c.sv)) +
+    rl('=','Productivity gain from existing work','Hulten: share × saving, compounded',signed(Math.exp(c.taskLog)-1),'sub') +
+    rl('+','Productivity gain from faster invention','step 4, accumulated over 25 years',signed(Math.exp(c.sciLog)-1)) +
+    rl('×','Investment follows productivity','capital catches up: × 1 / (1 − 0.35) in logs','× 1.54') +
+    rl('=','Bigger economy in year 25, before risk','',signed(c.gdp),'total');
+
+  // headline
+  $('v-trs').textContent = trsM.toFixed(1);
+  $('v-trs-wrap').classList.toggle('harm',neg);
+  $('v-trs-sub').textContent = neg ? ' on the scale, and negative' : ' on the scale';
+  $('b-trs').innerHTML = trsM.toFixed(1) + (neg?' <small>net harm</small>':'');
+  $('b-gut').textContent = S.gut.toFixed(1);
+  const gap = trsM - S.gut;
+  let rv;
+  if(Math.abs(gap)<0.25) rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers say <b class="m">${trsM.toFixed(1)}</b>. They agree, which is rarer than you'd think.`;
+  else if(gap>0) rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers say <b class="m">${trsM.toFixed(1)}</b>. Your own assumptions are ${gap>=1?'ten times ':''}bigger than your instinct. One of them is wrong.`;
+  else rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers say <b class="m">${trsM.toFixed(1)}</b>. Your instinct is ${gap<=-1?'ten times ':''}bigger than your assumptions. Which slider were you too cautious on?`;
+  if(neg) rv += ' And in the median run, the economy ends up smaller.';
+  $('reveal').innerHTML = rv;
+  const where = trsWord(trsM);
+  $('v-line').textContent = neg
+    ? `The median run is a loss of ${pctS(m)} of GDP. Half the runs land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`
+    : `That's ${where}: the economy is ${pctS(m)} bigger than it would be without AI. Half the runs land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`;
+  $('b-line').textContent = neg ? 'Net harm' : where.charAt(0).toUpperCase()+where.slice(1);
+
+  let nNet=0,nEl=0,nH=0; for(let i=0;i<N;i++){ const v=y25[i]; if(v>bi)nNet++; if(v>be)nEl++; if(v<0)nH++; }
+  $('v-median').textContent=signed(m); $('v-p10').textContent=signed(lo); $('v-p90').textContent=signed(hi);
+  $('v-net').textContent=share(nNet/N); $('v-elec').textContent=share(nEl/N); $('v-harm').textContent=share(nH/N);
+
+  // matrix (bands in rating terms)
+  const at=r=>bi*Math.pow(10,r-8);
+  const bands=[
+    {n:'Economy smaller',s:'accidents or catastrophe outweigh gains',lo:-Infinity,hi:0,harm:true},
+    {n:'Under 7',s:`less than ${pctS(at(7))} bigger`,lo:0,hi:at(7)},
+    {n:'7 to 7.5',s:`${pctS(at(7))} to ${pctS(at(7.5))}`,lo:at(7),hi:at(7.5)},
+    {n:'7.5 to 8',s:`${pctS(at(7.5))} to ${pctS(at(8))}: up to the internet`,lo:at(7.5),hi:at(8)},
+    {n:'8 to 8.5',s:`${pctS(at(8))} to ${pctS(at(8.5))}: internet to electricity`,lo:at(8),hi:at(8.5)},
+    {n:'8.5 to 9',s:`${pctS(at(8.5))} to ${pctS(at(9))}: beyond electricity`,lo:at(8.5),hi:at(9)},
+    {n:'9 and up',s:`living standards more than double`,lo:at(9),hi:Infinity},
+  ];
+  const tb=$('matrix').querySelector('tbody'); tb.innerHTML='';
+  bands.forEach(b=>{
+    let c10=0,c25=0; for(let i=0;i<N;i++){ if(y10[i]>=b.lo&&y10[i]<b.hi)c10++; if(y25[i]>=b.lo&&y25[i]<b.hi)c25++; }
+    const tr=document.createElement('tr'); if(b.harm)tr.className='harm';
+    tr.innerHTML=`<td class="lbl">${b.n}<small>${b.s}</small></td><td class="num">${share(c10/N)}</td><td class="num">${share(c25/N)}</td><td class="bar"><div class="b" style="width:${Math.max(2,c25/N*100)}%"></div></td>`;
+    tb.appendChild(tr);
+  });
+
+  // worth it
+  const ce = certEq(y25,S);
+  $('v-ce').textContent = signed(ce);
+  $('ce-wrap').classList.toggle('harm', ce<0);
+  const eta=S.aversion;
+  $('v-ce-line').textContent = ce>=0
+    ? `Counting risk at η = ${eta.toFixed(1)} and your view on who gains, this gamble is worth the same to you as a guaranteed ${pctS(ce)} bigger economy: a ${trsOf(ce,bi).toFixed(1)} on the scale.`
+    : `Counting risk at η = ${eta.toFixed(1)} and your view on who gains, you'd accept a guaranteed ${pctS(ce)} smaller economy to avoid this gamble.`;
+
+  drawScale(S.gut,trsM,trsLo,trsHi,bi,be,neg);
+  drawCurve(med,p10,p90,bi,be);
+  lastCurve={med,p10,p90};
+  renderChecks();
+  try{ localStorage.setItem('eq-state3',JSON.stringify(S)); }catch(e){}
+  scheduleTornado();
+}
+
+function renderChecks(){
+  const a = central(PRESETS.acemoglu,10);
+  const row=(l,v)=>`<div class="check"><span>${l}</span><span class="v">${v}</span></div>`;
+  $('checks').innerHTML =
+    row('Share of tasks affected: this model / Acemoglu', `${pctS(a.E*a.A)} / 4.6%`) +
+    row('Productivity gain over 10 years: this model / Acemoglu', `${pctS(a.tfp)} / 0.66%`) +
+    row('GDP gain over 10 years: this model / Acemoglu', `${pctS(a.gdp)} / 0.93–1.16%`) +
+    row('Penn Wharton (2025): GDP by 2035 / by 2055','+1.5% / +3%') +
+    row('Goldman Sachs (2023): global GDP over 10 years','+7%');
+}
+
+let lastCurve=null;
+const FORECASTS=[['Acemoglu',0.0105],['Penn Wharton',0.029],['Goldman',0.07]];
+function drawScale(gut,trs,lo,hi,bi,be,neg){
+  const svg=$('scale'); const W=640,L=24,R=24,base=86;
+  const dmin=Math.max(1,Math.min(6,Math.floor(Math.min(gut,trs,lo)-0.2))), dmax=10;
+  const x=v=>L+(W-L-R)*(Math.max(dmin,Math.min(dmax,v))-dmin)/(dmax-dmin);
+  let g='';
+  g+=`<line x1="${L}" x2="${W-R}" y1="${base}" y2="${base}" stroke="var(--line-2)" stroke-width="2"/>`;
+  for(let v=dmin;v<=dmax;v++){ g+=`<line x1="${x(v)}" x2="${x(v)}" y1="${base-6}" y2="${base+6}" stroke="var(--ink-3)" stroke-width="1.5"/><text x="${x(v)}" y="${base+24}" text-anchor="middle" font-family="var(--mono)" font-size="15" fill="var(--ink-3)">${v}</text>`; }
+  // benchmarks
+  [[8,'Internet','var(--net)'],[trsOf(be,bi),'Electricity','var(--elec)']].forEach(([v,lab,c],i)=>{
+    const yy=base+48+i*18; g+=`<line x1="${x(v)}" x2="${x(v)}" y1="${base+30}" y2="${yy-12}" stroke="${c}" stroke-width="1.5" stroke-dasharray="3 3"/><text x="${x(v)}" y="${yy}" text-anchor="${i?'start':'end'}" dx="${i?-4:4}" font-family="var(--body)" font-size="14" font-weight="600" fill="${c}">${lab}</text>`; });
+  // forecasts
+  FORECASTS.forEach(([lab,val],i)=>{ const v=trsOf(val,bi); const yy=base+48+i*18; const anc=i===2?'start':'end';
+    g+=`<path d="M${x(v)} ${base-5} l5 5 l-5 5 l-5 -5z" fill="var(--ink-3)"/><text x="${x(v)}" dx="${i===2?-4:4}" y="${yy+36}" text-anchor="${anc}" font-family="var(--body)" font-size="13" fill="var(--ink-3)">${lab}</text><line x1="${x(v)}" x2="${x(v)}" y1="${base+30}" y2="${yy+24}" stroke="var(--ink-3)" stroke-width="1" stroke-dasharray="1 3"/>`; });
+  if(!isNaN(lo)&&!isNaN(hi)) g+=`<rect x="${x(lo)}" y="${base-14}" width="${Math.max(2,x(hi)-x(lo))}" height="28" fill="var(--ai-soft)"/>`;
+  const col = neg?'var(--harm)':'var(--ai)';
+  const close=Math.abs(x(trs)-x(gut))<80; const anc= !close?'middle' : (x(gut)>x(trs)?'end':'start'); const tx= !close? x(trs) : (x(gut)>x(trs)? x(trs)-14 : x(trs)+14);
+  g+=`<circle cx="${x(trs)}" cy="${base}" r="9" fill="${col}" stroke="var(--paper)" stroke-width="2"/><text x="${tx}" y="${base-22}" text-anchor="${anc}" font-family="var(--mono)" font-size="16" font-weight="500" fill="${col}">numbers ${trs.toFixed(1)}</text>`;
+  const gy=base-56;
+  g+=`<line x1="${x(gut)}" x2="${x(gut)}" y1="${gy+8}" y2="${base-10}" stroke="var(--gut)" stroke-width="2"/><circle cx="${x(gut)}" cy="${gy}" r="8" fill="var(--gut)" stroke="var(--paper)" stroke-width="2"/><text x="${x(gut)}" y="${gy-14}" text-anchor="middle" font-family="var(--mono)" font-size="16" font-weight="500" fill="var(--gut)">instinct ${gut.toFixed(1)}</text>`;
+  svg.innerHTML=g;
+}
+
+function drawCurve(med,p10,p90,bi,be){
+  const svg=$('curve'); const W=640,H=340,L=64,R=16,Tp=18,B=40;
+  let ymax=Math.max(bi*1.2, ...p90, 0.02), ymin=Math.min(0, ...p10);
+  if(be<ymax*1.6) ymax=Math.max(ymax,be*1.1);
+  const x=t=>L+(W-L-R)*t/T, y=v=>Tp+(H-Tp-B)*(ymax-v)/(ymax-ymin);
+  const span=ymax-ymin; const steps=[0.005,0.01,0.02,0.05,0.1,0.2,0.25,0.5,1,2,5]; const step=steps.find(s=>span/s<=6)||10;
+  let g='';
+  for(let v=Math.ceil(ymin/step)*step; v<=ymax+1e-9; v+=step){ g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L-8}" y="${y(v)+5}" text-anchor="end" font-family="var(--mono)" font-size="15" fill="var(--ink-3)">${signed(v)}</text>`; }
+  [0,5,10,15,20,25].forEach(t=>{ g+=`<text x="${x(t)}" y="${H-B+22}" text-anchor="middle" font-family="var(--mono)" font-size="15" fill="var(--ink-3)">${t===0?'now':'+'+t+'y'}</text>`; });
+  g+=`<line x1="${L}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--ink-2)" stroke-width="1"/>`;
+  const ref=(v,c,lab)=> v>ymax? '' : `<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="${c}" stroke-width="2" stroke-dasharray="4 4"/><text x="${L+6}" y="${y(v)-6}" font-family="var(--body)" font-size="15" font-weight="600" fill="${c}">${lab}</text>`;
+  g+=ref(be,'var(--elec)','Electricity')+ref(bi,'var(--net)','Internet');
+  const band = p90.map((v,t)=>`${x(t)},${y(v)}`).join(' ')+' '+p10.map((v,t)=>`${x(t)},${y(v)}`).reverse().join(' ');
+  g+=`<polygon points="${band}" fill="var(--ai-soft)" stroke="none"/>`;
+  g+=`<polyline points="${med.map((v,t)=>`${x(t)},${y(v)}`).join(' ')}" fill="none" stroke="var(--ai)" stroke-width="2.5" stroke-linejoin="round"/>`;
+  g+=`<circle cx="${x(T)}" cy="${y(med[T])}" r="4.5" fill="var(--ai)" stroke="var(--paper)" stroke-width="2"/>`;
+  g+=`<g id="hover"></g>`;
+  svg.innerHTML=g; svg._x=x; svg._y=y; svg._top=Tp; svg._bot=H-B;
+}
+
+// ---------- tornado ----------
+let tmode='size', tornTimer=null;
+document.querySelectorAll('[data-tmode]').forEach(b=>b.addEventListener('click',()=>{ tmode=b.dataset.tmode; document.querySelectorAll('[data-tmode]').forEach(c=>c.setAttribute('aria-pressed',String(c===b))); drawTornado(); }));
+function scheduleTornado(){ if(tornTimer) clearTimeout(tornTimer); tornTimer=setTimeout(drawTornado,120); }
+function drawTornado(){
+  const n=600, bi=S.bInternet/100;
+  const metric = st => { const col=simulate(st,n)[T]; if(tmode==='size'){ const a=col.slice().sort(); return trsOf(q(a,.5),bi)*(q(a,.5)<0?-1:1); } return certEq(col,st)*100; };
+  const base = metric(S);
+  const rows=[];
+  DEFS.filter(d=>d.torn || (tmode==='value' && d.valueTorn)).forEach(d=>{
+    const cur=S[d.k];
+    let loV, hiV;
+    if(cur===0){ loV=0; hiV=d.min+(d.max-d.min)/4; }
+    else { loV=Math.max(d.min,cur/2); hiV=Math.min(d.max,cur*2); }
+    if(d.k==='t50'){ /* halving years is the bullish move; keep literal halve/double */ }
+    const a=metric(Object.assign({},S,{[d.k]:loV})), b=metric(Object.assign({},S,{[d.k]:hiV}));
+    rows.push({d,lo:a-base,hi:b-base,loV,hiV});
+  });
+  rows.sort((p,r)=>Math.max(Math.abs(r.lo),Math.abs(r.hi))-Math.max(Math.abs(p.lo),Math.abs(p.hi)));
+  const svg=$('tornado'); const W=640, L=200, R=16, rowH=34, top=30; const H=top+rows.length*rowH+24;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const ext=Math.max(tmode==='size'?0.3:1, ...rows.map(r=>Math.max(Math.abs(r.lo),Math.abs(r.hi))))*1.05;
+  const inner=W-L-R-110; const cx=L+55+inner/2;
+  const x=v=>cx + (inner/2)*v/ext;
+  const tv=(d,v)=>fmtVal(d,v).replace(/ of GDP.*$/,'').replace(' pts/yr','');
+  const unit = tmode==='size' ? v=>(v>=0?'+':'−')+Math.abs(v).toFixed(1) : v=>(v>=0?'+':'−')+Math.abs(v).toFixed(Math.abs(v)<10?1:0)+' pts';
+  let g='';
+  [-ext,0,ext].forEach(v=>{ g+=`<line x1="${x(v)}" x2="${x(v)}" y1="${top-6}" y2="${H-22}" stroke="${v===0?'var(--ink-2)':'var(--line)'}" stroke-width="1"/><text x="${x(v)}" y="${top-12}" text-anchor="middle" font-family="var(--mono)" font-size="13" fill="var(--ink-3)">${v===0?(tmode==='size'?'your rating':'your worth'):unit(v)}</text>`; });
+  rows.forEach((r,i)=>{
+    const yy=top+i*rowH+8;
+    g+=`<text x="${L-10}" y="${yy+14}" text-anchor="end" font-family="var(--body)" font-size="14" fill="var(--ink)">${r.d.short}</text>`;
+    const draw=(v,c)=>{ const x0=x(Math.min(0,v)), w=Math.abs(x(v)-x(0)); g+=`<rect x="${x0}" y="${yy}" width="${Math.max(1.5,w)}" height="18" rx="2" fill="${c}"/>`; };
+    draw(r.lo,'var(--ink-3)'); draw(r.hi,'var(--ai)');
+    const leftV = r.lo<=r.hi ? r.loV : r.hiV, rightV = r.lo<=r.hi ? r.hiV : r.loV;
+    g+=`<text x="${x(Math.min(0,r.lo,r.hi))-5}" y="${yy+14}" text-anchor="end" font-family="var(--mono)" font-size="12" fill="var(--ink-3)">${tv(r.d,leftV)}</text><text x="${x(Math.max(0,r.lo,r.hi))+5}" y="${yy+14}" font-family="var(--mono)" font-size="12" fill="var(--ink-3)">${tv(r.d,rightV)}</text>`;
+  });
+  svg.innerHTML=g;
+  $('torn-cap').textContent = tmode==='size'
+    ? 'Change in the median rating when each input is halved (gray) or doubled (blue). An input at zero is raised to a quarter of its range instead. Risk inputs barely move the median, because rare events don\'t change the typical run. Switch to "Worth" to see them matter.'
+    : 'Change in the sure-thing equivalent, in percentage points of GDP, when each input is halved (gray) or doubled (blue). This measure counts rare disasters, so the risk inputs show up here.';
+}
+
+// hover / touch on curve
+(function(){
+  const svg=$('curve'), tip=$('tip'), wrap=svg.parentElement;
+  function onMove(ev){
+    if(!lastCurve) return;
+    const pt = ev.touches? ev.touches[0]: ev;
+    const r=svg.getBoundingClientRect(); const px=(pt.clientX-r.left)/r.width*640;
+    const t=Math.max(0,Math.min(25,Math.round((px-64)/(640-64-16)*25)));
+    const x=svg._x(t), y=svg._y(lastCurve.med[t]);
+    $('hover').innerHTML=`<line x1="${x}" x2="${x}" y1="${svg._top}" y2="${svg._bot}" stroke="var(--ink-3)" stroke-width="1" stroke-dasharray="2 3"/><circle cx="${x}" cy="${y}" r="5" fill="var(--ai)" stroke="var(--paper)" stroke-width="2"/>`;
+    tip.style.display='block'; tip.style.left=(Math.min(Math.max(x,110),530)/640*r.width)+'px'; tip.style.top=(y/340*r.height)+'px';
+    tip.textContent=`year ${t}: ${signed(lastCurve.med[t])} (${signed(lastCurve.p10[t])} to ${signed(lastCurve.p90[t])})`;
+    if(ev.touches) ev.preventDefault();
+  }
+  function off(){ tip.style.display='none'; const h=$('hover'); if(h) h.innerHTML=''; }
+  wrap.addEventListener('mousemove',onMove); wrap.addEventListener('mouseleave',off);
+  wrap.addEventListener('touchstart',onMove,{passive:false}); wrap.addEventListener('touchmove',onMove,{passive:false}); wrap.addEventListener('touchend',off);
+})();
+
+// copy
+$('copy').addEventListener('click',()=>{
+  const lines = DEFS.map(d=>`${d.label}: ${fmtVal(d,S[d.k])}`);
+  const txt = `My AI numbers (The Electricity Question)\nInstinct: ${S.gut.toFixed(1)}\nNumbers: ${$('v-trs').textContent}\n${$('v-line').textContent}\nWorth to me: ${$('v-ce').textContent} sure-thing equivalent\n\nInputs:\n`+lines.join('\n');
+  const box=$('copybox');
+  const done=()=>{ $('toast').textContent='Copied. Send it to whoever you\'re arguing with.'; };
+  const fallback=()=>{ box.hidden=false; box.textContent=txt; const sel=window.getSelection(), rg=document.createRange(); rg.selectNodeContents(box); sel.removeAllRanges(); sel.addRange(rg); $('toast').textContent='Select and copy the text below.'; };
+  try{ navigator.clipboard.writeText(txt).then(done,fallback); }catch(e){ fallback(); }
+});
+
+let raf=null;
+function schedule(){ syncInputs(); if(raf) cancelAnimationFrame(raf); raf=requestAnimationFrame(()=>{raf=null; render();}); }
+const h=(location.hash||'').slice(1); if(PRESETS[h]){ applyPreset(h); activePreset=h; }
+syncInputs(); render();
+})();
+</script>
+
+</body>
+</html>
