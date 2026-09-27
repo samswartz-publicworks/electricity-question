@@ -190,13 +190,13 @@ details[open] summary::after{content:"–"}
 <body>
 
 <div class="wrap">
-  <div class="eyebrow">An argument, with sliders</div>
+  <div class="eyebrow">A model, with sliders</div>
   <h1>The Electricity Question</h1>
   <p class="dek">How big is AI? As important as the internet? On par with electricity? A rounding error, like the blockchain? A lot of conversations circle back to this question. This is an attempt to help ask questions, develop potential answers, and have better conversations on the topic.</p>
   <p class="byline">A usable model and mental framework, meant to be transparent and straightforward. The core assumptions are built in as sliders, with formulas included at the bottom. You start with a gut assessment, then work through the sub-questions one at a time. As a check, the model reproduces a published estimate.</p>
 
   <p class="lede">It's really hard to have conversations about AI, and about this question in particular. People use the same words but arrive at very different answers, often because they're talking about different things.</p>
-  <p>This breaks the big question into a few smaller ones that are easier to talk about: How much of our work could AI do? How much of that will actually change? How much cheaper does it get? Could it speed up discovery itself? What could go wrong? And what might it mean for people, now and in the future? If two people land in different places, the sliders show exactly where.</p>
+  <p>This breaks the big question into a few smaller ones that are easier to talk about: How much of our work could AI do? How much of that will actually change? How much cheaper does it get? Could it speed up discovery itself? What could go wrong? And what might it mean for people, now and in the future? If two people land in different places, the sliders can help show where.</p>
 
   <h2>First, your gut</h2>
   <p>Nate Silver's Technological Richter Scale, from <em>On the Edge</em>. Like the earthquake scale, each step up is roughly ten times bigger than the one below. It measures size, not direction: Silver puts nuclear weapons at 9. Looking back from 25 years out, where does AI land?</p>
@@ -215,9 +215,9 @@ details[open] summary::after{content:"–"}
   <div class="formula">
     <span>Work AI can do</span> <span class="op">×</span> <span>share that switches</span> <span class="op">×</span> <span>how much cheaper it gets</span> <span class="op">+</span> <span>faster invention</span> <span class="op">−</span> <span>what goes wrong</span>
   </div>
-  <p>The first three terms are the standard way economists add up the effect of a new technology: if 5% of the economy's work gets 14% cheaper, the economy gets about 5% × 14% ≈ 0.7% more productive. Those are roughly Daron Acemoglu's numbers, and that calculation is the core of the case for a small effect. The question is whether any of the three numbers is too low, or whether something is missing.</p>
+  <p>The first three terms are the standard way economists add up the effect of a new technology: if 5% of the economy's work gets 14% cheaper, the economy gets about 5% × 14% ≈ 0.7% more productive. Those are roughly Daron Acemoglu's numbers, which point to a modest effect. People disagree about whether those numbers are too low, about right or too high, and whether something is missing.</p>
 
-  <p class="note">Start from one of these published positions, then adjust the sliders.</p>
+  <p class="note">Start from one of these positions, then adjust the sliders to match your own view.</p>
   <div class="presets" role="group" aria-label="Starting positions">
     <button class="chip" data-preset="acemoglu" aria-pressed="false">Acemoglu (skeptic)</button>
     <button class="chip" data-preset="mainstream" aria-pressed="true">Mainstream forecasts</button>
@@ -237,7 +237,7 @@ details[open] summary::after{content:"–"}
   <div class="group" id="g-speed"></div>
 
   <h3><span class="step">Step 4</span>Does it speed up invention itself?</h3>
-  <p class="note">Steps 1–3 describe AI doing existing work more cheaply: a one-time jump in the level of the economy. If AI also makes research faster, it raises the growth rate, and that effect compounds over time. Without it, it's hard to reach electricity-scale numbers.</p>
+  <p class="note">Steps 1–3 describe AI doing existing work more cheaply: a one-time jump in the level of the economy. If AI also makes research faster, it raises the growth rate, and that effect compounds over time. In this model, it's hard to reach electricity-scale numbers without it.</p>
   <div class="group" id="g-science"></div>
 
   <h3><span class="step">Step 5</span>What can go wrong?</h3>
@@ -249,7 +249,7 @@ details[open] summary::after{content:"–"}
   <div class="receipt" id="receipt"></div>
   <p class="note">The model then reruns this 2,000 times, each time moving your inputs up or down by the amount of uncertainty you chose, and adding incidents and catastrophes at the rates you set. That's where the results below come from.</p>
 
-  <h2 id="results">What your numbers say</h2>
+  <h2 id="results">What your numbers suggest</h2>
   <div class="verdict">
     <div class="big" id="v-trs-wrap"><span id="v-trs">–</span><small id="v-trs-sub"> on the scale</small></div>
     <div style="font-size:14px;color:var(--ink-2)">The typical result across 2,000 runs, 25 years out, placed on the scale.</div>
@@ -262,14 +262,14 @@ details[open] summary::after{content:"–"}
     <figcaption>Purple: your instinct. Blue: your numbers' typical result, with a band covering the middle 80% of runs. Below the line, in color: the historical benchmarks. In gray: published forecasts, placed the same way (horizons differ; see the checks at the bottom).</figcaption>
   </figure>
 
-  <h3>What it means for people</h3>
+  <h3>What it might mean for people</h3>
   <p class="note">What the results mean for people. Dollar figures use US output per person, about $85,000 a year today, and average pay of about $65,000.</p>
   <div class="group" id="g-people" style="margin-bottom:6px"></div>
   <table class="people" id="people" aria-label="What the results mean for people at 10 and 25 years">
     <thead><tr><th></th><th class="num">In 10 years</th><th class="num">In 25 years</th></tr></thead>
     <tbody></tbody>
   </table>
-  <p class="note" style="margin-top:10px">What the model can't tell you is who gains and who loses: which jobs change, how fast people can move to new ones, and whether the gains are shared. Those depend on choices people and governments make, which is part of why getting the size roughly right matters. When the lost pay adds up to a few months of the gains, there is enough to compensate displaced workers. Whether that happens is also a choice.</p>
+  <p class="note" style="margin-top:10px">The model can't say who gains and who loses: which jobs change, how quickly people find new ones, and how the gains are shared. Those depend on many factors, including choices by businesses and governments. Where lost pay is small next to the gains, the gains would in principle be large enough to compensate displaced workers; whether and how that happens is a separate question.</p>
 
   <details class="more">
     <summary>More detail: the range of outcomes and the path over time</summary>
@@ -354,8 +354,9 @@ details[open] summary::after{content:"–"}
       <p><b>Is it worth it.</b> Each run's gain is weighted: gains captured by a concentrated group count at <code>(1 − discount)</code>, so a gain of <code>x</code> counts as <code>x × (1 − concentration × discount)</code>. Losses count in full. Then a certainty equivalent with constant relative risk aversion <code>η</code> (the "bad outcomes" slider): <code>CE = (mean[(1 + x)^(1−η)])^(1/(1−η)) − 1</code>, which at <code>η = 1</code> is <code>exp(mean[ln(1 + x)]) − 1</code>. At <code>η = 0</code> it's the plain average.</p>
       <p><b>What it leaves out.</b></p>
       <ul>
-        <li><b>Bottlenecks.</b> Unit elasticity means cheaper tasks don't shrink as a share of the economy. If tasks are strong complements, the things AI can't do become the bottleneck (Baumol's cost disease), and large savings matter less. This is the main reason the higher estimates may be too high.</li>
+        <li><b>Bottlenecks.</b> Unit elasticity means cheaper tasks don't shrink as a share of the economy. If tasks are strong complements, the things AI can't do become the bottleneck (Baumol's cost disease), and large savings matter less. This could make the higher estimates too high.</li>
         <li><b>Who wins.</b> Wages, prices and inequality are not modeled, except through the concentration sliders.</li>
+        <li><b>New products.</b> The model counts existing work getting cheaper, plus faster invention, but not entirely new goods and services. This could make the lower estimates too low.</li>
         <li><b>Costs.</b> Energy, chips and the investment itself are treated as paid for out of the gains.</li>
         <li><b>The long run.</b> Nothing after 25 years. Slow scenarios are not finished by then.</li>
       </ul>
@@ -431,7 +432,7 @@ const DEFS = [
   {g:'g-risk',k:'sevMajor',short:'Incident cost',label:'Cost of such an incident',unit:'% of GDP',min:0,max:10,step:0.5,risk:true,torn:true,
    why:'The 2008 financial crisis cost the US roughly 4% of GDP at its trough. Covid cost about 3% in 2020. Losses fade with a five-year half-life.',ticks:['0%','10%']},
   {g:'g-risk',k:'pCat',short:'Catastrophe chance',label:'Chance of an irreversible catastrophe within 25 years',unit:'%',min:0,max:30,step:0.5,risk:true,torn:true,
-   why:'Loss of control, an engineered pandemic, AI-enabled war. In a 2023 survey, AI researchers gave a median 5% chance of outcomes as bad as human extinction, with no time limit, so a 25-year figure should be lower. Most economists put it far lower still.',ticks:['0%','30%']},
+   why:'Loss of control, an engineered pandemic, AI-enabled war. In a 2023 survey, AI researchers gave a median 5% chance of outcomes as bad as human extinction, with no time limit, so a 25-year figure should be lower. Estimates vary widely: in a 2022 forecasting tournament, AI experts put AI-caused human extinction by 2100 at about 3%, and superforecasters at about 0.4%.',ticks:['0%','30%']},
   {g:'g-risk',k:'sevCat',short:'Catastrophe cost',label:'How bad is that outcome',unit:'% of GDP, permanent',min:10,max:95,step:5,risk:true,torn:true,
    why:'95% means the economy barely survives. Lower values mean a severe but survivable catastrophe.',ticks:['−10%','−95%']},
   {g:'g-risk',k:'link',short:'Risk grows with AI',label:'Does risk grow with how much AI is doing?',unit:'%',min:0,max:100,step:5,risk:true,torn:true,
@@ -457,7 +458,7 @@ const PRESETS = {
   mainstream:{exposure:40,amax:30,saving:20,t50:10,science:0.05,pMajor:3,sevMajor:1.5,pCat:1,sevCat:50,link:50,uncert:0.5,aversion:1,concentration:40,discount:30,bInternet:10,bElec:35,
     note:'Set to land between the Penn Wharton Budget Model and Goldman Sachs forecasts: broader exposure than Acemoglu, a modest boost to invention.'},
   electricity:{exposure:50,amax:65,saving:35,t50:8,science:0.3,pMajor:4,sevMajor:2,pCat:3,sevCat:60,link:60,uncert:0.6,aversion:1,concentration:40,discount:30,bInternet:10,bElec:35,
-    note:'Half the economy\'s work exposed, most of it switches, a real boost to invention. Roughly what "on par with electricity" requires.'},
+    note:'Half the economy\'s work exposed, most of it switches, a real boost to invention. Roughly what it takes, in this model, to reach electricity-scale.'},
   transformative:{exposure:75,amax:80,saving:60,t50:6,science:1,pMajor:6,sevMajor:3,pCat:8,sevCat:80,link:80,uncert:0.5,aversion:1,concentration:60,discount:30,bInternet:10,bElec:35,
     note:'AI does most work and speeds up research sharply, with much higher risk. The world of the explosive-growth papers.'},
 };
@@ -590,15 +591,15 @@ function render(){
   $('b-gut').textContent = S.gut.toFixed(1);
   const gap = trsM - S.gut;
   let rv;
-  if(Math.abs(gap)<0.25) rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers say <b class="m">${trsM.toFixed(1)}</b>. They roughly agree.`;
-  else if(gap>0) rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers say <b class="m">${trsM.toFixed(1)}</b>. Your assumptions point ${gap>=1?'about ten times ':''}higher than your gut.`;
-  else rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers say <b class="m">${trsM.toFixed(1)}</b>. Your gut points ${gap<=-1?'about ten times ':''}higher than your assumptions.`;
+  if(Math.abs(gap)<0.25) rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers suggest <b class="m">${trsM.toFixed(1)}</b>. They roughly agree.`;
+  else if(gap>0) rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers suggest <b class="m">${trsM.toFixed(1)}</b>. Your assumptions point ${gap>=1?'about ten times ':''}higher than your gut.`;
+  else rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers suggest <b class="m">${trsM.toFixed(1)}</b>. Your gut points ${gap<=-1?'about ten times ':''}higher than your assumptions.`;
   if(neg) rv += ' And in the typical run, the economy ends up smaller.';
   $('reveal').innerHTML = rv;
   const where = trsWord(trsM);
   $('v-line').textContent = neg
     ? `The typical run is a loss of ${pctS(m)} of GDP. Half the runs land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`
-    : `That's ${where}: the economy is ${pctS(m)} bigger than it would be without AI. Half the runs land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`;
+    : `That would be ${where}: in this model, the economy ends up about ${pctS(m)} bigger than it would be without AI. Half the runs land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`;
   $('b-line').textContent = neg ? 'Net harm' : where.charAt(0).toUpperCase()+where.slice(1);
 
   let nNet=0,nEl=0,nH=0; for(let i=0;i<N;i++){ const v=y25[i]; if(v>bi)nNet++; if(v>be)nEl++; if(v<0)nH++; }
@@ -618,7 +619,7 @@ function render(){
     prow('Share of today\'s work done differently','the work AI is doing, at your settings',pctS(c10.E*c10.A),pctS(c25.E*c25.A)) +
     prow('Extra income per person, per year','typical outcome, if gains were shared evenly',usd(med[10]*GDPPC),usd(m*GDPPC)) +
     prow('The part that reaches most people',`after the ${share(1-broad)} you said a few capture`,usd(Math.max(0,med[10])*broad*GDPPC+Math.min(0,med[10])*GDPPC),usd(Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC)) +
-    prow('Workers who lose their jobs along the way',`about ${(LABOR/1e6).toFixed(0)} million people work in the US; counted in full-time jobs`,dispTxt(c10),dispTxt(c25)) +
+    prow('Workers who could lose their jobs along the way',`about ${(LABOR/1e6).toFixed(0)} million people work in the US; counted in full-time jobs`,dispTxt(c10),dispTxt(c25)) +
     prow('What each of them loses',`about 1.4 years of pay over the next 20 years, or 2.8 if it happens in a recession`,usd(1.4*PAY),usd(1.4*PAY)) +
     prow('Their total lost pay, next to one year of AI\'s gains','costs land on specific people once; gains recur every year',costTxt(c10,med[10]),costTxt(c25,m)) +
     prow('Chance things are worse than without AI','in that year: a recent incident or a catastrophe outweighs the gains',share(h10/N),share(nH/N),'harm');
@@ -650,7 +651,7 @@ function render(){
   $('ce-wrap').classList.toggle('harm', ce<0);
   const eta=S.aversion;
   $('v-ce-line').textContent = ce>=0
-    ? `Given how much weight you put on bad outcomes and who gets the gains, this is worth the same to you as a guaranteed ${pctS(ce)} bigger economy: a ${trsOf(ce,bi).toFixed(1)} on the scale.`
+    ? `Given how much weight you put on bad outcomes and who gets the gains, this would be worth about the same to you as a guaranteed ${pctS(ce)} bigger economy: a ${trsOf(ce,bi).toFixed(1)} on the scale.`
     : `Given how much weight you put on bad outcomes and who gets the gains, you'd accept a guaranteed ${pctS(ce)} smaller economy to avoid this.`;
 
   drawScale(S.gut,trsM,trsLo,trsHi,bi,be,neg);
@@ -748,14 +749,14 @@ function renderSummary(){
   const P=SUM.people||{}; const items=[];
   const usd=v=>{ const a=Math.abs(v); const r=a>=10000?Math.round(a/1000)*1000:a>=1000?Math.round(a/100)*100:Math.round(a/10)*10; return (v<0?'−':'')+'$'+r.toLocaleString(); };
   const gap=SUM.trs-SUM.gut;
-  const gapTxt=Math.abs(gap)<0.25?'Your gut said about the same.':gap>0?`Your gut said ${SUM.gut.toFixed(1)}, so your own numbers are more bullish than your instinct.`:`Your gut said ${SUM.gut.toFixed(1)}, so your instinct is more bullish than your own numbers.`;
-  items.push({t:SUM.neg?`Your numbers put AI at <b>${SUM.trs.toFixed(1)}</b> in size, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`Your numbers put AI at <b>${SUM.trs.toFixed(1)}</b> on the scale: ${SUM.where}. ${gapTxt}`});
+  const gapTxt=Math.abs(gap)<0.25?'Your gut said about the same.':gap>0?`Your gut said ${SUM.gut.toFixed(1)}, so your numbers come out higher than your gut.`:`Your gut said ${SUM.gut.toFixed(1)}, so your gut comes out higher than your numbers.`;
+  items.push({t:SUM.neg?`Your numbers suggest about <b>${SUM.trs.toFixed(1)}</b> in size, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`Your numbers suggest about <b>${SUM.trs.toFixed(1)}</b> on the scale: ${SUM.where}. ${gapTxt}`});
   if(SUM.driver) items.push({t:`Your answer depends most on <b>${lc(SUM.driver.d.short)}</b>.`});
   if(P.work!=null) items.push({t:`In 25 years, about <b>${pctS(P.work)}</b> of today's work would be done differently. That's roughly <b>${usd(P.inc)}</b> more per person each year if shared evenly, or <b>${usd(P.incBroad)}</b> for most people after what you think a few capture.`});
   if(P.nDisp>0){ const mo=P.yrGain>0?P.cost/P.yrGain*12:null; const n=P.nDisp>=1e6?(P.nDisp/1e6).toFixed(P.nDisp<1e7?1:0)+' million':Math.round(P.nDisp/1e3)+' thousand';
-    items.push({t:`About <b>${n}</b> workers would lose their jobs along the way, each losing about ${usd(P.perDisp)} in pay.`+(mo!=null?` Together that's about <b>${mo<1?'under a month':mo<24?Math.round(mo)+' months':Math.round(mo/12)+' years'}</b> of AI's yearly gains`+(mo<=4?', enough to compensate them several times over.':mo<=12?', enough to compensate them.':', a large cost next to the gains.'):'')}); }
-  items.push({t:`There's ${(P.harm||0)<0.005?'<b>under a 1%</b>':`about a <b>${share(P.harm)}</b>`} chance that, 25 years out, things are worse than without AI.`,cls:'harm'});
-  items.push({t:SUM.ce>=0?`Counting your caution about risk and who benefits, this is worth about the same to you as a guaranteed <b>${pctS(SUM.ce)}</b> bigger economy.`:`Counting your caution about risk and who benefits, you'd accept a guaranteed <b>${pctS(SUM.ce)}</b> smaller economy to avoid it.`});
+    items.push({t:`About <b>${n}</b> workers could lose their jobs along the way, each losing about ${usd(P.perDisp)} in pay.`+(mo!=null?` Together that's about <b>${mo<1?'under a month':mo<24?Math.round(mo)+' months':Math.round(mo/12)+' years'}</b> of AI's yearly gains`+(mo<=12?'. In principle, the gains could be large enough to compensate them.':'. That is a large cost next to the gains.'):'')}); }
+  items.push({t:`Your inputs imply ${(P.harm||0)<0.005?'<b>under a 1%</b>':`about a <b>${share(P.harm)}</b>`} chance that, 25 years out, things are worse than without AI.`,cls:'harm'});
+  items.push({t:SUM.ce>=0?`Counting your caution about risk and who benefits, this would be worth about the same to you as a guaranteed <b>${pctS(SUM.ce)}</b> bigger economy.`:`Counting your caution about risk and who benefits, you'd accept a guaranteed <b>${pctS(SUM.ce)}</b> smaller economy to avoid it.`});
   if(activePreset==='mainstream') items.push({t:'Your settings match the mainstream forecasts. Move a slider to see where you differ.'});
   else if(SUM.diff && Math.abs(SUM.diff.delta)>=0.05){ const D=SUM.diff; items.push({t:`Of the ways you differ from mainstream forecasts, the one that matters most is <b>${lc(D.d.short)}</b> (you: ${fmtVal(D.d,D.mine)}; mainstream: ${fmtVal(D.d,D.theirs)}). That alone moves your answer ${D.delta>0?'up':'down'} by ${Math.abs(D.delta).toFixed(1)} on the scale.`}); }
   $('summary').innerHTML=items.map(i=>`<li class="${i.cls||''}">${i.t}</li>`).join('');
