@@ -144,12 +144,17 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .qlist{margin:0 0 16px;padding-left:22px;font-size:17px;max-width:62ch}
 .qlist li{margin-bottom:8px;padding-left:4px}
 .qlist li::marker{color:var(--ink-3);font-family:var(--mono);font-size:.85em}
+.implic-h{margin:22px 0 6px}
+.implic{margin:0 0 8px;padding-left:22px;max-width:62ch}
+.implic li{margin-bottom:10px}
+.implic li::marker{color:var(--ink-3)}
 .summary{list-style:none;margin:12px 0 8px;padding:0;border-top:3px solid var(--ink)}
 .summary li{font-family:var(--display);font-size:19px;line-height:1.4;padding:12px 0 12px 22px;border-bottom:1px solid var(--line);position:relative}
 .summary li::before{content:"";position:absolute;left:2px;top:22px;width:8px;height:8px;border-radius:50%;background:var(--ink-3)}
 .summary li.harm::before{background:var(--harm)}
 .summary li b{font-weight:600}
 details.more{margin-top:22px;border-bottom:1px solid var(--line)}
+details.more.calc{margin-top:4px;margin-bottom:10px}
 .more-body{padding-bottom:14px}
 .people{width:100%;border-collapse:collapse;font-size:15.5px;margin-top:10px}
 .people th,.people td{padding:10px 6px;text-align:left;border-bottom:1px solid var(--line);vertical-align:baseline}
@@ -215,13 +220,13 @@ details[open] summary::after{content:"–"}
     <span>On par with electricity?</span>
     <span>A rounding error with some useful applications, like the blockchain?</span>
   </div>
-  <p class="purpose">A lot of conversations circle back to this question. This is an attempt to make that question easier to ask, answer, and discuss.</p>
+  <p class="purpose">A lot of conversations circle back to this question. The aim isn't a single forecast. It's to make the assumptions behind different views easier to see, test and discuss, and to show what those views would mean if they were right.</p>
   <div class="whatis">
     <div class="whatis-h"><b>What this is</b></div>
     <ul>
       <li>A usable, transparent model and mental framework</li>
-      <li>Core assumptions are sliders; the formulas are at the bottom</li>
-      <li>Starts with your gut, then turns your answers into estimates and compares them with published ones</li>
+      <li>Core assumptions are sliders; formulas are available below</li>
+      <li>Give AI a gut rating, answer a few questions, and see whether your answers imply something bigger or smaller, and how that compares with published estimates</li>
     </ul>
   </div>
 
@@ -248,11 +253,9 @@ details[open] summary::after{content:"–"}
   </div>
 
   <h2>Breaking down the question</h2>
-  <p>Economists often model the economy as a long list of tasks (drafting a contract, answering a customer, reading a scan) and ask what happens when some get cheaper.</p>
-  <p>The standard version multiplies three things: the share of work AI can do, the share that actually switches over, and how much cheaper it gets.</p>
-  <p>Acemoglu's 2024 estimate was modest: roughly 1 percent of GDP over 10 years. Others put the numbers higher, and some argue the calculation leaves things out.</p>
+  <p>Economists often model the economy as a long list of tasks (drafting a contract, answering a customer, reading a scan) and ask what happens when some get cheaper. The standard approach combines how much work AI can do, how much actually switches over, and how much cheaper it becomes.</p>
 
-  <p class="note">Start from one of these positions, then adjust the sliders to match your own view.</p>
+  <p class="note">Start from one of these views, then adjust the assumptions to match yours.</p>
   <div class="presets" role="group" aria-label="Starting positions">
     <button class="chip" data-preset="acemoglu" aria-pressed="false">Acemoglu (skeptic)</button>
     <button class="chip" data-preset="mainstream" aria-pressed="true">Mainstream forecasts</button>
@@ -279,11 +282,6 @@ details[open] summary::after{content:"–"}
   <p class="note">The red sliders set the risks.</p>
   <div class="group" id="g-risk"></div>
 
-  <h2>Your answers, multiplied out</h2>
-  <p class="note">What your settings imply 25 years from now, before accounting for risk.</p>
-  <div class="receipt" id="receipt"></div>
-  <p class="note">The model runs 2,000 simulations, varying your inputs by the uncertainty you chose and adding incidents and catastrophes at the rates you set. The results below come from those runs.</p>
-
   <h2 id="results">What your answers suggest</h2>
   <div class="verdict">
     <div class="big" id="v-trs-wrap"><span id="v-trs">–</span><small id="v-trs-sub"> on the scale</small></div>
@@ -296,6 +294,14 @@ details[open] summary::after{content:"–"}
     <div class="chart-wrap"><svg id="scale" viewBox="0 0 640 190" role="img" aria-label="Your rating, your model's result, historical benchmarks and published forecasts on the Richter scale"></svg></div>
     <figcaption>Purple is your gut assessment. Blue is the typical model result, with a band covering the middle 80% of runs. Historical benchmarks are in color below the line; published forecasts are gray. Horizons differ; see the checks below.</figcaption>
   </figure>
+  <p class="note"><b>How this is calculated:</b> the model runs your assumptions 2,000 times, varying them by the uncertainty you chose and adding incidents and catastrophes at the rates you set.</p>
+  <details class="more calc">
+    <summary>Your answers, multiplied out</summary>
+    <div class="more-body">
+      <p class="note">What your settings imply 25 years from now, before accounting for risk.</p>
+      <div class="receipt" id="receipt"></div>
+    </div>
+  </details>
 
   <h3>What it might mean for people</h3>
   <p class="note">Dollar figures use today's US output per person (about $85,000) and average pay (about $65,000).</p>
@@ -356,6 +362,8 @@ details[open] summary::after{content:"–"}
   <h2 id="summary-h">In short</h2>
   <p class="note">A plain-language summary that updates as you move the sliders. This is what "Copy my answers" copies.</p>
   <ul class="summary" id="summary"></ul>
+  <p class="implic-h"><b>Questions your answers raise</b></p>
+  <ul class="implic" id="implic"></ul>
 
   <div class="dgroup">
   <details>
@@ -795,6 +803,14 @@ function renderSummary(){
   if(activePreset==='mainstream') items.push({t:'Your settings match the mainstream forecasts. Move a slider to see where you differ.'});
   else if(SUM.diff && Math.abs(SUM.diff.delta)>=0.05){ const D=SUM.diff; items.push({t:`Of the ways you differ from mainstream forecasts, the one that matters most is <b>${lc(D.d.short)}</b> (you: ${fmtVal(D.d,D.mine)}; mainstream: ${fmtVal(D.d,D.theirs)}). That alone moves your answer ${D.delta>0?'up':'down'} by ${Math.abs(D.delta).toFixed(1)} on the scale.`}); }
   $('summary').innerHTML=items.map(i=>`<li class="${i.cls||''}">${i.t}</li>`).join('');
+  // diagnostic questions, not recommendations: at most three, drawn from the user's own numbers
+  const qs=[];
+  if(P.inc>=500) qs.push(`Your answers imply about ${usd(P.inc)} more per person a year by year 25. What would a year's delay cost, and what would moving faster risk?`);
+  if((P.harm||0)>=0.01) qs.push(`Your answers imply about a ${share(P.harm)} chance things end up worse than without AI. How much of the gains would you give up to cut that chance in half?`);
+  const distQ = S.concentration>=50;
+  if(P.nDisp>=1e6 && !(distQ && qs.length>=2)){ const n=(P.nDisp/1e6).toFixed(P.nDisp<1e7?1:0)+' million'; qs.push(`About ${n} people could lose their jobs along the way. Who should bear that cost, and how?`); }
+  if(S.concentration>=30 && (distQ || qs.length<3)) qs.push(`You expect about ${S.concentration}% of the gains to go to a few firms or countries. Does the same total look different depending on who gets it?`);
+  $('implic').innerHTML=qs.slice(0,3).map(q=>`<li>${q}</li>`).join('');
 }
 function drawTornado(){
   const n=600, bi=S.bInternet/100;
@@ -856,7 +872,7 @@ function drawTornado(){
 // copy
 $('copy').addEventListener('click',()=>{
   const lines = DEFS.map(d=>`${d.label}: ${fmtVal(d,S[d.k])}`);
-  const bullets=[...document.querySelectorAll('#summary li')].map(li=>'• '+li.textContent).join('\n');
+  const bullets=[...document.querySelectorAll('#summary li')].map(li=>'• '+li.textContent).join('\n')+'\n\nQuestions my answers raise:\n'+[...document.querySelectorAll('#implic li')].map(li=>'• '+li.textContent).join('\n');
   const txt = `My answers to The Electricity Question\n${location.href.split('#')[0]}\n\n${bullets}\n\nMy settings:\n`+lines.join('\n');
   const box=$('copybox');
   const done=()=>{ $('toast').textContent='Copied. Send it to whoever you\'re arguing with.'; };
