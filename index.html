@@ -266,12 +266,13 @@ details[open] summary::after{content:"–"}
   </div>
 
   <h3>What it means for people</h3>
-  <p class="note">The same results, in human terms. Dollar figures use US output per person, about $85,000 a year today.</p>
+  <p class="note">The same results, in human terms. Dollar figures use US output per person, about $85,000 a year today, and average pay of about $65,000.</p>
+  <div class="group" id="g-people" style="margin-bottom:6px"></div>
   <table class="people" id="people" aria-label="What the results mean for people at 10 and 25 years">
     <thead><tr><th></th><th class="num">In 10 years</th><th class="num">In 25 years</th></tr></thead>
     <tbody></tbody>
   </table>
-  <p class="note" style="margin-top:10px">What the model can't tell you is who gains and who loses: which jobs change, how fast people can move to new ones, and whether the gains are shared. Those depend on choices people and governments make, which is part of why getting the size roughly right matters.</p>
+  <p class="note" style="margin-top:10px">What the model can't tell you is who gains and who loses: which jobs change, how fast people can move to new ones, and whether the gains are shared. Those depend on choices people and governments make, which is part of why getting the size roughly right matters. When the lost pay adds up to a few months of the gains, the economy can afford to make displaced workers whole. Whether it does is one of those choices.</p>
 
   <h3>Where the runs land</h3>
   <p class="note">Each band is one half-step on the scale, which is roughly a tripling in size.</p>
@@ -422,6 +423,8 @@ const DEFS = [
    why:'At 0, the chances above are fixed. At 100%, they are the chances for an AI doing a fifth of the economy\'s work, and double if it does twice that. This keeps optimists honest: a bigger AI is also a riskier one.',ticks:['fixed','fully linked']},
   {g:'g-risk',k:'uncert',label:'How sure are you about all of the above?',unit:'',min:0.1,max:1,step:0.05,fmt:v=>v<=0.3?'very sure':v<=0.6?'somewhat sure':'wide open',
    why:'How much each run nudges your inputs. At "very sure" the runs cluster around your numbers. At "wide open," a typical run has each input off by a factor of two.',ticks:['very sure','wide open']},
+  {g:'g-people',k:'displace',label:'Of the work AI takes over, how much means someone loses their job?',unit:'%',min:0,max:100,step:5,
+   why:'The rest is jobs that change but don\'t disappear, like an accountant who now uses AI for the routine parts. Only the job losses below depend on this; it doesn\'t change the size of the economy.',ticks:['0%','100%']},
   {g:'g-values',k:'aversion',short:'Risk aversion',label:'How much do you fear bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>'η = '+v.toFixed(1),valueTorn:true,
    why:'Relative risk aversion, the standard measure. 0 cares only about the average. Economists typically use 1 to 2 for household decisions. Higher values let a small chance of disaster dominate.',ticks:['only the average','very cautious']},
   {g:'g-values',k:'concentration',short:'Concentration',label:'Share of the gains captured by a few firms or countries',unit:'%',min:0,max:100,step:5,valueTorn:true,
@@ -443,10 +446,11 @@ const PRESETS = {
   transformative:{exposure:75,amax:80,saving:60,t50:6,science:1,pMajor:6,sevMajor:3,pCat:8,sevCat:80,link:80,uncert:0.5,aversion:1,concentration:60,discount:30,bInternet:10,bElec:35,
     note:'AI does most work and speeds up research sharply, with much higher risk. The world of the explosive-growth papers.'},
 };
-function applyPreset(name){ const p=PRESETS[name]; const gut=S?S.gut:7.5; S={gut}; for(const k in p){ if(k!=='note') S[k]=p[k]; } }
+function applyPreset(name){ const p=PRESETS[name]; const gut=S?S.gut:7.5; const displace=(S&&S.displace!=null)?S.displace:25; S={gut,displace}; for(const k in p){ if(k!=='note') S[k]=p[k]; } }
 let S=null; applyPreset('mainstream');
 try{ const saved = JSON.parse(localStorage.getItem('eq-state3')||'null'); if(saved && typeof saved==='object'){ S = Object.assign({}, S, saved); var loadedSaved=true; } }catch(e){}
 let activePreset = (typeof loadedSaved!=='undefined') ? null : 'mainstream';
+if(S.displace==null) S.displace=25;
 
 const fmtVal = (d,v)=> d.fmt ? d.fmt(v) : (Number.isInteger(d.step)? v : d.step>=0.1? v.toFixed(1): v.toFixed(2)) + d.unit;
 
@@ -586,7 +590,11 @@ function render(){
   $('v-median').textContent=signed(m); $('v-p10').textContent=signed(lo); $('v-p90').textContent=signed(hi);
   $('v-net').textContent=share(nNet/N); $('v-elec').textContent=share(nEl/N); $('v-harm').textContent=share(nH/N);
   // what it means for people
-  const GDPPC=85000, broad=1-S.concentration/100;
+  const GDPPC=85000, broad=1-S.concentration/100, LABOR=170e6, PAY=65000, GDPUS=GDPPC*340e6;
+  const displaced=c=>c.E*c.A*(S.displace/100);
+  const dispTxt=c=>{ const d=displaced(c); const n=d*LABOR; return `${pctS(d)} · ${n>=1e6?(n/1e6).toFixed(n<1e7?1:0)+' million':Math.round(n/1e3)+' thousand'}`; };
+  const bn=v=>v>=1e12?'$'+(v/1e12).toFixed(1)+' trillion':'$'+Math.round(v/1e9)+' billion';
+  const costTxt=(c,gain)=>{ const cost=displaced(c)*LABOR*1.4*PAY; if(cost<=0) return '$0'; const yr=gain*GDPUS; if(yr<=0) return bn(cost)+' · no gain to offset'; const mo=cost/yr*12; return `${bn(cost)} · ${mo<1?'under a month':mo<24?Math.round(mo)+' months':(mo/12).toFixed(0)+' years'} of gains`; };
   const c10=central(S,10), c25=central(S,T);
   let h10=0; for(let i=0;i<N;i++){ if(y10[i]<0)h10++; }
   const usd=v=>{ const a=Math.abs(v); const r=a>=10000?Math.round(a/1000)*1000:a>=1000?Math.round(a/100)*100:Math.round(a/10)*10; return (v<0?'−':'')+'$'+r.toLocaleString(); };
@@ -595,6 +603,9 @@ function render(){
     prow('Share of today\'s work done differently','the work AI is doing, at your settings',pctS(c10.E*c10.A),pctS(c25.E*c25.A)) +
     prow('Extra income per person, per year','typical outcome, if gains were shared evenly',usd(med[10]*GDPPC),usd(m*GDPPC)) +
     prow('The part that reaches most people',`after the ${share(1-broad)} you said a few capture`,usd(Math.max(0,med[10])*broad*GDPPC+Math.min(0,med[10])*GDPPC),usd(Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC)) +
+    prow('Workers who lose their jobs along the way',`about ${(LABOR/1e6).toFixed(0)} million people work in the US; counted in full-time jobs`,dispTxt(c10),dispTxt(c25)) +
+    prow('What each of them loses',`about 1.4 years of pay over the next 20 years, or 2.8 if it happens in a recession`,usd(1.4*PAY),usd(1.4*PAY)) +
+    prow('Their total lost pay, next to one year of AI\'s gains','costs land on specific people once; gains recur every year',costTxt(c10,med[10]),costTxt(c25,m)) +
     prow('Chance things are worse than without AI','in that year: a recent incident or a catastrophe outweighs the gains',share(h10/N),share(nH/N),'harm');
 
   // matrix (bands in rating terms)
