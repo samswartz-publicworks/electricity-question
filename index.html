@@ -237,12 +237,12 @@ details[open] summary::after{content:"–"}
   <p class="fn-host">These questions form the basis of <b>the <span class="fn" tabindex="0" role="button" aria-describedby="fn-model">model<span class="fn-pop" id="fn-model" role="tooltip"><b>The model, in one line</b>Work AI can do × share that switches × how much cheaper it gets + faster invention − what goes wrong</span></span></b>. The approach is adapted from the work of economists Charles Hulten and Daron Acemoglu, with two additions: it allows for AI to speed up discovery itself, and for things to go badly wrong.</p>
 
   <h2>First, your gut assessment</h2>
-  <p>Before working through the questions, where would you put AI, looking back from 25 years out? At the end, your answer is compared with what your numbers suggest.</p>
+  <p>Before working through the questions, where would you put AI, looking back from 25 years out? At the end, your answer is compared with what your answers suggest.</p>
   <p>The scale is Nate Silver's Technological Richter Scale, from <em>On the Edge</em>. Like the earthquake scale, each step up is roughly ten times bigger than the one below. It measures size, not direction: Silver puts nuclear weapons at 9.</p>
   <div class="ladder" id="ladder"></div>
   <div class="gutbox">
     <div class="ctl gut">
-      <div class="ctl-head"><label for="in-gut">Your rating for AI, instinct only</label><span class="ctl-val" id="val-gut"></span></div>
+      <div class="ctl-head"><label for="in-gut">Your gut assessment</label><span class="ctl-val" id="val-gut"></span></div>
       <input type="range" id="in-gut" min="1" max="10" step="0.1" value="7.5">
       <div class="ticks"><span>1 shower thought</span><span>10 new epoch</span></div>
       <div class="gut-read" id="gut-read"></div>
@@ -263,30 +263,30 @@ details[open] summary::after{content:"–"}
   </div>
   <div class="preset-note" id="preset-note"></div>
 
-  <h3><span class="step">Step 1</span>How much of the economy's work can AI do?</h3>
+  <h3><span class="step">Step 1</span>How much of our work could AI do, and how much would actually change?</h3>
   <div class="group" id="g-reach"></div>
 
-  <h3><span class="step">Step 2</span>How much cheaper does that work get?</h3>
+  <h3><span class="step">Step 2</span>How much cheaper would that work get?</h3>
   <div class="group" id="g-saving"></div>
 
-  <h3><span class="step">Step 3</span>How fast?</h3>
+  <h3><span class="step">Step 3</span>How fast would it change?</h3>
   <p class="note">Electricity took about forty years to rewire factories. The internet took about ten to reach half of US households.</p>
   <div class="group" id="g-speed"></div>
 
-  <h3><span class="step">Step 4</span>Does it speed up invention itself?</h3>
+  <h3><span class="step">Step 4</span>Could it speed up discovery and invention?</h3>
   <p class="note">Steps 1–3 describe AI doing existing work more cheaply: a one-time jump in the level of the economy. If AI also makes research faster, it raises the growth rate, and that effect compounds over time. In this model, it's hard to reach electricity-scale numbers without it.</p>
   <div class="group" id="g-science"></div>
 
-  <h3><span class="step">Step 5</span>What can go wrong?</h3>
+  <h3><span class="step">Step 5</span>What could go wrong?</h3>
   <p class="note">The red sliders set the risks.</p>
   <div class="group" id="g-risk"></div>
 
-  <h2>Your numbers, multiplied out</h2>
-  <p class="note">The arithmetic at your central values, 25 years from now, before anything goes wrong.</p>
+  <h2>Your answers, multiplied out</h2>
+  <p class="note">The arithmetic at your settings, 25 years from now, before anything goes wrong.</p>
   <div class="receipt" id="receipt"></div>
   <p class="note">The model then reruns this 2,000 times, each time moving your inputs up or down by the amount of uncertainty you chose, and adding incidents and catastrophes at the rates you set. That's where the results below come from.</p>
 
-  <h2 id="results">What your numbers suggest</h2>
+  <h2 id="results">What your answers suggest</h2>
   <div class="verdict">
     <div class="big" id="v-trs-wrap"><span id="v-trs">–</span><small id="v-trs-sub"> on the scale</small></div>
     <div style="font-size:14px;color:var(--ink-2)">The typical result across 2,000 runs, 25 years out, placed on the scale.</div>
@@ -296,17 +296,17 @@ details[open] summary::after{content:"–"}
 
   <figure>
     <div class="chart-wrap"><svg id="scale" viewBox="0 0 640 190" role="img" aria-label="Your rating, your model's result, historical benchmarks and published forecasts on the Richter scale"></svg></div>
-    <figcaption>Purple: your instinct. Blue: your numbers' typical result, with a band covering the middle 80% of runs. Below the line, in color: the historical benchmarks. In gray: published forecasts, placed the same way (horizons differ; see the checks at the bottom).</figcaption>
+    <figcaption>Purple: your gut assessment. Blue: your answers' typical result, with a band covering the middle 80% of runs. Below the line, in color: the historical benchmarks. In gray: published forecasts, placed the same way (horizons differ; see the checks at the bottom).</figcaption>
   </figure>
 
   <h3>What it might mean for people</h3>
-  <p class="note">What the results mean for people. Dollar figures use US output per person, about $85,000 a year today, and average pay of about $65,000.</p>
+  <p class="note">Dollar figures use US output per person, about $85,000 a year today, and average pay of about $65,000.</p>
   <div class="group" id="g-people" style="margin-bottom:6px"></div>
   <table class="people" id="people" aria-label="What the results mean for people at 10 and 25 years">
     <thead><tr><th></th><th class="num">In 10 years</th><th class="num">In 25 years</th></tr></thead>
     <tbody></tbody>
   </table>
-  <p class="note" style="margin-top:10px">The model can't say who gains and who loses: which jobs change, how quickly people find new ones, and how the gains are shared. Those depend on many factors, including choices by businesses and governments. Where lost pay is small next to the gains, the gains would in principle be large enough to compensate displaced workers; whether and how that happens is a separate question.</p>
+  <p class="note" style="margin-top:10px">The model can't say who gains and who loses: which jobs change, how quickly people find new ones, or how gains are shared. Those depend on choices by businesses and governments, among other things.</p>
 
   <details class="more">
     <summary>More detail: the range of outcomes and the path over time</summary>
@@ -336,14 +336,6 @@ details[open] summary::after{content:"–"}
     </div>
   </details>
 
-  <h2>Is it worth it?</h2>
-  <p>The sections above measure how big AI is. Whether that's good also depends on your values. Two matter most here: how much weight you give to bad outcomes, and who you think gets the gains.</p>
-  <div class="group" id="g-values"></div>
-  <div class="verdict2">
-    <div class="big" id="ce-wrap"><span id="v-ce">–</span><small> as a guaranteed gain</small></div>
-    <p class="verdict-line" id="v-ce-line" style="margin-bottom:0">–</p>
-  </div>
-
   <h2>What actually moves the answer</h2>
   <p class="note">Each assumption halved and doubled, with everything else held at your settings. A longer bar means your answer depends more on that assumption.</p>
   <div class="toggle" role="group" aria-label="Measure">
@@ -352,10 +344,18 @@ details[open] summary::after{content:"–"}
   </div>
   <figure>
     <div class="chart-wrap"><svg id="tornado" viewBox="0 0 640 420" role="img" aria-label="Sensitivity of the result to each assumption"></svg></div>
-    <figcaption id="torn-cap">Change in the median rating when each input is halved (gray) or doubled (blue). An input set to zero is raised to a quarter of its range instead.</figcaption>
+    <figcaption id="torn-cap">Change in the rating when each input is halved (gray) or doubled (blue). An input set to zero is raised to a quarter of its range instead.</figcaption>
   </figure>
 
-  <h2 id="summary-h">What your answers suggest</h2>
+  <h2>Is it worth it?</h2>
+  <p>The sections above measure how big AI is. Whether that's good also depends on your values. Two matter most here: how much weight you give to bad outcomes, and who you think gets the gains.</p>
+  <div class="group" id="g-values"></div>
+  <div class="verdict2">
+    <div class="big" id="ce-wrap"><span id="v-ce">–</span><small> as a guaranteed gain</small></div>
+    <p class="verdict-line" id="v-ce-line" style="margin-bottom:0">–</p>
+  </div>
+
+  <h2 id="summary-h">In short</h2>
   <p class="note">A plain-language summary of everything above. It updates as you move the sliders, and it's what "Copy my answers" copies.</p>
   <ul class="summary" id="summary"></ul>
 
@@ -413,7 +413,7 @@ details[open] summary::after{content:"–"}
 
 <div class="bar" aria-live="polite">
   <div class="bar-in">
-    <div><div class="bar-l">Instinct <span id="b-gut">–</span> · Your numbers</div><div class="bar-n" id="b-trs">–</div></div>
+    <div><div class="bar-l">Gut <span id="b-gut">–</span> · Your answers</div><div class="bar-n" id="b-trs">–</div></div>
     <div class="bar-r"><span id="b-line">–</span><br><a href="#results">see results</a></div>
   </div>
 </div>
@@ -475,7 +475,7 @@ const DEFS = [
   {g:'g-risk',k:'link',short:'Risk grows with AI',label:'Does risk grow with how much AI is doing?',unit:'%',min:0,max:100,step:5,risk:true,torn:true,
    why:'At 0, the chances above are fixed. At 100%, they are the chances for an AI doing a fifth of the economy\'s work, and double if it does twice that. Use this if you think a more capable, more widely used AI also carries more risk.',ticks:['fixed','fully linked']},
   {g:'g-risk',k:'uncert',label:'How sure are you about all of the above?',unit:'',min:0.1,max:1,step:0.05,fmt:v=>v<=0.3?'very sure':v<=0.6?'somewhat sure':'wide open',
-   why:'How much each run nudges your inputs. At "very sure" the runs cluster around your numbers. At "wide open," a typical run has each input off by a factor of two.',ticks:['very sure','wide open']},
+   why:'How much each run nudges your inputs. At "very sure" the runs cluster around your answers. At "wide open," a typical run has each input off by a factor of two.',ticks:['very sure','wide open']},
   {g:'g-people',k:'displace',label:'Of the work AI takes over, how much means someone loses their job?',unit:'%',min:0,max:100,step:5,
    why:'The rest is jobs that change but don\'t disappear, like an accountant who now uses AI for the routine parts. Only the job losses below depend on this; it doesn\'t change the size of the economy.',ticks:['0%','100%']},
   {g:'g-values',k:'aversion',short:'Risk aversion',label:'How much do you fear bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>v.toFixed(1)+(v<0.5?' · average only':v<=2?' · typical':v<=3.5?' · cautious':' · very cautious'),valueTorn:true,
@@ -628,9 +628,9 @@ function render(){
   $('b-gut').textContent = S.gut.toFixed(1);
   const gap = trsM - S.gut;
   let rv;
-  if(Math.abs(gap)<0.25) rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers suggest <b class="m">${trsM.toFixed(1)}</b>. They roughly agree.`;
-  else if(gap>0) rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers suggest <b class="m">${trsM.toFixed(1)}</b>. Your assumptions point ${gap>=1?'about ten times ':''}higher than your gut.`;
-  else rv = `Your instinct said <b class="g">${S.gut.toFixed(1)}</b>. Your numbers suggest <b class="m">${trsM.toFixed(1)}</b>. Your gut points ${gap<=-1?'about ten times ':''}higher than your assumptions.`;
+  if(Math.abs(gap)<0.25) rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. Your answers suggest <b class="m">${trsM.toFixed(1)}</b>. They roughly agree.`;
+  else if(gap>0) rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. Your answers suggest <b class="m">${trsM.toFixed(1)}</b>. Your assumptions point ${gap>=1?'about ten times ':''}higher than your gut.`;
+  else rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. Your answers suggest <b class="m">${trsM.toFixed(1)}</b>. Your gut points ${gap<=-1?'about ten times ':''}higher than your assumptions.`;
   if(neg) rv += ' And in the typical run, the economy ends up smaller.';
   $('reveal').innerHTML = rv;
   const where = trsWord(trsM);
@@ -730,9 +730,9 @@ function drawScale(gut,trs,lo,hi,bi,be,neg){
   if(!isNaN(lo)&&!isNaN(hi)) g+=`<rect x="${x(lo)}" y="${base-14}" width="${Math.max(2,x(hi)-x(lo))}" height="28" fill="var(--ai-soft)"/>`;
   const col = neg?'var(--harm)':'var(--ai)';
   const close=Math.abs(x(trs)-x(gut))<80; const anc= !close?'middle' : (x(gut)>x(trs)?'end':'start'); const tx= !close? x(trs) : (x(gut)>x(trs)? x(trs)-14 : x(trs)+14);
-  g+=`<circle cx="${x(trs)}" cy="${base}" r="9" fill="${col}" stroke="var(--paper)" stroke-width="2"/><text x="${tx}" y="${base-22}" text-anchor="${anc}" font-family="var(--mono)" font-size="16" font-weight="500" fill="${col}">numbers ${trs.toFixed(1)}</text>`;
+  g+=`<circle cx="${x(trs)}" cy="${base}" r="9" fill="${col}" stroke="var(--paper)" stroke-width="2"/><text x="${tx}" y="${base-22}" text-anchor="${anc}" font-family="var(--mono)" font-size="16" font-weight="500" fill="${col}">answers ${trs.toFixed(1)}</text>`;
   const gy=base-56;
-  g+=`<line x1="${x(gut)}" x2="${x(gut)}" y1="${gy+8}" y2="${base-10}" stroke="var(--gut)" stroke-width="2"/><circle cx="${x(gut)}" cy="${gy}" r="8" fill="var(--gut)" stroke="var(--paper)" stroke-width="2"/><text x="${x(gut)}" y="${gy-14}" text-anchor="middle" font-family="var(--mono)" font-size="16" font-weight="500" fill="var(--gut)">instinct ${gut.toFixed(1)}</text>`;
+  g+=`<line x1="${x(gut)}" x2="${x(gut)}" y1="${gy+8}" y2="${base-10}" stroke="var(--gut)" stroke-width="2"/><circle cx="${x(gut)}" cy="${gy}" r="8" fill="var(--gut)" stroke="var(--paper)" stroke-width="2"/><text x="${x(gut)}" y="${gy-14}" text-anchor="middle" font-family="var(--mono)" font-size="16" font-weight="500" fill="var(--gut)">gut ${gut.toFixed(1)}</text>`;
   svg.innerHTML=g;
 }
 
@@ -786,8 +786,8 @@ function renderSummary(){
   const P=SUM.people||{}; const items=[];
   const usd=v=>{ const a=Math.abs(v); const r=a>=10000?Math.round(a/1000)*1000:a>=1000?Math.round(a/100)*100:Math.round(a/10)*10; return (v<0?'−':'')+'$'+r.toLocaleString(); };
   const gap=SUM.trs-SUM.gut;
-  const gapTxt=Math.abs(gap)<0.25?'Your gut said about the same.':gap>0?`Your gut said ${SUM.gut.toFixed(1)}, so your numbers come out higher than your gut.`:`Your gut said ${SUM.gut.toFixed(1)}, so your gut comes out higher than your numbers.`;
-  items.push({t:SUM.neg?`Your numbers suggest about <b>${SUM.trs.toFixed(1)}</b> in size, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`Your numbers suggest about <b>${SUM.trs.toFixed(1)}</b> on the scale: ${SUM.where}. ${gapTxt}`});
+  const gapTxt=Math.abs(gap)<0.25?'Your gut said about the same.':gap>0?`Your gut said ${SUM.gut.toFixed(1)}, so your answers come out higher than your gut.`:`Your gut said ${SUM.gut.toFixed(1)}, so your gut comes out higher than your answers.`;
+  items.push({t:SUM.neg?`Your answers suggest about <b>${SUM.trs.toFixed(1)}</b> in size, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`Your answers suggest about <b>${SUM.trs.toFixed(1)}</b> on the scale: ${SUM.where}. ${gapTxt}`});
   if(SUM.driver) items.push({t:`Your answer depends most on <b>${lc(SUM.driver.d.short)}</b>.`});
   if(P.work!=null) items.push({t:`In 25 years, about <b>${pctS(P.work)}</b> of today's work would be done differently. That's roughly <b>${usd(P.inc)}</b> more per person each year if shared evenly, or <b>${usd(P.incBroad)}</b> for most people after what you think a few capture.`});
   if(P.nDisp>0){ const mo=P.yrGain>0?P.cost/P.yrGain*12:null; const n=P.nDisp>=1e6?(P.nDisp/1e6).toFixed(P.nDisp<1e7?1:0)+' million':Math.round(P.nDisp/1e3)+' thousand';
