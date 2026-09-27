@@ -127,6 +127,13 @@ figcaption{font-size:14px;color:var(--ink-2);margin-top:8px;max-width:62ch}
 svg{display:block;width:100%;height:auto;overflow:visible}
 .chart-wrap{position:relative}
 .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font:13px var(--mono);padding:6px 8px;border-radius:4px;white-space:nowrap;transform:translate(-50%,-110%);display:none}
+.summary{list-style:none;margin:12px 0 8px;padding:0;border-top:3px solid var(--ink)}
+.summary li{font-family:var(--display);font-size:19px;line-height:1.4;padding:12px 0 12px 22px;border-bottom:1px solid var(--line);position:relative}
+.summary li::before{content:"";position:absolute;left:2px;top:22px;width:8px;height:8px;border-radius:50%;background:var(--ink-3)}
+.summary li.harm::before{background:var(--harm)}
+.summary li b{font-weight:600}
+details.more{margin-top:22px;border-bottom:1px solid var(--line)}
+.more-body{padding-bottom:14px}
 .people{width:100%;border-collapse:collapse;font-size:15.5px;margin-top:10px}
 .people th,.people td{padding:10px 6px;text-align:left;border-bottom:1px solid var(--line);vertical-align:baseline}
 .people th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
@@ -256,15 +263,6 @@ details[open] summary::after{content:"–"}
     <figcaption>Purple: your instinct. Blue: your model's median, with a band from the 10th to 90th percentile of runs. Below the line, in color: the historical benchmarks. In gray: published forecasts, placed the same way (horizons differ; see the checks at the bottom).</figcaption>
   </figure>
 
-  <div class="stats">
-    <div class="stat"><b id="v-median">–</b><span>median change in GDP, year 25</span></div>
-    <div class="stat"><b id="v-p10">–</b><span>pessimistic case (10th percentile)</span></div>
-    <div class="stat"><b id="v-p90">–</b><span>optimistic case (90th percentile)</span></div>
-    <div class="stat"><b id="v-net">–</b><span>of runs beat the internet</span></div>
-    <div class="stat"><b id="v-elec">–</b><span>of runs beat electricity</span></div>
-    <div class="stat harm"><b id="v-harm">–</b><span>of runs leave the economy smaller</span></div>
-  </div>
-
   <h3>What it means for people</h3>
   <p class="note">The same results, in human terms. Dollar figures use US output per person, about $85,000 a year today, and average pay of about $65,000.</p>
   <div class="group" id="g-people" style="margin-bottom:6px"></div>
@@ -274,7 +272,19 @@ details[open] summary::after{content:"–"}
   </table>
   <p class="note" style="margin-top:10px">What the model can't tell you is who gains and who loses: which jobs change, how fast people can move to new ones, and whether the gains are shared. Those depend on choices people and governments make, which is part of why getting the size roughly right matters. When the lost pay adds up to a few months of the gains, the economy can afford to make displaced workers whole. Whether it does is one of those choices.</p>
 
-  <h3>Where the runs land</h3>
+  <details class="more">
+    <summary>More detail: the range of outcomes and the path over time</summary>
+    <div class="more-body">
+  <div class="stats">
+    <div class="stat"><b id="v-median">–</b><span>median change in GDP, year 25</span></div>
+    <div class="stat"><b id="v-p10">–</b><span>pessimistic case (10th percentile)</span></div>
+    <div class="stat"><b id="v-p90">–</b><span>optimistic case (90th percentile)</span></div>
+    <div class="stat"><b id="v-net">–</b><span>of runs beat the internet</span></div>
+    <div class="stat"><b id="v-elec">–</b><span>of runs beat electricity</span></div>
+    <div class="stat harm"><b id="v-harm">–</b><span>of runs leave the economy smaller</span></div>
+  </div>
+
+  <h3 style="margin-top:6px">Where the runs land</h3>
   <p class="note">Each band is one half-step on the scale, which is roughly a tripling in size.</p>
   <table class="matrix" id="matrix" aria-label="Share of runs in each outcome band at 10 and 25 years">
     <thead><tr><th>Outcome</th><th class="num">10 yrs</th><th class="num">25 yrs</th><th></th></tr></thead>
@@ -287,6 +297,8 @@ details[open] summary::after{content:"–"}
     <div class="chart-wrap"><svg id="curve" viewBox="0 0 640 340" role="img" aria-label="Change in GDP from AI over 25 years, median and band, against benchmark lines"></svg><div class="tip" id="tip"></div></div>
     <figcaption>Change in the size of the economy versus a world without AI, by year. Drag across the chart to read values.</figcaption>
   </figure>
+    </div>
+  </details>
 
   <h2>Is it worth it?</h2>
   <p>Everything above is about how big AI is. Whether it's good is a separate question, and it depends on your values as well as the numbers. Two values matter most: how much you fear the bad outcomes, and whether you care who gets the gains.</p>
@@ -306,6 +318,10 @@ details[open] summary::after{content:"–"}
     <div class="chart-wrap"><svg id="tornado" viewBox="0 0 640 420" role="img" aria-label="Sensitivity of the result to each assumption"></svg></div>
     <figcaption id="torn-cap">Change in the median rating when each input is halved (gray) or doubled (blue). An input set to zero is raised to a quarter of its range instead.</figcaption>
   </figure>
+
+  <h2 id="summary-h">What your answers suggest</h2>
+  <p class="note">A plain-language summary of everything above. It updates as you move the sliders, and it's what "Copy my answers" copies.</p>
+  <ul class="summary" id="summary"></ul>
 
   <div class="dgroup">
   <details>
@@ -349,7 +365,7 @@ details[open] summary::after{content:"–"}
   </div>
 
   <div class="actions">
-    <button class="btn" id="copy">Copy my numbers</button>
+    <button class="btn" id="copy">Copy my answers</button>
     <button class="btn ghost" id="reset">Reset to mainstream</button>
   </div>
   <div class="toast" id="toast"></div>
@@ -607,6 +623,8 @@ function render(){
     prow('What each of them loses',`about 1.4 years of pay over the next 20 years, or 2.8 if it happens in a recession`,usd(1.4*PAY),usd(1.4*PAY)) +
     prow('Their total lost pay, next to one year of AI\'s gains','costs land on specific people once; gains recur every year',costTxt(c10,med[10]),costTxt(c25,m)) +
     prow('Chance things are worse than without AI','in that year: a recent incident or a catastrophe outweighs the gains',share(h10/N),share(nH/N),'harm');
+  SUM.people={work:c25.E*c25.A, inc:m*GDPPC, incBroad:Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC, conc:S.concentration,
+    nDisp:displaced(c25)*LABOR, perDisp:1.4*PAY, cost:displaced(c25)*LABOR*1.4*PAY, yrGain:m*GDPUS, harm:nH/N};
 
   // matrix (bands in rating terms)
   const at=r=>bi*Math.pow(10,r-8);
@@ -639,7 +657,9 @@ function render(){
   drawScale(S.gut,trsM,trsLo,trsHi,bi,be,neg);
   drawCurve(med,p10,p90,bi,be);
   lastCurve={med,p10,p90};
+  SUM.trs=trsM; SUM.neg=neg; SUM.where=where; SUM.gut=S.gut; SUM.m=m; SUM.ce=ce;
   renderChecks();
+  renderSummary();
   try{ localStorage.setItem('eq-state3',JSON.stringify(S)); }catch(e){}
   scheduleTornado();
 }
@@ -702,7 +722,45 @@ function drawCurve(med,p10,p90,bi,be){
 // ---------- tornado ----------
 let tmode='size', tornTimer=null;
 document.querySelectorAll('[data-tmode]').forEach(b=>b.addEventListener('click',()=>{ tmode=b.dataset.tmode; document.querySelectorAll('[data-tmode]').forEach(c=>c.setAttribute('aria-pressed',String(c===b))); drawTornado(); }));
-function scheduleTornado(){ if(tornTimer) clearTimeout(tornTimer); tornTimer=setTimeout(drawTornado,120); }
+function scheduleTornado(){ if(tornTimer) clearTimeout(tornTimer); tornTimer=setTimeout(()=>{ drawTornado(); computeDrivers(); },120); }
+const SUM={};
+const MODEL_KEYS=['exposure','amax','saving','t50','science','pMajor','sevMajor','pCat','sevCat','link'];
+function sizeMetric(st){ const a=simulate(st,400)[T].slice().sort(); const v=q(a,.5); return trsOf(v,st.bInternet/100)*(v<0?-1:1); }
+function computeDrivers(){
+  const base=sizeMetric(S);
+  // what matters most: halve/double
+  let best=null;
+  MODEL_KEYS.forEach(k=>{ const d=DEFS.find(x=>x.k===k); const cur=S[k]; if(cur===0) return;
+    const lo= cur===0?0:Math.max(d.min,cur/2), hi= cur===0? d.min+(d.max-d.min)/4 : Math.min(d.max,cur*2);
+    const sw=Math.abs(sizeMetric(Object.assign({},S,{[k]:hi}))-sizeMetric(Object.assign({},S,{[k]:lo})));
+    if(!best||sw>best.sw) best={d,sw}; });
+  SUM.driver=best;
+  // biggest difference from mainstream forecasts
+  let diff=null; const ms=PRESETS.mainstream;
+  MODEL_KEYS.forEach(k=>{ if(S[k]===ms[k]) return; const d=DEFS.find(x=>x.k===k);
+    const delta=base-sizeMetric(Object.assign({},S,{[k]:ms[k]}));
+    if(!diff||Math.abs(delta)>Math.abs(diff.delta)) diff={d,delta,mine:S[k],theirs:ms[k]}; });
+  SUM.diff=diff; SUM.base=base;
+  renderSummary();
+}
+function lc(t){ return t.charAt(0).toLowerCase()+t.slice(1); }
+function renderSummary(){
+  if(SUM.trs==null) return;
+  const P=SUM.people||{}; const items=[];
+  const usd=v=>{ const a=Math.abs(v); const r=a>=10000?Math.round(a/1000)*1000:a>=1000?Math.round(a/100)*100:Math.round(a/10)*10; return (v<0?'−':'')+'$'+r.toLocaleString(); };
+  const gap=SUM.trs-SUM.gut;
+  const gapTxt=Math.abs(gap)<0.25?'Your gut said about the same.':gap>0?`Your gut said ${SUM.gut.toFixed(1)}, so your own numbers are more bullish than your instinct.`:`Your gut said ${SUM.gut.toFixed(1)}, so your instinct is more bullish than your own numbers.`;
+  items.push({t:SUM.neg?`Your numbers put AI at <b>${SUM.trs.toFixed(1)}</b> in size, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`Your numbers put AI at <b>${SUM.trs.toFixed(1)}</b> on the scale: ${SUM.where}. ${gapTxt}`});
+  if(SUM.driver) items.push({t:`The assumption that matters most for your answer is <b>${lc(SUM.driver.d.short)}</b>. That's the one worth arguing about.`});
+  if(P.work!=null) items.push({t:`In 25 years, about <b>${pctS(P.work)}</b> of today's work would be done differently. That's roughly <b>${usd(P.inc)}</b> more per person each year if shared evenly, or <b>${usd(P.incBroad)}</b> for most people after what you think a few capture.`});
+  if(P.nDisp>0){ const mo=P.yrGain>0?P.cost/P.yrGain*12:null; const n=P.nDisp>=1e6?(P.nDisp/1e6).toFixed(P.nDisp<1e7?1:0)+' million':Math.round(P.nDisp/1e3)+' thousand';
+    items.push({t:`About <b>${n}</b> workers would lose their jobs along the way, each losing about ${usd(P.perDisp)} in pay.`+(mo!=null?` Together that's about <b>${mo<1?'under a month':mo<24?Math.round(mo)+' months':Math.round(mo/12)+' years'}</b> of AI's yearly gains`+(mo<=12?', so making them whole is affordable, if we choose to.':', a large cost next to the gains.'):'')}); }
+  items.push({t:`There's ${(P.harm||0)<0.005?'<b>under a 1%</b>':`about a <b>${share(P.harm)}</b>`} chance that, 25 years out, things are worse than without AI.`,cls:'harm'});
+  items.push({t:SUM.ce>=0?`Counting your caution about risk and who benefits, this is worth about the same to you as a guaranteed <b>${pctS(SUM.ce)}</b> bigger economy.`:`Counting your caution about risk and who benefits, you'd accept a guaranteed <b>${pctS(SUM.ce)}</b> smaller economy to avoid it.`});
+  if(activePreset==='mainstream') items.push({t:'Your settings match the mainstream forecasts. Move a slider to see where you differ.'});
+  else if(SUM.diff && Math.abs(SUM.diff.delta)>=0.05){ const D=SUM.diff; items.push({t:`Of the ways you differ from mainstream forecasts, the one that matters most is <b>${lc(D.d.short)}</b> (you: ${fmtVal(D.d,D.mine)}; mainstream: ${fmtVal(D.d,D.theirs)}). That alone moves your answer ${D.delta>0?'up':'down'} by ${Math.abs(D.delta).toFixed(1)} on the scale.`}); }
+  $('summary').innerHTML=items.map(i=>`<li class="${i.cls||''}">${i.t}</li>`).join('');
+}
 function drawTornado(){
   const n=600, bi=S.bInternet/100;
   const metric = st => { const col=simulate(st,n)[T]; if(tmode==='size'){ const a=col.slice().sort(); return trsOf(q(a,.5),bi)*(q(a,.5)<0?-1:1); } return certEq(col,st)*100; };
@@ -763,7 +821,8 @@ function drawTornado(){
 // copy
 $('copy').addEventListener('click',()=>{
   const lines = DEFS.map(d=>`${d.label}: ${fmtVal(d,S[d.k])}`);
-  const txt = `My AI numbers (The Electricity Question)\nInstinct: ${S.gut.toFixed(1)}\nNumbers: ${$('v-trs').textContent}\n${$('v-line').textContent}\nWorth to me: ${$('v-ce').textContent} sure-thing equivalent\n\nInputs:\n`+lines.join('\n');
+  const bullets=[...document.querySelectorAll('#summary li')].map(li=>'• '+li.textContent).join('\n');
+  const txt = `My answers to The Electricity Question\n${location.href.split('#')[0]}\n\n${bullets}\n\nMy settings:\n`+lines.join('\n');
   const box=$('copybox');
   const done=()=>{ $('toast').textContent='Copied. Send it to whoever you\'re arguing with.'; };
   const fallback=()=>{ box.hidden=false; box.textContent=txt; const sel=window.getSelection(), rg=document.createRange(); rg.selectNodeContents(box); sel.removeAllRanges(); sel.addRange(rg); $('toast').textContent='Select and copy the text below.'; };
