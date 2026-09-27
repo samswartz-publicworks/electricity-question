@@ -127,6 +127,9 @@ figcaption{font-size:14px;color:var(--ink-2);margin-top:8px;max-width:62ch}
 svg{display:block;width:100%;height:auto;overflow:visible}
 .chart-wrap{position:relative}
 .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font:13px var(--mono);padding:6px 8px;border-radius:4px;white-space:nowrap;transform:translate(-50%,-110%);display:none}
+.qlist{margin:0 0 16px;padding-left:22px;font-size:17.5px;max-width:62ch}
+.qlist li{margin-bottom:8px;padding-left:4px}
+.qlist li::marker{color:var(--ink-3)}
 .summary{list-style:none;margin:12px 0 8px;padding:0;border-top:3px solid var(--ink)}
 .summary li{font-family:var(--display);font-size:19px;line-height:1.4;padding:12px 0 12px 22px;border-bottom:1px solid var(--line);position:relative}
 .summary li::before{content:"";position:absolute;left:2px;top:22px;width:8px;height:8px;border-radius:50%;background:var(--ink-3)}
@@ -195,8 +198,14 @@ details[open] summary::after{content:"–"}
   <p class="dek">How big is AI? As important as the internet? On par with electricity? A rounding error with some useful applications, like the blockchain? A lot of conversations circle back to or depend on this question. This is an attempt to help ask the question, develop potential answers, and have better conversations on the topic.</p>
   <p class="byline">A usable model and mental framework, meant to be transparent and straightforward. The core assumptions are built in as sliders, with formulas included at the bottom. You start with a gut assessment, then work through the sub-questions one at a time. As a check, the model reproduces a published estimate.</p>
 
-  <p class="lede">It's really hard to have conversations about AI, and about this question in particular. People use the same words but arrive at very different answers, often because they're talking about different things.</p>
-  <p>This breaks the big question into a few smaller ones that are easier to talk about: How much of our work could AI do? How much of that will actually change? How much cheaper does it get? Could it speed up discovery itself? What could go wrong? And what might it mean for people, now and in the future? If two people land in different places, the sliders can help show where.</p>
+  <p class="lede" style="margin-bottom:8px">This model breaks the big question into a few smaller ones:</p>
+  <ul class="qlist">
+    <li>How much of our work could AI do? How much of that work would actually change, and how fast? How much cheaper would that work get?</li>
+    <li>Could it speed up discovery and invention?</li>
+    <li>What could go wrong?</li>
+    <li>And what might this mean for people, now and in the future?</li>
+  </ul>
+  <p>If two people land in different places, the sliders can help show where.</p>
 
   <h2>First, your gut</h2>
   <p>Nate Silver's Technological Richter Scale, from <em>On the Edge</em>. Like the earthquake scale, each step up is roughly ten times bigger than the one below. It measures size, not direction: Silver puts nuclear weapons at 9. Looking back from 25 years out, where does AI land?</p>
