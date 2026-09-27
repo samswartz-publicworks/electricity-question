@@ -130,11 +130,11 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .fn-host{position:relative}
 .fn{position:static;border-bottom:1.5px dotted var(--ink-2);cursor:help;outline:none}
 .fn:focus-visible{outline:2px solid var(--ai);outline-offset:2px;border-radius:2px}
-.fn-pop{display:none;position:absolute;left:0;right:0;bottom:calc(100% + 6px);max-width:420px;background:var(--ink);color:var(--paper);font:14px/1.45 var(--body);padding:10px 12px;border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.18);z-index:10}
+.fn-pop{font-weight:400;display:none;position:absolute;left:0;right:0;bottom:calc(100% + 6px);max-width:420px;background:var(--ink);color:var(--paper);font:14px/1.45 var(--body);padding:10px 12px;border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.18);z-index:10}
 .fn-pop b{display:block;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin-bottom:4px}
 .fn:hover .fn-pop,.fn:focus .fn-pop,.fn.open .fn-pop{display:block}
 .whatis{margin:4px 0 28px;font-size:15px;color:var(--ink-2)}
-.whatis-h{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.whatis-h{color:var(--ink);margin-bottom:4px}
 .whatis ul{margin:0;padding-left:20px}
 .whatis li{margin-bottom:3px}
 .whatis li::marker{color:var(--ink-3)}
@@ -208,7 +208,7 @@ details[open] summary::after{content:"–"}
   <h1>The Electricity Question</h1>
   <p class="dek">How big is AI? As important as the internet? On par with electricity? A rounding error with some useful applications, like the blockchain? A lot of conversations circle back to this question. This is an attempt to help ask, answer, and hopefully have better conversations on the topic.</p>
   <div class="whatis">
-    <div class="whatis-h">What this is</div>
+    <div class="whatis-h"><b>What this is</b></div>
     <ul>
       <li>A usable model and mental framework</li>
       <li>Meant to be transparent and straightforward</li>
@@ -224,7 +224,7 @@ details[open] summary::after{content:"–"}
     <li>What could go wrong?</li>
     <li>And what might this mean for people, now and in the future?</li>
   </ul>
-  <p class="fn-host">These questions form the basis of the <span class="fn" tabindex="0" role="button" aria-describedby="fn-model">model<span class="fn-pop" id="fn-model" role="tooltip"><b>The model, in one line</b>Work AI can do × share that switches × how much cheaper it gets + faster invention − what goes wrong</span></span>. The approach is adapted from the work of economists Charles Hulten and Daron Acemoglu, with two additions: it allows for AI to speed up discovery itself, and for things to go badly wrong.</p>
+  <p class="fn-host">These questions form the basis of <b>the <span class="fn" tabindex="0" role="button" aria-describedby="fn-model">model<span class="fn-pop" id="fn-model" role="tooltip"><b>The model, in one line</b>Work AI can do × share that switches × how much cheaper it gets + faster invention − what goes wrong</span></span></b>. The approach is adapted from the work of economists Charles Hulten and Daron Acemoglu, with two additions: it allows for AI to speed up discovery itself, and for things to go badly wrong.</p>
 
   <h2>First, your gut</h2>
   <p>Before working through the questions, where would you put AI, looking back from 25 years out? At the end, your answer is compared with what your numbers suggest.</p>
