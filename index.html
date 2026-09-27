@@ -127,6 +127,12 @@ figcaption{font-size:14px;color:var(--ink-2);margin-top:8px;max-width:62ch}
 svg{display:block;width:100%;height:auto;overflow:visible}
 .chart-wrap{position:relative}
 .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font:13px var(--mono);padding:6px 8px;border-radius:4px;white-space:nowrap;transform:translate(-50%,-110%);display:none}
+.fn-host{position:relative}
+.fn{position:static;border-bottom:1.5px dotted var(--ink-2);cursor:help;outline:none}
+.fn:focus-visible{outline:2px solid var(--ai);outline-offset:2px;border-radius:2px}
+.fn-pop{display:none;position:absolute;left:0;right:0;bottom:calc(100% + 6px);max-width:420px;background:var(--ink);color:var(--paper);font:14px/1.45 var(--body);padding:10px 12px;border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.18);z-index:10}
+.fn-pop b{display:block;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin-bottom:4px}
+.fn:hover .fn-pop,.fn:focus .fn-pop,.fn.open .fn-pop{display:block}
 .qlist{margin:0 0 16px;padding-left:22px;font-size:17.5px;max-width:62ch}
 .qlist li{margin-bottom:8px;padding-left:4px}
 .qlist li::marker{color:var(--ink-3)}
@@ -196,7 +202,7 @@ details[open] summary::after{content:"–"}
   <div class="eyebrow">A model and sub-questions producing estimates based on your answers</div>
   <h1>The Electricity Question</h1>
   <p class="dek">How big is AI? As important as the internet? On par with electricity? A rounding error with some useful applications, like the blockchain? A lot of conversations circle back to or depend on this question. This is an attempt to help ask the question, develop potential answers, and have better conversations on the topic.</p>
-  <p class="byline">A usable model and mental framework, meant to be transparent and straightforward. The core assumptions are built in as sliders, with formulas included at the bottom. You start with a gut assessment, then work through the sub-questions one at a time. As a check, the model reproduces a published estimate.</p>
+  <p class="byline">A usable model and mental framework, meant to be transparent and straightforward. The core assumptions are built in as sliders, with formulas included at the bottom.</p>
 
   <p class="lede" style="margin-bottom:8px">This model breaks the big question into a few smaller ones:</p>
   <ul class="qlist">
@@ -205,9 +211,11 @@ details[open] summary::after{content:"–"}
     <li>What could go wrong?</li>
     <li>And what might this mean for people, now and in the future?</li>
   </ul>
+  <p class="fn-host">These questions form the basis of the <span class="fn" tabindex="0" role="button" aria-describedby="fn-model">model<span class="fn-pop" id="fn-model" role="tooltip"><b>The model, in one line</b>Work AI can do × share that switches × how much cheaper it gets + faster invention − what goes wrong</span></span>. The approach is adapted from the work of economists Charles Hulten and Daron Acemoglu, with two additions: it allows for AI to speed up discovery itself, and for things to go badly wrong.</p>
 
   <h2>First, your gut</h2>
-  <p>Nate Silver's Technological Richter Scale, from <em>On the Edge</em>. Like the earthquake scale, each step up is roughly ten times bigger than the one below. It measures size, not direction: Silver puts nuclear weapons at 9. Looking back from 25 years out, where does AI land?</p>
+  <p>Before working through the questions, where would you put AI, looking back from 25 years out? At the end, your answer is compared with what your numbers suggest.</p>
+  <p>The scale is Nate Silver's Technological Richter Scale, from <em>On the Edge</em>. Like the earthquake scale, each step up is roughly ten times bigger than the one below. It measures size, not direction: Silver puts nuclear weapons at 9.</p>
   <div class="ladder" id="ladder"></div>
   <div class="gutbox">
     <div class="ctl gut">
@@ -219,12 +227,12 @@ details[open] summary::after{content:"–"}
   </div>
 
   <h2>Breaking the question down</h2>
-  <p>Economists who study new technologies tend to start with the work a technology touches rather than the technology itself. The approach treats the economy as a very long list of tasks, such as drafting a contract, answering a customer or reading a scan, and asks what happens when some of those tasks get cheaper. The model here follows that approach, then adds two things the standard version leaves out: the possibility that AI speeds up discovery itself, and the possibility that something goes badly wrong.</p>
+  <p>Economists who study new technologies tend to start with the work a technology touches rather than the technology itself. The approach treats the economy as a very long list of tasks, such as drafting a contract, answering a customer or reading a scan, and asks what happens when some of those tasks get cheaper.</p>
   <div class="formula">
     <span>Work AI can do</span> <span class="op">×</span> <span>share that switches</span> <span class="op">×</span> <span>how much cheaper it gets</span> <span class="op">+</span> <span>faster invention</span> <span class="op">−</span> <span>what goes wrong</span>
   </div>
-  <p>Multiplying the first three terms gives the share of the economy that becomes more productive, and by how much. Each term is one of the questions above, and each gets its own step below.</p>
-  <p>The MIT economist Daron Acemoglu, a 2024 Nobel laureate, ran this calculation in 2024. He estimated that about 20 percent of tasks are exposed to AI, that roughly a quarter of those would be worth automating within a decade, and that costs on those tasks would fall by about 14 percent. The result was a modest gain of roughly 1 percent of GDP over 10 years. Others put the same numbers higher, and some argue the calculation leaves things out. The sliders below let you decide for yourself.</p>
+  <p>Multiplying the first three terms gives the share of the economy that becomes more productive, and by how much.</p>
+  <p>The MIT economist Daron Acemoglu, a 2024 Nobel laureate, ran this calculation in 2024. He estimated that about 20 percent of tasks are exposed to AI, that roughly a quarter of those would be worth automating within a decade, and that costs on those tasks would fall by about 14 percent. The result was a modest gain of roughly 1 percent of GDP over 10 years. Others put the same numbers higher, and some argue the calculation leaves things out.</p>
 
   <p class="note">Start from one of these positions, then adjust the sliders to match your own view.</p>
   <div class="presets" role="group" aria-label="Starting positions">
@@ -838,6 +846,11 @@ $('copy').addEventListener('click',()=>{
   try{ navigator.clipboard.writeText(txt).then(done,fallback); }catch(e){ fallback(); }
 });
 
+document.querySelectorAll('.fn').forEach(el=>{
+  el.addEventListener('click',e=>{ e.stopPropagation(); const o=el.classList.toggle('open'); document.querySelectorAll('.fn').forEach(x=>{ if(x!==el) x.classList.remove('open'); }); if(!o) el.blur(); });
+  el.addEventListener('keydown',e=>{ if(e.key==='Escape'){ el.classList.remove('open'); el.blur(); } });
+});
+document.addEventListener('click',()=>document.querySelectorAll('.fn.open').forEach(x=>x.classList.remove('open')));
 let raf=null;
 function schedule(){ syncInputs(); if(raf) cancelAnimationFrame(raf); raf=requestAnimationFrame(()=>{raf=null; render();}); }
 const h=(location.hash||'').slice(1); if(PRESETS[h]){ applyPreset(h); activePreset=h; }
