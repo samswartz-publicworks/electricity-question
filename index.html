@@ -206,6 +206,46 @@ details[open] summary::after{content:"–"}
 .bar-n small{font-size:13px;opacity:.7;font-family:var(--body)}
 .bar-r{font-family:var(--display);font-size:16px;text-align:right;line-height:1.2}
 .bar a{color:inherit;font:13px var(--body);opacity:.7}
+
+/* shared additions */
+.why-btn{display:none;background:none;border:0;padding:2px 0 6px;font:600 14px var(--body);color:var(--ai);cursor:pointer}
+.why-btn::after{content:" +";font-family:var(--mono)}
+.ctl.show-why .why-btn::after{content:" –"}
+details.ladder-d{border:0;margin-top:6px}
+details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
+.bar-main{font-family:var(--mono);font-size:22px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar-main b{font-weight:500}
+.bar-main small{font-size:12px;opacity:.7;font-family:var(--body)}
+.bar-l{font-family:var(--body);font-size:13px;opacity:.7}
+.bar-arrow{opacity:.5;padding:0 4px}
+.bar-r{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.bar-r a{font:13px var(--body);opacity:.75;color:inherit}
+
+/* phones */
+@media (max-width:600px){
+  .ctl-why{display:none}
+  .ctl.show-why .ctl-why{display:block}
+  .why-btn{display:inline-block}
+  input[type=range]{height:48px}
+  input[type=range]::-webkit-slider-thumb{width:30px;height:30px;margin-top:-13px}
+  input[type=range]::-moz-range-thumb{width:24px;height:24px}
+  .presets{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .presets .chip{width:100%;text-align:center;padding:11px 8px;border-radius:8px}
+  #b-line{display:none}
+  .bar-main{font-size:19px}
+}
+@media (max-width:480px){
+  .wrap{padding-block:20px 110px}
+  h2{margin-top:40px}
+  h3{margin-top:27px}
+  .ctl-head{flex-direction:column;align-items:flex-start;gap:2px}
+  .people thead{display:none}
+  .people tr{display:grid;grid-template-columns:1fr;gap:4px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .people td{border:0;padding:0}
+  .people td:first-child{margin-bottom:4px}
+  .people td.num{text-align:left;white-space:normal;display:flex;gap:10px;align-items:baseline;font-size:15px}
+  .people td.num::before{content:attr(data-l);flex:0 0 52px;color:var(--ink-3);font:13px var(--body)}
+}
 @media (prefers-reduced-motion:no-preference){.matrix .b{transition:width .25s ease}}
 @media (max-width:420px){.stats{grid-template-columns:1fr 1fr}.formula{font-size:19px}}
 </style>
@@ -242,8 +282,6 @@ details[open] summary::after{content:"–"}
 
   <h2>First, your gut assessment</h2>
   <p>Before working through the questions, imagine looking back 25 years from now. How big was AI? At the end, we'll compare your gut view with what your inputs imply.</p>
-  <p>The scale is Nate Silver's Technological Richter Scale, from <em>On the Edge</em>. Like the earthquake scale, each step up is roughly ten times bigger than the one below. It measures size, not direction: Silver puts nuclear weapons at 9.</p>
-  <div class="ladder" id="ladder"></div>
   <div class="gutbox">
     <div class="ctl gut">
       <div class="ctl-head"><label for="in-gut">Your gut assessment</label><span class="ctl-val" id="val-gut"></span></div>
@@ -252,6 +290,11 @@ details[open] summary::after{content:"–"}
       <div class="gut-read" id="gut-read"></div>
     </div>
   </div>
+  <p>The scale is Nate Silver's Technological Richter Scale, from <em>On the Edge</em>. Like the earthquake scale, each step up is roughly ten times bigger than the one below. It measures size, not direction: Silver puts nuclear weapons at 9.</p>
+  <details class="ladder-d" id="ladder-d">
+    <summary>See the full scale</summary>
+    <div class="ladder" id="ladder"></div>
+  </details>
 
   <h2>Breaking down the question</h2>
   <p>Economists often model the economy as a long list of tasks (drafting a contract, answering a customer, reading a scan) and ask what happens when some get cheaper. The standard approach combines how much work AI can do, how much actually switches over, and how much cheaper it becomes.</p>
@@ -294,7 +337,7 @@ details[open] summary::after{content:"–"}
 
   <figure>
     <div class="chart-wrap"><svg id="scale" viewBox="0 0 640 190" role="img" aria-label="Your rating, your model's result, historical benchmarks and published forecasts on the Richter scale"></svg></div>
-    <figcaption>Purple is your gut assessment. Blue is the typical model result, with a band covering the middle 80% of runs. Historical benchmarks are in color below the line; published forecasts are gray. Horizons differ; see the checks below.</figcaption>
+    <figcaption>Purple is your gut assessment. Blue is the typical model result, with a band covering the middle 80% of runs. Historical benchmarks are in color below the line; published forecasts are gray. Horizons differ; see the checks below.<span id="scale-fc"></span></figcaption>
   </figure>
   <p class="note"><b>How this is calculated:</b> the model runs your assumptions 2,000 times, varying them by the uncertainty you chose and adding incidents and catastrophes at the rates you set.</p>
   <details class="more calc">
@@ -422,8 +465,8 @@ details[open] summary::after{content:"–"}
 
 <div class="bar" aria-live="polite">
   <div class="bar-in">
-    <div><div class="bar-l">Gut <span id="b-gut">–</span> · Your answers</div><div class="bar-n" id="b-trs">–</div></div>
-    <div class="bar-r"><span id="b-line">–</span><br><a href="#results">see results</a></div>
+    <div class="bar-main"><span class="bar-l">Gut</span> <b id="b-gut">–</b> <span class="bar-arrow">→</span> <span class="bar-l">Answers</span> <b id="b-trs">–</b></div>
+    <div class="bar-r"><span id="b-line">–</span><a href="#results">See result</a></div>
   </div>
 </div>
 
@@ -522,10 +565,12 @@ const fmtVal = (d,v)=> d.fmt ? d.fmt(v) : (Number.isInteger(d.step)? v : d.step>
 DEFS.forEach(d=>{
   const el = document.createElement('div'); el.className='ctl'+(d.risk?' risk':'');
   el.innerHTML = `<div class="ctl-head"><label for="in-${d.k}">${d.label}</label><span class="ctl-val" id="val-${d.k}"></span></div>
+  <button type="button" class="why-btn" aria-expanded="false">Why these numbers?</button>
   <div class="ctl-why">${d.why}</div>
   <input type="range" id="in-${d.k}" min="${d.min}" max="${d.max}" step="${d.step}" value="${S[d.k]}">
   <div class="ticks"><span>${d.ticks[0]}</span><span>${d.ticks[1]}</span></div>`;
   $(d.g).appendChild(el);
+  const wb=el.querySelector('.why-btn'); wb.addEventListener('click',()=>{ const o=el.classList.toggle('show-why'); wb.setAttribute('aria-expanded',String(o)); });
   const inp = el.querySelector('input');
   inp.addEventListener('input', ()=>{ S[d.k]=parseFloat(inp.value); activePreset=null; schedule(); });
 });
@@ -672,7 +717,7 @@ function render(){
   const c10=central(S,10), c25=central(S,T);
   let h10=0; for(let i=0;i<N;i++){ if(y10[i]<0)h10++; }
   const usd=v=>{ const a=Math.abs(v); const r=a>=10000?Math.round(a/1000)*1000:a>=1000?Math.round(a/100)*100:Math.round(a/10)*10; return (v<0?'−':'')+'$'+r.toLocaleString(); };
-  const prow=(l,sub,a,b,cls)=>`<tr class="${cls||''}"><td>${l}<small>${sub}</small></td><td class="num">${a}</td><td class="num">${b}</td></tr>`;
+  const prow=(l,sub,a,b,cls)=>`<tr class="${cls||''}"><td>${l}<small>${sub}</small></td><td class="num" data-l="10 yrs">${a}</td><td class="num" data-l="25 yrs">${b}</td></tr>`;
   $('people').querySelector('tbody').innerHTML =
     prow('Share of today\'s work done differently','the work AI is doing, at your settings',pctS(c10.E*c10.A),pctS(c25.E*c25.A)) +
     prow('Extra income per person, per year','typical outcome, if gains were shared evenly',usd(med[10]*GDPPC),usd(m*GDPPC)) +
@@ -735,8 +780,11 @@ function renderChecks(){
 
 let lastCurve=null;
 const FORECASTS=[['Acemoglu',0.0105],['Penn Wharton',0.029],['Goldman',0.07]];
+function chartW(){ const w=document.querySelector('.wrap'); const cs=getComputedStyle(w); return Math.max(300, Math.min(640, w.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight))); }
 function drawScale(gut,trs,lo,hi,bi,be,neg){
-  const svg=$('scale'); const W=640,L=24,R=24,base=86;
+  const svg=$('scale'); const W=chartW(), narrow=W<480, L=narrow?14:24,R=narrow?14:24,base=86;
+  const SH=narrow?150:214; svg.setAttribute('viewBox',`0 0 ${W} ${SH}`);
+  const fc=$('scale-fc'); if(fc) fc.textContent = narrow ? ' Gray diamonds, left to right: Acemoglu, Penn Wharton, Goldman.' : '';
   const dmin=Math.max(1,Math.min(6,Math.floor(Math.min(gut,trs,lo)-0.2))), dmax=10;
   const x=v=>L+(W-L-R)*(Math.max(dmin,Math.min(dmax,v))-dmin)/(dmax-dmin);
   let g='';
@@ -747,10 +795,11 @@ function drawScale(gut,trs,lo,hi,bi,be,neg){
     const yy=base+48+i*18; g+=`<line x1="${x(v)}" x2="${x(v)}" y1="${base+30}" y2="${yy-12}" stroke="${c}" stroke-width="1.5" stroke-dasharray="3 3"/><text x="${x(v)}" y="${yy}" text-anchor="${i?'start':'end'}" dx="${i?-4:4}" font-family="var(--body)" font-size="14" font-weight="600" fill="${c}">${lab}</text>`; });
   // forecasts
   FORECASTS.forEach(([lab,val],i)=>{ const v=trsOf(val,bi); const yy=base+48+i*18; const anc=i===2?'start':'end';
+    if(narrow){ g+=`<path d="M${x(v)} ${base-5} l5 5 l-5 5 l-5 -5z" fill="var(--ink-3)"/>`; return; }
     g+=`<path d="M${x(v)} ${base-5} l5 5 l-5 5 l-5 -5z" fill="var(--ink-3)"/><text x="${x(v)}" dx="${i===2?-4:4}" y="${yy+36}" text-anchor="${anc}" font-family="var(--body)" font-size="13" fill="var(--ink-3)">${lab}</text><line x1="${x(v)}" x2="${x(v)}" y1="${base+30}" y2="${yy+24}" stroke="var(--ink-3)" stroke-width="1" stroke-dasharray="1 3"/>`; });
   if(!isNaN(lo)&&!isNaN(hi)) g+=`<rect x="${x(lo)}" y="${base-14}" width="${Math.max(2,x(hi)-x(lo))}" height="28" fill="var(--ai-soft)"/>`;
   const col = neg?'var(--harm)':'var(--ai)';
-  const close=Math.abs(x(trs)-x(gut))<80; const anc= !close?'middle' : (x(gut)>x(trs)?'end':'start'); const tx= !close? x(trs) : (x(gut)>x(trs)? x(trs)-14 : x(trs)+14);
+  const close=Math.abs(x(trs)-x(gut))<(narrow?110:80); const anc= !close?'middle' : (x(gut)>x(trs)?'end':'start'); const tx= !close? x(trs) : (x(gut)>x(trs)? x(trs)-14 : x(trs)+14);
   g+=`<circle cx="${x(trs)}" cy="${base}" r="9" fill="${col}" stroke="var(--paper)" stroke-width="2"/><text x="${tx}" y="${base-22}" text-anchor="${anc}" font-family="var(--mono)" font-size="16" font-weight="500" fill="${col}">answers ${trs.toFixed(1)}</text>`;
   const gy=base-56;
   g+=`<line x1="${x(gut)}" x2="${x(gut)}" y1="${gy+8}" y2="${base-10}" stroke="var(--gut)" stroke-width="2"/><circle cx="${x(gut)}" cy="${gy}" r="8" fill="var(--gut)" stroke="var(--paper)" stroke-width="2"/><text x="${x(gut)}" y="${gy-14}" text-anchor="middle" font-family="var(--mono)" font-size="16" font-weight="500" fill="var(--gut)">gut ${gut.toFixed(1)}</text>`;
@@ -758,23 +807,24 @@ function drawScale(gut,trs,lo,hi,bi,be,neg){
 }
 
 function drawCurve(med,p10,p90,bi,be){
-  const svg=$('curve'); const W=640,H=340,L=64,R=16,Tp=18,B=40;
+  const svg=$('curve'); const W=chartW(), narrow=W<480, H=narrow?250:340, L=narrow?52:64, R=narrow?8:16, Tp=18, B=40, FS=narrow?13:15;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   let ymax=Math.max(bi*1.2, ...p90, 0.02), ymin=Math.min(0, ...p10);
   if(be<ymax*1.6) ymax=Math.max(ymax,be*1.1);
   const x=t=>L+(W-L-R)*t/T, y=v=>Tp+(H-Tp-B)*(ymax-v)/(ymax-ymin);
   const span=ymax-ymin; const steps=[0.005,0.01,0.02,0.05,0.1,0.2,0.25,0.5,1,2,5]; const step=steps.find(s=>span/s<=6)||10;
   let g='';
-  for(let v=Math.ceil(ymin/step)*step; v<=ymax+1e-9; v+=step){ g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L-8}" y="${y(v)+5}" text-anchor="end" font-family="var(--mono)" font-size="15" fill="var(--ink-3)">${signed(v)}</text>`; }
-  [0,5,10,15,20,25].forEach(t=>{ g+=`<text x="${x(t)}" y="${H-B+22}" text-anchor="middle" font-family="var(--mono)" font-size="15" fill="var(--ink-3)">${t===0?'now':'+'+t+'y'}</text>`; });
+  for(let v=Math.ceil(ymin/step)*step; v<=ymax+1e-9; v+=step){ g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L-8}" y="${y(v)+5}" text-anchor="end" font-family="var(--mono)" font-size="${FS}" fill="var(--ink-3)">${signed(v)}</text>`; }
+  (narrow?[0,10,25]:[0,5,10,15,20,25]).forEach(t=>{ g+=`<text x="${x(t)}" y="${H-B+22}" text-anchor="${t===25&&narrow?'end':'middle'}" font-family="var(--mono)" font-size="${FS}" fill="var(--ink-3)">${t===0?'now':'+'+t+'y'}</text>`; });
   g+=`<line x1="${L}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--ink-2)" stroke-width="1"/>`;
-  const ref=(v,c,lab)=> v>ymax? '' : `<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="${c}" stroke-width="2" stroke-dasharray="4 4"/><text x="${L+6}" y="${y(v)-6}" font-family="var(--body)" font-size="15" font-weight="600" fill="${c}">${lab}</text>`;
+  const ref=(v,c,lab)=> v>ymax? '' : `<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="${c}" stroke-width="2" stroke-dasharray="4 4"/><text x="${L+6}" y="${y(v)-6}" font-family="var(--body)" font-size="${FS}" font-weight="600" fill="${c}">${lab}</text>`;
   g+=ref(be,'var(--elec)','Electricity')+ref(bi,'var(--net)','Internet');
   const band = p90.map((v,t)=>`${x(t)},${y(v)}`).join(' ')+' '+p10.map((v,t)=>`${x(t)},${y(v)}`).reverse().join(' ');
   g+=`<polygon points="${band}" fill="var(--ai-soft)" stroke="none"/>`;
   g+=`<polyline points="${med.map((v,t)=>`${x(t)},${y(v)}`).join(' ')}" fill="none" stroke="var(--ai)" stroke-width="2.5" stroke-linejoin="round"/>`;
   g+=`<circle cx="${x(T)}" cy="${y(med[T])}" r="4.5" fill="var(--ai)" stroke="var(--paper)" stroke-width="2"/>`;
   g+=`<g id="hover"></g>`;
-  svg.innerHTML=g; svg._x=x; svg._y=y; svg._top=Tp; svg._bot=H-B;
+  svg.innerHTML=g; svg._x=x; svg._y=y; svg._top=Tp; svg._bot=H-B; svg._W=W; svg._H=H; svg._L=L; svg._R=R;
 }
 
 // ---------- tornado ----------
@@ -845,18 +895,19 @@ function drawTornado(){
     rows.push({d,lo:a-base,hi:b-base,loV,hiV});
   });
   rows.sort((p,r)=>Math.max(Math.abs(r.lo),Math.abs(r.hi))-Math.max(Math.abs(p.lo),Math.abs(p.hi)));
-  const svg=$('tornado'); const W=640, L=200, R=16, rowH=34, top=30; const H=top+rows.length*rowH+24;
+  const svg=$('tornado'); const W=chartW(), narrow=W<520, L=narrow?0:200, R=narrow?0:16, rowH=narrow?50:34, top=30; const H=top+rows.length*rowH+24;
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   const ext=Math.max(tmode==='size'?0.3:1, ...rows.map(r=>Math.max(Math.abs(r.lo),Math.abs(r.hi))))*1.05;
-  const inner=W-L-R-110; const cx=L+55+inner/2;
+  const pad=narrow?58:55; const inner=W-L-R-2*pad; const cx=L+pad+inner/2;
   const x=v=>cx + (inner/2)*v/ext;
   const tv=(d,v)=>fmtVal(d,v).replace(/ of GDP.*$/,'').replace(' pts/yr','');
   const unit = tmode==='size' ? v=>(v>=0?'+':'−')+Math.abs(v).toFixed(1) : v=>(v>=0?'+':'−')+Math.abs(v).toFixed(Math.abs(v)<10?1:0)+' pts';
   let g='';
   [-ext,0,ext].forEach(v=>{ g+=`<line x1="${x(v)}" x2="${x(v)}" y1="${top-6}" y2="${H-22}" stroke="${v===0?'var(--ink-2)':'var(--line)'}" stroke-width="1"/><text x="${x(v)}" y="${top-12}" text-anchor="middle" font-family="var(--mono)" font-size="13" fill="var(--ink-3)">${v===0?(tmode==='size'?'your rating':'your worth'):unit(v)}</text>`; });
   rows.forEach((r,i)=>{
-    const yy=top+i*rowH+8;
-    g+=`<text x="${L-10}" y="${yy+14}" text-anchor="end" font-family="var(--body)" font-size="14" fill="var(--ink)">${r.d.short}</text>`;
+    const yy=top+i*rowH+(narrow?26:8);
+    g+= narrow ? `<text x="0" y="${yy-7}" font-family="var(--body)" font-size="15" font-weight="600" fill="var(--ink)">${r.d.short}</text>`
+               : `<text x="${L-10}" y="${yy+14}" text-anchor="end" font-family="var(--body)" font-size="14" fill="var(--ink)">${r.d.short}</text>`;
     const draw=(v,c)=>{ const x0=x(Math.min(0,v)), w=Math.abs(x(v)-x(0)); g+=`<rect x="${x0}" y="${yy}" width="${Math.max(1.5,w)}" height="18" rx="2" fill="${c}"/>`; };
     draw(r.lo,'var(--ink-3)'); draw(r.hi,'var(--ai)');
     const leftV = r.lo<=r.hi ? r.loV : r.hiV, rightV = r.lo<=r.hi ? r.hiV : r.loV;
@@ -874,17 +925,16 @@ function drawTornado(){
   function onMove(ev){
     if(!lastCurve) return;
     const pt = ev.touches? ev.touches[0]: ev;
-    const r=svg.getBoundingClientRect(); const px=(pt.clientX-r.left)/r.width*640;
-    const t=Math.max(0,Math.min(25,Math.round((px-64)/(640-64-16)*25)));
+    const r=svg.getBoundingClientRect(); const W=svg._W||640, H=svg._H||340; const px=(pt.clientX-r.left)/r.width*W;
+    const t=Math.max(0,Math.min(25,Math.round((px-svg._L)/(W-svg._L-svg._R)*25)));
     const x=svg._x(t), y=svg._y(lastCurve.med[t]);
     $('hover').innerHTML=`<line x1="${x}" x2="${x}" y1="${svg._top}" y2="${svg._bot}" stroke="var(--ink-3)" stroke-width="1" stroke-dasharray="2 3"/><circle cx="${x}" cy="${y}" r="5" fill="var(--ai)" stroke="var(--paper)" stroke-width="2"/>`;
-    tip.style.display='block'; tip.style.left=(Math.min(Math.max(x,110),530)/640*r.width)+'px'; tip.style.top=(y/340*r.height)+'px';
+    tip.style.display='block'; tip.style.left=(Math.min(Math.max(x,110),W-110)/W*r.width)+'px'; tip.style.top=(y/H*r.height)+'px';
     tip.textContent=`year ${t}: ${signed(lastCurve.med[t])} (${signed(lastCurve.p10[t])} to ${signed(lastCurve.p90[t])})`;
-    if(ev.touches) ev.preventDefault();
   }
   function off(){ tip.style.display='none'; const h=$('hover'); if(h) h.innerHTML=''; }
   wrap.addEventListener('mousemove',onMove); wrap.addEventListener('mouseleave',off);
-  wrap.addEventListener('touchstart',onMove,{passive:false}); wrap.addEventListener('touchmove',onMove,{passive:false}); wrap.addEventListener('touchend',off);
+  wrap.addEventListener('touchstart',onMove,{passive:true}); wrap.addEventListener('touchmove',onMove,{passive:true}); wrap.addEventListener('touchend',off);
 })();
 
 // copy
@@ -903,6 +953,9 @@ document.querySelectorAll('.fn').forEach(el=>{
   el.addEventListener('keydown',e=>{ if(e.key==='Escape'){ el.classList.remove('open'); el.blur(); } });
 });
 document.addEventListener('click',()=>document.querySelectorAll('.fn.open').forEach(x=>x.classList.remove('open')));
+try{ if(window.innerWidth>=640) $('ladder-d').open=true; }catch(e){}
+let rzT=null, lastW=0;
+window.addEventListener('resize',()=>{ clearTimeout(rzT); rzT=setTimeout(()=>{ const w=chartW(); if(Math.abs(w-lastW)>8){ lastW=w; render(); } },200); });
 let raf=null;
 function schedule(){ syncInputs(); if(raf) cancelAnimationFrame(raf); raf=requestAnimationFrame(()=>{raf=null; render();}); }
 const h=(location.hash||'').slice(1); if(PRESETS[h]){ applyPreset(h); activePreset=h; }
