@@ -278,7 +278,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
     <li>What could go wrong?</li>
     <li>And what might this mean for people, now and in the future?</li>
   </ol>
-  <p class="fn-host">Your answers become the model's inputs.<sup class="fn" tabindex="0" role="button" aria-label="Note 1" aria-describedby="fn-model">1<span class="fn-pop" id="fn-model" role="tooltip"><span class="fn-num">1</span>Hulten (1978); Acemoglu (2024). The invention term follows Aghion, Jones and Jones (2019). Full specification under &ldquo;The math, in full&rdquo; at the bottom of the page.</span></sup> The framework builds on work by Charles Hulten and Daron Acemoglu, then adds three things: how quickly adoption happens, whether AI speeds up discovery, and what could go wrong.</p>
+  <p class="fn-host">Your answers become the model's inputs.<sup class="fn" tabindex="0" role="button" aria-label="Note 1" aria-describedby="fn-model">1<span class="fn-pop" id="fn-model" role="tooltip"><span class="fn-num">1</span>Hulten (1978); Acemoglu (2024). The faster-invention term is inspired by Aghion, Jones and Jones (2019). Full specification under &ldquo;The math, in full&rdquo; at the bottom of the page.</span></sup> The framework builds on work by Charles Hulten and Daron Acemoglu, then adds three things: how quickly adoption happens, whether AI speeds up discovery, and what could go wrong.</p>
 
   <h2>First, your gut assessment</h2>
   <p>Before working through the questions, imagine looking back 25 years from now. How big was AI? At the end, we'll compare your gut view with what your inputs imply.</p>
@@ -397,7 +397,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   </figure>
 
   <h2>Is it worth it?</h2>
-  <p>The sections above measure how big AI is. Whether that's good depends on your values, especially how much weight you put on bad outcomes and who gets the gains.</p>
+  <p>The sections above measure how big AI is. Whether that's good depends on your values, especially how much weight you put on bad outcomes and who gets the gains. This is a simple way to explore those judgments, not a full welfare model.</p>
   <div class="group" id="g-values"></div>
   <div class="verdict2">
     <div class="big" id="ce-wrap"><span id="v-ce">–</span><small> as a guaranteed gain</small></div>
@@ -424,29 +424,30 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
     <div class="math">
       <p>As a check, plugging in Acemoglu's inputs (20% of tasks exposed, 23% profitable to automate, and a 14.4% cost saving) should reproduce his estimate.</p>
       <div id="checks"></div>
-      <p style="margin-top:12px">The small gap on productivity comes from compounding: we use the exact log form of Hulten's rule, which is slightly larger than Acemoglu's linear approximation. Published forecasts cover different horizons and methods (Goldman is global, over 10 years; Penn Wharton runs to 2055), so treat their placement on the scale as a rough guide.</p>
+      <p style="margin-top:12px">The small gap on productivity comes from using the log/Cobb-Douglas version rather than Acemoglu's linear approximation. For small changes they are nearly the same. Published forecasts cover different horizons and methods (Goldman is global, over 10 years; Penn Wharton runs to 2055), so treat their placement on the scale as a rough guide.</p>
     </div>
   </details>
   <details>
     <summary>The math, in full</summary>
     <div class="math">
-      <p>Everything is the change in GDP relative to a world without AI. Time <code>t</code> runs from 0 to 25 years.</p>
-      <p><b>Adoption.</b> An S-curve: <code>A(t) = ceiling / (1 + exp(−k(t − T)))</code>, where <code>T</code> is the years-to-halfway slider and <code>k = 2·ln 9 / T</code>, so adoption goes from 10% to 90% of its ceiling between <code>T/2</code> and <code>1.5T</code>.</p>
-      <p><b>Productivity from doing existing work.</b> Hulten's theorem: the log productivity gain is the share of the economy affected times the log productivity gain on it: <code>exposure × A(t) × ln(1 / (1 − saving))</code>. For small savings, <code>ln(1/(1−s)) ≈ s</code>, which gives the familiar "share × saving." This is exact if the economy combines tasks with a unit elasticity of substitution (Cobb-Douglas).</p>
-      <p><b>Faster invention.</b> Adds <code>science × A(t)/ceiling</code> to the productivity growth rate each year, so it accumulates: <code>Σ science × A(τ)/ceiling</code>.</p>
-      <p><b>Investment follows.</b> When productivity rises, firms invest until the capital stock catches up, which raises output by a further factor of <code>1 / (1 − α)</code>, with capital share <code>α = 0.35</code>. So <code>ln GDP gain = (task gain + invention gain) / 0.65</code>. Acemoglu's own step from productivity to GDP implies a similar factor.</p>
-      <p><b>Incidents.</b> Each year, a major incident happens with probability <code>p × m(t)</code>, knocks <code>severity</code> off GDP, and fades with a five-year half-life. Losses stack.</p>
-      <p><b>Catastrophe.</b> A constant annual hazard <code>h</code> set so that <code>1 − (1 − h)^25</code> equals your 25-year probability, scaled each year by <code>m(t)</code>. If it happens, GDP is permanently <code>−severity</code> relative to a world without AI, replacing any gains.</p>
-      <p><b>Extinction-level risk.</b> The separate extinction slider is not simulated or priced in GDP terms. A GDP model can't meaningfully value that outcome, so the page reports the number alongside the results instead.</p>
-      <p><b>Risk and footprint.</b> <code>m(t) = (1 − link) + link × F(t) / 20%</code>, where <code>F(t) = exposure × A(t)</code> is the share of the economy's work AI is doing. At link 0 your probabilities apply as entered. At 100%, they're the probabilities for an AI doing a fifth of the economy's work, and scale in proportion to how much it actually does.</p>
-      <p><b>Uncertainty.</b> Each run multiplies exposure, saving, years-to-halfway and science by independent log-normal noise with spread <code>σ = 0.7 × uncertainty</code>. The same 2,000 random draws are reused every time, so moving a slider changes the answer, not the dice.</p>
-      <p><b>Is it worth it.</b> Each run's gain is weighted: gains captured by a concentrated group count at <code>(1 − discount)</code>, so a gain of <code>x</code> counts as <code>x × (1 − concentration × discount)</code>. Losses count in full. Then a certainty equivalent with constant relative risk aversion <code>η</code> (the "bad outcomes" slider): <code>CE = (mean[(1 + x)^(1−η)])^(1/(1−η)) − 1</code>, which at <code>η = 1</code> is <code>exp(mean[ln(1 + x)]) − 1</code>. At <code>η = 0</code> it's the plain average.</p>
+      <p>This is deliberately a simple model. It borrows a few standard relationships from the economics literature, then links the assumptions above with straightforward compounding and simulation. Where it goes beyond the cited work, the choices are simple modeling assumptions rather than estimates.</p>
+      <p>Everything below is the change in GDP relative to a world without AI. Time <code>t</code> runs from 0 to 25 years.</p>
+      <p><b>Adoption.</b> Adoption follows an S-curve: <code>A(t) = ceiling / (1 + exp(−k(t − T)))</code>. <code>T</code> is the years-to-halfway slider. Setting <code>k = 2·ln 9 / T</code> means adoption moves from 10% to 90% of its eventual level between <code>T/2</code> and <code>1.5T</code>. The point is simply to represent adoption starting slowly, speeding up, and then leveling off.</p>
+      <p><b>Productivity from doing existing work.</b> Acemoglu's basic calculation combines how much work is affected with how much cheaper that work becomes, drawing on Hulten's theorem. The model uses <code>exposure × A(t) × ln(1 / (1 − saving))</code>. For small savings, <code>ln(1/(1−s)) ≈ s</code>, so this is close to the intuitive "share affected × saving." Hulten's theorem is generally a first-order result; under a Cobb-Douglas, unit-elasticity assumption, this log form is exact.</p>
+      <p><b>Faster invention.</b> The model also lets AI raise the rate of productivity growth by speeding up research and invention, an idea explored by Aghion, Jones and Jones (2019). The implementation here is deliberately simple: it adds <code>science × A(t)/ceiling</code> to productivity growth each year. As adoption rises, more of the eventual research boost arrives, and those gains compound over time.</p>
+      <p><b>Investment.</b> To translate productivity gains into GDP, the model uses a simple capital-adjustment multiplier, <code>1 / (1 − α)</code>, with capital share <code>α = 0.35</code>. So <code>ln GDP gain = (task gain + invention gain) / 0.65</code>. Acemoglu uses the same basic benchmark (GDP gains equal productivity gains divided by one minus the capital share), though with different calibrations and additional cases.</p>
+      <p><b>Incidents.</b> Each year, a major incident can occur. Its probability is the incident rate you entered, adjusted by the risk-and-footprint setting below. An incident reduces GDP by the severity you chose, then the loss fades with a five-year half-life. Multiple incidents can stack.</p>
+      <p><b>Catastrophe.</b> The 25-year catastrophe probability is first converted into a constant annual rate: <code>h</code> is chosen so that <code>1 − (1 − h)^25</code> equals the probability you entered. The risk-and-footprint setting can then scale that rate over time. If a catastrophe occurs, GDP remains permanently below the no-AI baseline by the severity you chose, replacing any gains.</p>
+      <p><b>Extinction-level risk.</b> The separate extinction slider is not simulated or priced in GDP terms. A GDP model cannot meaningfully value human extinction or permanent loss of civilization, so the page reports that belief separately instead.</p>
+      <p><b>Risk and AI's footprint.</b> This is a simple scaling assumption. <code>m(t) = (1 − link) + link × F(t) / 20%</code>, where <code>F(t) = exposure × A(t)</code> is the share of the economy's work AI is doing. At zero linkage, the risk probabilities stay fixed. At full linkage, the probabilities you entered are the reference rates when AI is doing 20% of the economy's work, and they scale proportionally with its footprint. Intermediate settings blend the two.</p>
+      <p><b>Uncertainty.</b> Each run randomly moves four inputs (exposure, cost saving, years to halfway, and faster invention) around the values you chose. The draws are log-normal, with <code>σ = 0.7 × uncertainty</code>; at the widest setting, roughly two-thirds fall between about half and twice the entered value. The same 2,000 random draws are reused every time, so moving a slider changes the assumptions, not the dice.</p>
+      <p><b>Is it worth it?</b> This is a simple way to explore how the answer changes when you care about who receives the gains and give bad outcomes extra weight; it is not a full welfare model. Gains captured by a concentrated group are discounted according to your settings, while losses count in full. The model then uses a standard CRRA certainty equivalent: <code>CE = (mean[(1 + x)^(1−η)])^(1/(1−η)) − 1</code>; when <code>η = 1</code>, this becomes <code>exp(mean[ln(1 + x)]) − 1</code>. At <code>η = 0</code>, it is just the average outcome. Higher values of <code>η</code> put progressively more weight on bad outcomes. The extinction-level risk above is not included in this calculation.</p>
       <p><b>What the model leaves out.</b></p>
       <ul>
         <li><b>Bottlenecks.</b> The model assumes cheaper tasks don't shrink as a share of the economy. If tasks are strong complements, what AI can't do becomes the bottleneck, so large savings matter less. This could make the higher estimates too high.</li>
         <li><b>Who wins.</b> Wages, prices and inequality are not modeled, except through the concentration sliders.</li>
         <li><b>New products.</b> The model counts existing work getting cheaper, plus faster invention, but not entirely new goods and services. This could make the lower estimates too low.</li>
-        <li><b>Costs.</b> Energy, chips, and investment are assumed to come out of the gains.</li>
+        <li><b>Costs.</b> Energy, chips, and other implementation costs are assumed to come out of the gains.</li>
         <li><b>The long run.</b> Nothing after 25 years. Slow scenarios are not finished by then.</li>
       </ul>
     </div>
@@ -525,15 +526,15 @@ const DEFS = [
   {g:'g-risk',k:'sevCat',short:'Catastrophe cost',label:'How bad is that outcome',unit:'% of GDP, permanent',min:10,max:95,step:5,risk:true,torn:true,
    why:'95% means the economy barely survives. Lower values mean a severe but survivable catastrophe.',ticks:['−10%','−95%']},
   {g:'g-risk',k:'link',short:'Risk grows with AI',label:'Does risk grow with how much AI is doing?',unit:'%',min:0,max:100,step:5,risk:true,torn:true,
-   why:'At 0, the chances above are fixed. At 100%, they are the chances for an AI doing a fifth of the economy\'s work, and double if it does twice that. Use this if you think a more capable, more widely used AI also carries more risk.',ticks:['fixed','fully linked']},
+   why:'At 0, the chances above stay fixed. At 100%, they are reference probabilities for AI doing a fifth of the economy\'s work, and scale with how much it actually does. Intermediate settings blend the two. Use this if you think a more capable, more widely used AI also carries more risk.',ticks:['fixed','fully linked']},
   {g:'g-risk',k:'pExt',short:'Extinction-level chance',label:'Chance of human extinction or permanent loss of civilization within 25 years',unit:'%',min:0,max:30,step:0.5,risk:true,
    why:'Estimates vary widely. In a 2023 survey, AI researchers gave a median 5% chance of outcomes as bad as human extinction, with no time limit. In a 2022 forecasting tournament, AI experts put AI-caused extinction by 2100 at about 3%, and superforecasters at about 0.4%. The economic numbers on this page don\'t try to price this outcome; it is shown on its own in the results.',ticks:['0%','30%']},
   {g:'g-risk',k:'uncert',label:'How sure are you about all of the above?',unit:'',min:0.1,max:1,step:0.05,fmt:v=>v<=0.3?'very sure':v<=0.6?'somewhat sure':'wide open',
-   why:'How much each run nudges your inputs. At "very sure" the runs cluster around your answers. At "wide open," a typical run has each input off by a factor of two.',ticks:['very sure','wide open']},
+   why:'How much each run moves your inputs around your answers. At "very sure" the runs cluster closely around them. At "wide open," roughly two-thirds of the draws fall between about half and twice your answer.',ticks:['very sure','wide open']},
   {g:'g-people',k:'displace',label:'Of the work AI takes over, how much means someone loses their job?',unit:'%',min:0,max:100,step:5,
    why:'The rest is jobs that change but don\'t disappear, like an accountant who now uses AI for the routine parts. Only the job losses below depend on this; it doesn\'t change the size of the economy.',ticks:['0%','100%']},
-  {g:'g-values',k:'aversion',short:'Risk aversion',label:'How much do you fear bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>v.toFixed(1)+(v<0.5?' · average only':v<=2?' · typical':v<=3.5?' · cautious':' · very cautious'),valueTorn:true,
-   why:'Economists call this risk aversion. At 0, only the average outcome matters. Economists typically use 1 to 2 for household decisions. Higher values let a small chance of disaster count for a lot.',ticks:['only the average','very cautious']},
+  {g:'g-values',k:'aversion',short:'Risk aversion',label:'How much extra weight do you give bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>v.toFixed(1)+(v<0.5?' · average only':v<=2?' · typical':v<=3.5?' · cautious':' · very cautious'),valueTorn:true,
+   why:'Economists call this risk aversion. At 0, only the average outcome matters. Values around 1 to 2 are common in some household applications; there is no standard right value for society-wide outcomes like these. Higher values give bad tail outcomes more weight.',ticks:['only the average','very cautious']},
   {g:'g-values',k:'concentration',short:'Concentration',label:'Share of the gains captured by a few firms or countries',unit:'%',min:0,max:100,step:5,valueTorn:true,
    why:'Who you think ends up with the gains. This doesn\'t change GDP; it changes how much of it you count.',ticks:['0%','100%']},
   {g:'g-values',k:'discount',short:'Discount on concentrated gains',label:'How much less a concentrated gain is worth to you',unit:'%',min:0,max:100,step:5,valueTorn:true,
@@ -675,7 +676,7 @@ function render(){
     rl('×','Cost saving on that work','step 2',share(c.sv)) +
     rl('=','Productivity gain from existing work','share of work × cost saving',signed(Math.exp(c.taskLog)-1),'sub') +
     rl('+','Productivity gain from faster invention','step 4, accumulated over 25 years',signed(Math.exp(c.sciLog)-1)) +
-    rl('×','Investment follows productivity','capital catches up: × 1 / (1 − 0.35) in logs','× 1.54') +
+    rl('×','Investment','a simple capital-adjustment multiplier; see the math','× 1.54') +
     rl('=','Bigger economy in year 25, before risk','',signed(c.gdp),'total');
 
   // headline
