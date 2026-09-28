@@ -155,6 +155,9 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .summary li.harm::before{background:var(--harm)}
 .summary li b{font-weight:600}
 details.more{margin-top:22px;border-bottom:1px solid var(--line)}
+details.more.sec{margin-top:0;border-top:0}
+details.more + details.more.sec{margin-top:0}
+details.more.adv{margin-top:14px}
 details.more.calc{margin-top:4px;margin-bottom:10px}
 .more-body{padding-bottom:14px}
 .people{width:100%;border-collapse:collapse;font-size:15.5px;margin-top:10px}
@@ -325,6 +328,13 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   <h3><span class="step">Step 5</span>What could go wrong?</h3>
   <p class="note">The red sliders set the risks.</p>
   <div class="group" id="g-risk"></div>
+  <details class="more adv">
+    <summary>More assumptions</summary>
+    <div class="more-body">
+      <p class="note">These refine the answer rather than drive it. Each has a sensible default; change them if you have a view.</p>
+      <div class="group" id="g-risk-more"></div>
+    </div>
+  </details>
 
   <h2 id="results">What your answers suggest</h2>
   <div class="verdict">
@@ -385,7 +395,9 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
     </div>
   </details>
 
-  <h2>What actually moves the answer</h2>
+  <details class="more sec">
+    <summary>What actually moves the answer</summary>
+    <div class="more-body">
   <p class="note">Each assumption is halved and doubled, with everything else held fixed. Longer bars mean the result depends more on that assumption.</p>
   <div class="toggle" role="group" aria-label="Measure">
     <button class="chip" data-tmode="size" aria-pressed="true">Size (rating)</button>
@@ -395,14 +407,19 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
     <div class="chart-wrap"><svg id="tornado" viewBox="0 0 640 420" role="img" aria-label="Sensitivity of the result to each assumption"></svg></div>
     <figcaption id="torn-cap">Change in the rating when each input is halved (gray) or doubled (blue). An input set to zero is raised to a quarter of its range instead.</figcaption>
   </figure>
-
-  <h2>Is it worth it?</h2>
+    </div>
+  </details>
+  <details class="more sec">
+    <summary>Is it worth it? Weigh risk and who gets the gains</summary>
+    <div class="more-body">
   <p>The sections above measure how big AI is. Whether that's good depends on your values, especially how much weight you put on bad outcomes and who gets the gains. This is a simple way to explore those judgments, not a full welfare model.</p>
   <div class="group" id="g-values"></div>
   <div class="verdict2">
     <div class="big" id="ce-wrap"><span id="v-ce">–</span><small> as a guaranteed gain</small></div>
     <p class="verdict-line" id="v-ce-line" style="margin-bottom:0">–</p>
   </div>
+    </div>
+  </details>
 
   <h2 id="summary-h">In short</h2>
   <p class="note">A plain-language summary that updates as you move the sliders. This is what "Copy my answers" copies.</p>
@@ -517,25 +534,25 @@ const DEFS = [
    why:'Internet: about 10 years to half of US households. Electricity: about 30 years to half of factory power.',ticks:['2','40']},
   {g:'g-science',k:'science',short:'Faster invention',label:'Extra productivity growth from faster R&D, once fully adopted',unit:' pts/yr',min:0,max:3,step:0.05,torn:true,
    why:'US productivity has grown about 1.5% a year over the long run. 0.1 would be a modest boost; 1.0 would be a historic one; the explosive-growth literature (Aghion, Jones & Jones; Davidson) considers far more.',ticks:['0','+3']},
-  {g:'g-risk',k:'pMajor',short:'Incident chance',label:'Yearly chance of a major AI-caused incident',unit:'%',min:0,max:25,step:0.5,risk:true,torn:true,
+  {g:'g-risk-more',k:'pMajor',short:'Incident chance',label:'Yearly chance of a major AI-caused incident',unit:'%',min:0,max:25,step:0.5,risk:true,torn:true,
    why:'A serious cyberattack, market failure or infrastructure failure enabled by AI. On the scale of a recession, not the end of the world.',ticks:['0%','25%']},
-  {g:'g-risk',k:'sevMajor',short:'Incident cost',label:'Cost of such an incident',unit:'% of GDP',min:0,max:10,step:0.5,risk:true,torn:true,
+  {g:'g-risk-more',k:'sevMajor',short:'Incident cost',label:'Cost of such an incident',unit:'% of GDP',min:0,max:10,step:0.5,risk:true,torn:true,
    why:'The 2008 financial crisis cost the US roughly 4% of GDP at its trough. Covid cost about 3% in 2020. Losses fade with a five-year half-life.',ticks:['0%','10%']},
   {g:'g-risk',k:'pCat',short:'Catastrophe chance',label:'Chance of an irreversible catastrophe within 25 years',unit:'%',min:0,max:30,step:0.5,risk:true,torn:true,
    why:'Loss of control, an engineered pandemic, AI-enabled war: a civilization-scale disaster that the economy survives, badly damaged. Outcomes as bad as human extinction are a separate question below, because a GDP model can\'t meaningfully capture them.',ticks:['0%','30%']},
-  {g:'g-risk',k:'sevCat',short:'Catastrophe cost',label:'How bad is that outcome',unit:'% of GDP, permanent',min:10,max:95,step:5,risk:true,torn:true,
-   why:'95% means the economy barely survives. Lower values mean a severe but survivable catastrophe.',ticks:['−10%','−95%']},
-  {g:'g-risk',k:'link',short:'Risk grows with AI',label:'Does risk grow with how much AI is doing?',unit:'%',min:0,max:100,step:5,risk:true,torn:true,
-   why:'At 0, the chances above stay fixed. At 100%, they are reference probabilities for AI doing a fifth of the economy\'s work, and scale with how much it actually does. Intermediate settings blend the two. Use this if you think a more capable, more widely used AI also carries more risk.',ticks:['fixed','fully linked']},
   {g:'g-risk',k:'pExt',short:'Extinction-level chance',label:'Chance of human extinction or permanent loss of civilization within 25 years',unit:'%',min:0,max:30,step:0.5,risk:true,
    why:'Estimates vary widely. In a 2023 survey, AI researchers gave a median 5% chance of outcomes as bad as human extinction, with no time limit. In a 2022 forecasting tournament, AI experts put AI-caused extinction by 2100 at about 3%, and superforecasters at about 0.4%. The economic numbers on this page don\'t try to price this outcome; it is shown on its own in the results.',ticks:['0%','30%']},
-  {g:'g-risk',k:'uncert',label:'How sure are you about all of the above?',unit:'',min:0.1,max:1,step:0.05,fmt:v=>v<=0.3?'very sure':v<=0.6?'somewhat sure':'wide open',
+  {g:'g-risk-more',k:'sevCat',short:'Catastrophe cost',label:'How bad a catastrophe would be',unit:'% of GDP, permanent',min:10,max:95,step:5,risk:true,torn:true,
+   why:'95% means the economy barely survives. Lower values mean a severe but survivable catastrophe.',ticks:['−10%','−95%']},
+  {g:'g-risk-more',k:'link',short:'Risk grows with AI',label:'Does risk grow with how much AI is doing?',unit:'%',min:0,max:100,step:5,risk:true,torn:true,
+   why:'At 0, the incident and catastrophe chances stay fixed. At 100%, they are reference probabilities for AI doing a fifth of the economy\'s work, and scale with how much it actually does. Intermediate settings blend the two. Use this if you think a more capable, more widely used AI also carries more risk.',ticks:['fixed','fully linked']},
+  {g:'g-risk-more',k:'uncert',label:'How sure are you about your answers?',unit:'',min:0.1,max:1,step:0.05,fmt:v=>v<=0.3?'very sure':v<=0.6?'somewhat sure':'wide open',
    why:'How much each run moves your inputs around your answers. At "very sure" the runs cluster closely around them. At "wide open," roughly two-thirds of the draws fall between about half and twice your answer.',ticks:['very sure','wide open']},
   {g:'g-people',k:'displace',label:'Of the work AI takes over, how much means someone loses their job?',unit:'%',min:0,max:100,step:5,
    why:'The rest is jobs that change but don\'t disappear, like an accountant who now uses AI for the routine parts. Only the job losses below depend on this; it doesn\'t change the size of the economy.',ticks:['0%','100%']},
   {g:'g-values',k:'aversion',short:'Risk aversion',label:'How much extra weight do you give bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>v.toFixed(1)+(v<0.5?' · average only':v<=2?' · typical':v<=3.5?' · cautious':' · very cautious'),valueTorn:true,
    why:'Economists call this risk aversion. At 0, only the average outcome matters. Values around 1 to 2 are common in some household applications; there is no standard right value for society-wide outcomes like these. Higher values give bad tail outcomes more weight.',ticks:['only the average','very cautious']},
-  {g:'g-values',k:'concentration',short:'Concentration',label:'Share of the gains captured by a few firms or countries',unit:'%',min:0,max:100,step:5,valueTorn:true,
+  {g:'g-people',k:'concentration',short:'Concentration',label:'Share of the gains captured by a few firms or countries',unit:'%',min:0,max:100,step:5,valueTorn:true,
    why:'Who you think ends up with the gains. This doesn\'t change GDP; it changes how much of it you count.',ticks:['0%','100%']},
   {g:'g-values',k:'discount',short:'Discount on concentrated gains',label:'How much less a concentrated gain is worth to you',unit:'%',min:0,max:100,step:5,valueTorn:true,
    why:'At 0, a dollar counts the same wherever it goes. At 100, gains that go to a few count for nothing.',ticks:['0%','100%']},
