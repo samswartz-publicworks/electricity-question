@@ -213,6 +213,11 @@ details[open] summary::after{content:"–"}
 .bar a{color:inherit;font:13px var(--body);opacity:.7}
 
 /* shared additions */
+.sure-sep{color:var(--ink-3);padding:0 2px}
+.sure-btn{background:none;border:0;padding:0;font:14px var(--body);color:var(--ink-2);text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}
+.sure-pick{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
+.sure-pick[hidden]{display:none}
+.sure-pick .chip{padding:6px 12px;font-size:13px}
 .why-btn{display:none;background:none;border:0;padding:2px 0 6px;font:600 14px var(--body);color:var(--ai);cursor:pointer}
 .why-btn::after{content:" +";font-family:var(--mono)}
 .ctl.show-why .why-btn::after{content:" –"}
@@ -342,7 +347,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   <div class="verdict">
     <div class="big" id="v-trs-wrap"><span id="v-trs">–</span><small id="v-trs-sub"> on the scale</small></div>
     <div class="risk-line" id="v-risk"></div>
-    <div style="font-size:14px;color:var(--ink-2)">The typical result across 2,000 runs, 25 years out, placed on the scale.</div>
+    <div style="font-size:14px;color:var(--ink-2)">The typical result across 2,000 runs, 25 years out. The range on the chart below reflects how sure you said you were.</div>
     <div class="reveal" id="reveal">–</div>
     <div class="verdict-line" id="v-line">–</div>
     <p class="tail-note" id="v-tail" hidden></p>
@@ -352,7 +357,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
     <div class="chart-wrap"><svg id="scale" viewBox="0 0 640 190" role="img" aria-label="Your rating, your model's result, historical benchmarks and published forecasts on the Richter scale"></svg></div>
     <figcaption>Purple is your gut assessment. Blue is the typical model result, with a band covering the middle 80% of runs. Historical benchmarks are in color below the line; published forecasts are gray. Horizons differ; see the checks below.<span id="scale-fc"></span></figcaption>
   </figure>
-  <p class="note"><b>How this is calculated:</b> the model runs your assumptions 2,000 times, varying them by the uncertainty you chose and adding incidents and catastrophes at the rates you set.</p>
+  <p class="note"><b>How this is calculated:</b> the model runs your assumptions 2,000 times, varying each by how sure you said you were and adding incidents and catastrophes at the rates you set.</p>
   <details class="more calc">
     <summary>Your answers, multiplied out</summary>
     <div class="more-body">
@@ -460,7 +465,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
       <p><b>Catastrophe.</b> The 25-year catastrophe probability is first converted into a constant annual rate: <code>h</code> is chosen so that <code>1 − (1 − h)^25</code> equals the probability you entered. The risk-and-footprint setting can then scale that rate over time. If a catastrophe occurs, GDP remains permanently below the no-AI baseline by the severity you chose, replacing any gains.</p>
       <p><b>Extinction-level risk.</b> The separate extinction slider is not simulated or priced in GDP terms. A GDP model cannot meaningfully value human extinction or permanent loss of civilization, so the page reports that belief separately instead.</p>
       <p><b>Risk and AI's footprint.</b> This is a simple scaling assumption. <code>m(t) = (1 − link) + link × F(t) / 20%</code>, where <code>F(t) = exposure × A(t)</code> is the share of the economy's work AI is doing. At zero linkage, the risk probabilities stay fixed. At full linkage, the probabilities you entered are the reference rates when AI is doing 20% of the economy's work, and they scale proportionally with its footprint. Intermediate settings blend the two.</p>
-      <p><b>Uncertainty.</b> Each run randomly moves four inputs (exposure, cost saving, years to halfway, and faster invention) around the values you chose. The draws are log-normal, with <code>σ = 0.7 × uncertainty</code>; at the widest setting, roughly two-thirds fall between about half and twice the entered value. The same 2,000 random draws are reused every time, so moving a slider changes the assumptions, not the dice.</p>
+      <p><b>Uncertainty.</b> Each run randomly moves five inputs (work AI can do, share that switches, cost saving, years to halfway, and faster invention) around the values you chose, each by how sure you said you were. The draws are log-normal, with <code>σ = 0.15</code> for very sure, <code>0.35</code> for fairly sure (the default) and <code>0.7</code> for not very sure; at not very sure, roughly two-thirds of draws fall between about half and twice your answer. The same 2,000 random draws are reused every time, so moving a slider changes the assumptions, not the dice.</p>
       <p><b>Is it worth it?</b> This is a simple way to explore how the answer changes when you care about who receives the gains and give bad outcomes extra weight; it is not a full welfare model. Gains captured by a concentrated group are discounted according to your settings, while losses count in full. The model then uses a standard CRRA certainty equivalent: <code>CE = (mean[(1 + x)^(1−η)])^(1/(1−η)) − 1</code>; when <code>η = 1</code>, this becomes <code>exp(mean[ln(1 + x)]) − 1</code>. At <code>η = 0</code>, it is just the average outcome. Higher values of <code>η</code> put progressively more weight on bad outcomes. The extinction-level risk above is not included in this calculation.</p>
       <p><b>What the model leaves out.</b></p>
       <ul>
@@ -549,8 +554,6 @@ const DEFS = [
    why:'95% means the economy barely survives. Lower values mean a severe but survivable catastrophe.',ticks:['−10%','−95%']},
   {g:'g-risk-more',k:'link',short:'Risk grows with AI',label:'Does risk grow with how much AI is doing?',unit:'%',min:0,max:100,step:5,risk:true,torn:true,
    why:'At 0, the incident and catastrophe chances stay fixed. At 100%, they are reference probabilities for AI doing a fifth of the economy\'s work, and scale with how much it actually does. Intermediate settings blend the two. Use this if you think a more capable, more widely used AI also carries more risk.',ticks:['fixed','fully linked']},
-  {g:'g-risk-more',k:'uncert',label:'How sure are you about your answers?',unit:'',min:0.1,max:1,step:0.05,fmt:v=>v<=0.3?'very sure':v<=0.6?'somewhat sure':'wide open',
-   why:'How much each run moves your inputs around your answers. At "very sure" the runs cluster closely around them. At "wide open," roughly two-thirds of the draws fall between about half and twice your answer.',ticks:['very sure','wide open']},
   {g:'g-people',k:'displace',label:'Of the work AI takes over, how much means someone loses their job?',unit:'%',min:0,max:100,step:5,
    why:'The rest is jobs that change but don\'t disappear, like an accountant who now uses AI for the routine parts. Only the job losses below depend on this; it doesn\'t change the size of the economy.',ticks:['0%','100%']},
   {g:'g-values',k:'aversion',short:'Risk aversion',label:'How much extra weight do you give bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>v.toFixed(1)+(v<0.5?' · average only':v<=2?' · typical':v<=3.5?' · cautious':' · very cautious'),valueTorn:true,
@@ -574,7 +577,7 @@ const PRESETS = {
   transformative:{exposure:75,amax:80,saving:60,t50:6,science:1,pMajor:6,sevMajor:3,pCat:8,sevCat:80,link:80,uncert:0.5,aversion:1,concentration:60,discount:30,bInternet:10,bElec:35,
     note:'AI does most work and speeds up research sharply, with much higher risk. The world of the explosive-growth papers.'},
 };
-function applyPreset(name){ const p=PRESETS[name]; const gut=S?S.gut:7.5; const displace=(S&&S.displace!=null)?S.displace:25; const pExt=(S&&S.pExt!=null)?S.pExt:0; S={gut,displace,pExt}; for(const k in p){ if(k!=='note') S[k]=p[k]; } }
+function applyPreset(name){ const prevS=S; const p=PRESETS[name]; const gut=S?S.gut:7.5; const displace=(S&&S.displace!=null)?S.displace:25; const pExt=(S&&S.pExt!=null)?S.pExt:0; S={gut,displace,pExt}; if(prevS) SURE_KEYS.forEach(k=>{ if(prevS['sure_'+k]) S['sure_'+k]=prevS['sure_'+k]; }); for(const k in p){ if(k!=='note') S[k]=p[k]; } }
 let S=null; applyPreset('mainstream');
 try{ const saved = JSON.parse(localStorage.getItem('eq-state3')||'null'); if(saved && typeof saved==='object'){ S = Object.assign({}, S, saved); var loadedSaved=true; } }catch(e){}
 let activePreset = (typeof loadedSaved!=='undefined') ? null : 'mainstream';
@@ -583,14 +586,25 @@ if(S.pExt==null) S.pExt=0;
 
 const fmtVal = (d,v)=> d.fmt ? d.fmt(v) : (Number.isInteger(d.step)? v : d.step>=0.1? v.toFixed(1): v.toFixed(2)) + d.unit;
 
+const SURE_KEYS=['exposure','amax','saving','t50','science'];
+const SURE_LEVELS=[['very','very sure',0.15],['fairly','fairly sure',0.35],['not','not very sure',0.7]];
+const sureOf=k=>(S&&S['sure_'+k])||'fairly';
+const sigOf=(s,k)=>{ const l=SURE_LEVELS.find(x=>x[0]===((s&&s['sure_'+k])||'fairly')); return l?l[2]:0.35; };
 DEFS.forEach(d=>{
   const el = document.createElement('div'); el.className='ctl'+(d.risk?' risk':'');
-  el.innerHTML = `<div class="ctl-head"><label for="in-${d.k}">${d.label}</label><span class="ctl-val" id="val-${d.k}"></span></div>
+  const sure = SURE_KEYS.includes(d.k);
+  el.innerHTML = `<div class="ctl-head"><label for="in-${d.k}">${d.label}</label><span class="ctl-val"><span id="val-${d.k}"></span>${sure?` <span class="sure-sep">·</span> <button type="button" class="sure-btn" id="sure-${d.k}" aria-expanded="false"></button>`:''}</span></div>
+  ${sure?`<div class="sure-pick" id="pick-${d.k}" hidden role="group" aria-label="How sure are you?">${SURE_LEVELS.map(l=>`<button type="button" class="chip sure-opt" data-k="${d.k}" data-v="${l[0]}">${l[1]}</button>`).join('')}</div>`:''}
   <button type="button" class="why-btn" aria-expanded="false">Why these numbers?</button>
   <div class="ctl-why">${d.why}</div>
   <input type="range" id="in-${d.k}" min="${d.min}" max="${d.max}" step="${d.step}" value="${S[d.k]}">
   <div class="ticks"><span>${d.ticks[0]}</span><span>${d.ticks[1]}</span></div>`;
   $(d.g).appendChild(el);
+  if(sure){
+    const sb=el.querySelector('.sure-btn'), pk=el.querySelector('.sure-pick');
+    sb.addEventListener('click',()=>{ pk.hidden=!pk.hidden; sb.setAttribute('aria-expanded',String(!pk.hidden)); });
+    pk.querySelectorAll('.sure-opt').forEach(b=>b.addEventListener('click',()=>{ S['sure_'+d.k]=b.dataset.v; pk.hidden=true; sb.setAttribute('aria-expanded','false'); schedule(); }));
+  }
   const wb=el.querySelector('.why-btn'); wb.addEventListener('click',()=>{ const o=el.classList.toggle('show-why'); wb.setAttribute('aria-expanded',String(o)); });
   const inp = el.querySelector('input');
   inp.addEventListener('input', ()=>{ S[d.k]=parseFloat(inp.value); activePreset=null; schedule(); });
@@ -598,6 +612,7 @@ DEFS.forEach(d=>{
 $('in-gut').addEventListener('input',()=>{ S.gut=parseFloat($('in-gut').value); schedule(); });
 function syncInputs(){
   DEFS.forEach(d=>{ $('in-'+d.k).value=S[d.k]; $('val-'+d.k).textContent=fmtVal(d,S[d.k]); });
+  SURE_KEYS.forEach(k=>{ const v=sureOf(k); $('sure-'+k).textContent=SURE_LEVELS.find(l=>l[0]===v)[1]; document.querySelectorAll(`.sure-opt[data-k="${k}"]`).forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v))); });
   $('in-gut').value=S.gut; $('val-gut').textContent=S.gut.toFixed(1);
   $('gut-read').innerHTML=`<b>${S.gut.toFixed(1)}</b>: ${trsWord(S.gut)}.`;
   document.querySelectorAll('.rung').forEach(r=>r.classList.toggle('on', Math.min(10,Math.floor(S.gut))==+r.dataset.n));
@@ -612,7 +627,8 @@ function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a
 const rng = mulberry32(20260926);
 function gauss(){ let u=0,v=0; while(u===0)u=rng(); while(v===0)v=rng(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
 const Z = [];
-for(let i=0;i<N;i++){ const z=[gauss(),gauss(),gauss(),gauss()]; const u=new Float32Array(T); for(let t=0;t<T;t++)u[t]=rng(); Z.push({z,u,cu:rng()}); }
+const rngA = mulberry32(777001); function gaussA(){ let u=0,v=0; while(u===0)u=rngA(); while(v===0)v=rngA(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+for(let i=0;i<N;i++){ const z=[gauss(),gauss(),gauss(),gauss()]; const u=new Float32Array(T); for(let t=0;t<T;t++)u[t]=rng(); Z.push({z,u,za:gaussA(),cu:rng()}); }
 
 // ---------- engine ----------
 function adoption(t, amax, t50){ const k=2*Math.log(9)/t50; return amax/(1+Math.exp(-k*(t-t50))); }
@@ -629,16 +645,17 @@ function central(s, tEnd){
 
 function simulate(s, n){
   n = n||N;
-  const sig = s.uncert*0.7;
+  const sE=sigOf(s,'exposure'), sA=sigOf(s,'amax'), sS=sigOf(s,'saving'), sT=sigOf(s,'t50'), sI=sigOf(s,'science');
   const cols=[]; for(let t=0;t<=T;t++) cols.push(new Float32Array(n));
-  const amax=s.amax/100, link=s.link/100;
+  const amax0=s.amax/100, link=s.link/100;
   const h0 = s.pCat>0 ? 1-Math.pow(1-s.pCat/100, 1/T) : 0;
   for(let i=0;i<n;i++){
     const r=Z[i];
-    const E = Math.min(1, s.exposure/100*Math.exp(sig*r.z[0]));
-    const sv = Math.min(0.95, s.saving/100*Math.exp(sig*r.z[1]));
-    const t50 = s.t50*Math.exp(sig*r.z[2]);
-    const sci = s.science/100*Math.exp(sig*r.z[3]);
+    const E = Math.min(1, s.exposure/100*Math.exp(sE*r.z[0]));
+    const sv = Math.min(0.95, s.saving/100*Math.exp(sS*r.z[1]));
+    const t50 = s.t50*Math.exp(sT*r.z[2]);
+    const sci = s.science/100*Math.exp(sI*r.z[3]);
+    const amax = Math.min(1, amax0*Math.exp(sA*r.za));
     const lnSave = Math.log(1/(1-sv));
     let sciLog=0, surv=1, catYear=T+1; const events=[];
     for(let t=0;t<=T;t++){
@@ -967,7 +984,7 @@ function drawTornado(){
 
 // copy
 $('copy').addEventListener('click',()=>{
-  const lines = DEFS.map(d=>`${d.label}: ${fmtVal(d,S[d.k])}`);
+  const lines = DEFS.map(d=>`${d.label}: ${fmtVal(d,S[d.k])}`+(SURE_KEYS.includes(d.k)?` (${SURE_LEVELS.find(l=>l[0]===sureOf(d.k))[1]})`:''));
   const bullets=[...document.querySelectorAll('#summary li')].map(li=>'• '+li.textContent).join('\n')+'\n\nQuestions my answers raise:\n'+[...document.querySelectorAll('#implic li')].map(li=>'• '+li.textContent).join('\n');
   const txt = `My answers to The Electricity Question\n${location.href.split('#')[0]}\n\n${bullets}\n\nMy settings:\n`+lines.join('\n');
   const box=$('copybox');
