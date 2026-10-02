@@ -214,7 +214,7 @@ details[open] summary::after{content:"–"}
 
 /* shared additions */
 .sure-sep{color:var(--ink-3);padding:0 2px}
-.sure-btn{background:none;border:0;padding:0;font:14px var(--body);color:var(--ink-2);text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}
+.sure-btn{background:none;border:0;padding:8px 4px;margin:-8px -4px;font:14px var(--body);color:var(--ink-2);text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}
 .sure-pick{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
 .sure-pick[hidden]{display:none}
 .sure-pick .chip{padding:6px 12px;font-size:13px}
@@ -347,7 +347,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   <div class="verdict">
     <div class="big" id="v-trs-wrap"><span id="v-trs">–</span><small id="v-trs-sub"> on the scale</small></div>
     <div class="risk-line" id="v-risk"></div>
-    <div style="font-size:14px;color:var(--ink-2)">The typical result across 2,000 runs, 25 years out. The range on the chart below reflects how sure you said you were.</div>
+    <div style="font-size:14px;color:var(--ink-2)">The typical result across 2,000 runs, 25 years out. The range reflects both uncertainty around your economic assumptions and the risks you entered.</div>
     <div class="reveal" id="reveal">–</div>
     <div class="verdict-line" id="v-line">–</div>
     <p class="tail-note" id="v-tail" hidden></p>
@@ -357,7 +357,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
     <div class="chart-wrap"><svg id="scale" viewBox="0 0 640 190" role="img" aria-label="Your rating, your model's result, historical benchmarks and published forecasts on the Richter scale"></svg></div>
     <figcaption>Purple is your gut assessment. Blue is the typical model result, with a band covering the middle 80% of runs. Historical benchmarks are in color below the line; published forecasts are gray. Horizons differ; see the checks below.<span id="scale-fc"></span></figcaption>
   </figure>
-  <p class="note"><b>How this is calculated:</b> the model runs your assumptions 2,000 times, varying each by how sure you said you were and adding incidents and catastrophes at the rates you set.</p>
+  <p class="note"><b>How this is calculated:</b> the model runs your assumptions 2,000 times, varying the five economic inputs according to the certainty setting on each and adding incidents and catastrophes at the rates you set.</p>
   <details class="more calc">
     <summary>Your answers, multiplied out</summary>
     <div class="more-body">
@@ -465,7 +465,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
       <p><b>Catastrophe.</b> The 25-year catastrophe probability is first converted into a constant annual rate: <code>h</code> is chosen so that <code>1 − (1 − h)^25</code> equals the probability you entered. The risk-and-footprint setting can then scale that rate over time. If a catastrophe occurs, GDP remains permanently below the no-AI baseline by the severity you chose, replacing any gains.</p>
       <p><b>Extinction-level risk.</b> The separate extinction slider is not simulated or priced in GDP terms. A GDP model cannot meaningfully value human extinction or permanent loss of civilization, so the page reports that belief separately instead.</p>
       <p><b>Risk and AI's footprint.</b> This is a simple scaling assumption. <code>m(t) = (1 − link) + link × F(t) / 20%</code>, where <code>F(t) = exposure × A(t)</code> is the share of the economy's work AI is doing. At zero linkage, the risk probabilities stay fixed. At full linkage, the probabilities you entered are the reference rates when AI is doing 20% of the economy's work, and they scale proportionally with its footprint. Intermediate settings blend the two.</p>
-      <p><b>Uncertainty.</b> Each run randomly moves five inputs (work AI can do, share that switches, cost saving, years to halfway, and faster invention) around the values you chose, each by how sure you said you were. The draws are log-normal, with <code>σ = 0.15</code> for very sure, <code>0.35</code> for fairly sure (the default) and <code>0.7</code> for not very sure; at not very sure, roughly two-thirds of draws fall between about half and twice your answer. The same 2,000 random draws are reused every time, so moving a slider changes the assumptions, not the dice.</p>
+      <p><b>Uncertainty.</b> Each run randomly moves five inputs (work AI can do, share that switches, cost saving, years to halfway, and faster invention) around the values you chose, using the certainty setting on each. The draws are log-normal, with <code>σ = 0.15</code> for very sure, <code>0.35</code> for fairly sure (the default) and <code>0.7</code> for not very sure; at not very sure, roughly two-thirds of draws fall between about half and twice your answer. The same 2,000 random draws are reused every time, so moving a slider changes the assumptions, not the dice.</p>
       <p><b>Is it worth it?</b> This is a simple way to explore how the answer changes when you care about who receives the gains and give bad outcomes extra weight; it is not a full welfare model. Gains captured by a concentrated group are discounted according to your settings, while losses count in full. The model then uses a standard CRRA certainty equivalent: <code>CE = (mean[(1 + x)^(1−η)])^(1/(1−η)) − 1</code>; when <code>η = 1</code>, this becomes <code>exp(mean[ln(1 + x)]) − 1</code>. At <code>η = 0</code>, it is just the average outcome. Higher values of <code>η</code> put progressively more weight on bad outcomes. The extinction-level risk above is not included in this calculation.</p>
       <p><b>What the model leaves out.</b></p>
       <ul>
