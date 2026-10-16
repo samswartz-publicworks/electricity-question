@@ -144,7 +144,6 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .qlist{margin:0 0 16px;padding-left:22px;font-size:17px;max-width:62ch}
 .qlist li{margin-bottom:8px;padding-left:4px}
 .qlist li::marker{color:var(--ink-3);font-family:var(--mono);font-size:.85em}
-.implic-h{margin:22px 0 6px}
 .implic{margin:0 0 8px;padding-left:22px;max-width:62ch}
 .implic li{margin-bottom:10px}
 .implic li::marker{color:var(--ink-3)}
@@ -160,15 +159,16 @@ details.more{margin-top:22px;border-bottom:1px solid var(--line)}
 details.more.sec{margin-top:0;border-top:0}
 details.more + details.more.sec{margin-top:0}
 details.more.adv{margin-top:14px}
-details.more.calc{margin-top:4px;margin-bottom:10px}
 .more-body{padding-bottom:14px}
-.people{width:100%;border-collapse:collapse;font-size:15.5px;margin-top:10px}
-.people th,.people td{padding:10px 6px;text-align:left;border-bottom:1px solid var(--line);vertical-align:baseline}
-.people th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
-.people td.num,.people th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
-.people th.num{font-family:var(--mono)}
-.people td small{display:block;color:var(--ink-3);font-size:12.5px}
-.people tr.harm td.num{color:var(--harm)}
+.figs{display:grid;grid-template-columns:1fr 1fr;gap:0 28px;margin-top:6px}
+.fig{padding:12px 0 12px;border-top:1px solid var(--line)}
+.fig .l{font-weight:600;font-size:15.5px;line-height:1.3}
+.fig .v{display:block;font-family:var(--mono);font-size:26px;font-weight:500;font-variant-numeric:tabular-nums;margin:4px 0 2px;line-height:1.15}
+.fig .v small{display:inline-block;white-space:nowrap;font-size:14px;color:var(--ink-3);font-weight:400}
+.fig .s{font-size:13px;color:var(--ink-2);line-height:1.4}
+.fig.harm .v{color:var(--harm)}
+.assume{font-size:14.5px;color:var(--ink-2);margin:4px 0 0;line-height:1.5}
+.assume b{color:var(--ink);font-weight:600}
 .matrix{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
 .matrix th,.matrix td{padding:9px 6px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
 .matrix th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
@@ -249,12 +249,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   h2{margin-top:40px}
   h3{margin-top:27px}
   .ctl-head{flex-direction:column;align-items:flex-start;gap:2px}
-  .people thead{display:none}
-  .people tr{display:grid;grid-template-columns:1fr;gap:4px;padding:10px 0;border-bottom:1px solid var(--line)}
-  .people td{border:0;padding:0}
-  .people td:first-child{margin-bottom:4px}
-  .people td.num{text-align:left;white-space:normal;display:flex;gap:10px;align-items:baseline;font-size:15px}
-  .people td.num::before{content:attr(data-l);flex:0 0 52px;color:var(--ink-3);font:13px var(--body)}
+  .figs{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:no-preference){.matrix .b{transition:width .25s ease}}
 @media (max-width:420px){.stats{grid-template-columns:1fr 1fr}.formula{font-size:19px}}
@@ -358,24 +353,25 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
     <figcaption>Purple is your gut assessment. Blue is the typical model result, with a band covering the middle 80% of runs. Historical benchmarks are in color below the line; published forecasts are gray. Horizons differ; see the checks below.<span id="scale-fc"></span></figcaption>
   </figure>
   <p class="note"><b>How this is calculated:</b> the model runs your assumptions 2,000 times, varying the five economic inputs according to the certainty setting on each and adding incidents and catastrophes at the rates you set.</p>
-  <details class="more calc">
+
+  <h3>What it might mean for people</h3>
+  <p class="note">In 25 years, at your settings. Dollar figures use today's US output per person (about $85,000) and average pay (about $65,000).</p>
+  <div class="figs" id="people"></div>
+  <p class="assume">Assumes <b id="as-displace">25%</b> of the work AI takes over means a lost job, and <b id="as-conc">40%</b> of the gains go to a few firms or countries. <button type="button" class="sure-btn" id="adjust-btn" aria-expanded="false" aria-controls="g-people-wrap">Adjust</button></p>
+  <div id="g-people-wrap" hidden><div class="group" id="g-people"></div></div>
+  <p class="note" style="margin-top:12px">The model can't say who gains and who loses: which jobs change, how quickly people find new ones, or how gains are shared. Those depend on choices by businesses and governments, among other things.</p>
+
+  <h3>Questions your answers raise</h3>
+  <ul class="implic" id="implic"></ul>
+
+  <details class="more">
     <summary>Your answers, multiplied out</summary>
     <div class="more-body">
       <p class="note">What your settings imply 25 years from now, before accounting for risk.</p>
       <div class="receipt" id="receipt"></div>
     </div>
   </details>
-
-  <h3>What it might mean for people</h3>
-  <p class="note">Dollar figures use today's US output per person (about $85,000) and average pay (about $65,000).</p>
-  <div class="group" id="g-people" style="margin-bottom:6px"></div>
-  <table class="people" id="people" aria-label="What the results mean for people at 10 and 25 years">
-    <thead><tr><th></th><th class="num">In 10 years</th><th class="num">In 25 years</th></tr></thead>
-    <tbody></tbody>
-  </table>
-  <p class="note" style="margin-top:10px">The model can't say who gains and who loses: which jobs change, how quickly people find new ones, or how gains are shared. Those depend on choices by businesses and governments, among other things.</p>
-
-  <details class="more">
+  <details class="more sec">
     <summary>More detail: the range of outcomes and the path over time</summary>
     <div class="more-body">
   <div class="stats">
@@ -430,10 +426,8 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   </details>
 
   <h2 id="summary-h">In short</h2>
-  <p class="note">A plain-language summary that updates as you move the sliders. This is what "Copy my answers" copies.</p>
+  <p class="note">A plain-language summary that updates as you move the sliders. "Copy my answers" copies this and the questions above.</p>
   <ul class="summary" id="summary"></ul>
-  <p class="implic-h"><b>Questions your answers raise</b></p>
-  <ul class="implic" id="implic"></ul>
 
   <div class="dgroup">
   <details>
@@ -610,6 +604,7 @@ DEFS.forEach(d=>{
   inp.addEventListener('input', ()=>{ S[d.k]=parseFloat(inp.value); activePreset=null; schedule(); });
 });
 $('in-gut').addEventListener('input',()=>{ S.gut=parseFloat($('in-gut').value); schedule(); });
+(()=>{ const ab=document.getElementById('adjust-btn'), w=document.getElementById('g-people-wrap'); if(ab&&w) ab.addEventListener('click',()=>{ const open=w.hidden; w.hidden=!open; ab.textContent=open?'Done':'Adjust'; ab.setAttribute('aria-expanded',String(open)); }); })();
 function syncInputs(){
   DEFS.forEach(d=>{ $('in-'+d.k).value=S[d.k]; $('val-'+d.k).textContent=fmtVal(d,S[d.k]); });
   SURE_KEYS.forEach(k=>{ const v=sureOf(k); $('sure-'+k).textContent=SURE_LEVELS.find(l=>l[0]===v)[1]; document.querySelectorAll(`.sure-opt[data-k="${k}"]`).forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v))); });
@@ -756,21 +751,23 @@ function render(){
   // what it means for people
   const GDPPC=85000, broad=1-S.concentration/100, LABOR=170e6, PAY=65000, GDPUS=GDPPC*340e6;
   const displaced=c=>c.E*c.A*(S.displace/100);
-  const dispTxt=c=>{ const d=displaced(c); const n=d*LABOR; return `${pctS(d)} · ${n>=1e6?(n/1e6).toFixed(n<1e7?1:0)+' million':Math.round(n/1e3)+' thousand'}`; };
   const bn=v=>v>=1e12?'$'+(v/1e12).toFixed(1)+' trillion':'$'+Math.round(v/1e9)+' billion';
-  const costTxt=(c,gain)=>{ const cost=displaced(c)*LABOR*1.4*PAY; if(cost<=0) return '$0'; const yr=gain*GDPUS; if(yr<=0) return bn(cost)+' · no gain to offset'; const mo=cost/yr*12; return `${bn(cost)} · ${mo<1?'under a month':mo<24?Math.round(mo)+' months':(mo/12).toFixed(0)+' years'} of gains`; };
   const c10=central(S,10), c25=central(S,T);
   let h10=0; for(let i=0;i<N;i++){ if(y10[i]<0)h10++; }
   const usd=v=>{ const a=Math.abs(v); const r=a>=10000?Math.round(a/1000)*1000:a>=1000?Math.round(a/100)*100:Math.round(a/10)*10; return (v<0?'−':'')+'$'+r.toLocaleString(); };
-  const prow=(l,sub,a,b,cls)=>`<tr class="${cls||''}"><td>${l}<small>${sub}</small></td><td class="num" data-l="10 yrs">${a}</td><td class="num" data-l="25 yrs">${b}</td></tr>`;
-  $('people').querySelector('tbody').innerHTML =
-    prow('Share of today\'s work done differently','the work AI is doing, at your settings',pctS(c10.E*c10.A),pctS(c25.E*c25.A)) +
-    prow('Extra income per person, per year','typical outcome, if gains were shared evenly',usd(med[10]*GDPPC),usd(m*GDPPC)) +
-    prow('The part that reaches most people',`after the ${share(1-broad)} you said a few capture`,usd(Math.max(0,med[10])*broad*GDPPC+Math.min(0,med[10])*GDPPC),usd(Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC)) +
-    prow('Workers who could lose their jobs along the way',`about ${(LABOR/1e6).toFixed(0)} million people work in the US; counted in full-time jobs`,dispTxt(c10),dispTxt(c25)) +
-    prow('What each of them loses',`about 1.4 years of pay over the next 20 years, or 2.8 if it happens in a recession`,usd(1.4*PAY),usd(1.4*PAY)) +
-    prow('Their total lost pay, next to one year of AI\'s gains','costs land on specific people once; gains recur every year',costTxt(c10,med[10]),costTxt(c25,m)) +
-    prow('Chance things are worse than without AI','in that year: a recent incident or a catastrophe outweighs the gains',share(h10/N),share(nH/N),'harm');
+  const lowPct=v=>v>0&&v<0.005?'under 1%':share(v);
+  const nPeople=n=>n>=1e6?(n/1e6).toFixed(n<1e7?1:0)+' million':n>=1e3?Math.round(n/1e3)+' thousand':'none';
+  const cost25=displaced(c25)*LABOR*1.4*PAY, yrGain25=m*GDPUS;
+  let costLine='';
+  if(cost25>0){ const mo=cost25/yrGain25*12; costLine = yrGain25<=0 ? `Together about ${bn(cost25)} in lost pay, with no gain to offset it.` : `Together about ${bn(cost25)} in lost pay, which is about ${mo<1?'under a month':mo<24?Math.round(mo)+' months':(mo/12).toFixed(0)+' years'} of one year's gains.`; }
+  const fig=(l,v,v10,sub,cls)=>`<div class="fig ${cls||''}"><div class="l">${l}</div><span class="v">${v} <small>${v10} in 10 years</small></span><div class="s">${sub}</div></div>`;
+  const broad25=Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC;
+  $('people').innerHTML =
+    fig('Share of today\'s work done differently',pctS(c25.E*c25.A),pctS(c10.E*c10.A),'The work AI is doing, at your settings.') +
+    fig('Extra income per person, per year',usd(m*GDPPC),usd(med[10]*GDPPC),`Typical outcome, if gains were shared evenly. About ${usd(broad25)} reaches most people after the ${share(1-broad)} you said a few capture.`) +
+    fig('Workers who could lose their jobs along the way',nPeople(displaced(c25)*LABOR),nPeople(displaced(c10)*LABOR),`${pctS(displaced(c25))} of about ${(LABOR/1e6).toFixed(0)} million US jobs. Each loses about ${usd(1.4*PAY)} in pay (about 1.4 years, or double in a recession). ${costLine}`) +
+    fig('Chance things are worse than without AI',lowPct(nH/N),lowPct(h10/N),'In that year: a recent incident or a catastrophe outweighs the gains.','harm');
+  $('as-displace').textContent=S.displace+'%'; $('as-conc').textContent=S.concentration+'%';
   SUM.people={work:c25.E*c25.A, inc:m*GDPPC, incBroad:Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC, conc:S.concentration,
     nDisp:displaced(c25)*LABOR, perDisp:1.4*PAY, cost:displaced(c25)*LABOR*1.4*PAY, yrGain:m*GDPUS, harm:nH/N};
 
