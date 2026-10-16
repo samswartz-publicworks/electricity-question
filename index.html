@@ -167,6 +167,7 @@ details.more.adv{margin-top:14px}
 .fig .v small{display:inline-block;white-space:nowrap;font-size:14px;color:var(--ink-3);font-weight:400}
 .fig .s{font-size:13px;color:var(--ink-2);line-height:1.4}
 .fig.harm .v{color:var(--harm)}
+.deeper{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:34px 0 -14px}
 .assume{font-size:14.5px;color:var(--ink-2);margin:4px 0 0;line-height:1.5}
 .assume b{color:var(--ink);font-weight:600}
 .matrix{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
@@ -357,13 +358,14 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   <h3>What it might mean for people</h3>
   <p class="note">In 25 years, at your settings. Dollar figures use today's US output per person (about $85,000) and average pay (about $65,000).</p>
   <div class="figs" id="people"></div>
-  <p class="assume">Assumes <b id="as-displace">25%</b> of the work AI takes over means a lost job, and <b id="as-conc">40%</b> of the gains go to a few firms or countries. <button type="button" class="sure-btn" id="adjust-btn" aria-expanded="false" aria-controls="g-people-wrap">Adjust</button></p>
+  <p class="assume">These estimates assume <b id="as-displace">25%</b> of the work AI takes over means a lost job, and <b id="as-conc">40%</b> of the gains go to a few firms or countries. <button type="button" class="sure-btn" id="adjust-btn" aria-expanded="false" aria-controls="g-people-wrap">Adjust</button></p>
   <div id="g-people-wrap" hidden><div class="group" id="g-people"></div></div>
   <p class="note" style="margin-top:12px">The model can't say who gains and who loses: which jobs change, how quickly people find new ones, or how gains are shared. Those depend on choices by businesses and governments, among other things.</p>
 
   <h3>Questions your answers raise</h3>
   <ul class="implic" id="implic"></ul>
 
+  <p class="deeper">Go deeper</p>
   <details class="more">
     <summary>Your answers, multiplied out</summary>
     <div class="more-body">
@@ -765,7 +767,7 @@ function render(){
   $('people').innerHTML =
     fig('Share of today\'s work done differently',pctS(c25.E*c25.A),pctS(c10.E*c10.A),'The work AI is doing, at your settings.') +
     fig('Extra income per person, per year',usd(m*GDPPC),usd(med[10]*GDPPC),`Typical outcome, if gains were shared evenly. About ${usd(broad25)} reaches most people after the ${share(1-broad)} you said a few capture.`) +
-    fig('Workers who could lose their jobs along the way',nPeople(displaced(c25)*LABOR),nPeople(displaced(c10)*LABOR),`${pctS(displaced(c25))} of about ${(LABOR/1e6).toFixed(0)} million US jobs. Each loses about ${usd(1.4*PAY)} in pay (about 1.4 years, or double in a recession). ${costLine}`) +
+    fig('Workers who could lose their jobs',nPeople(displaced(c25)*LABOR),nPeople(displaced(c10)*LABOR),`Along the way: ${pctS(displaced(c25))} of about ${(LABOR/1e6).toFixed(0)} million US jobs. Each loses about ${usd(1.4*PAY)} in pay (about 1.4 years, or double in a recession). ${costLine}`) +
     fig('Chance things are worse than without AI',lowPct(nH/N),lowPct(h10/N),'In that year: a recent incident or a catastrophe outweighs the gains.','harm');
   $('as-displace').textContent=S.displace+'%'; $('as-conc').textContent=S.concentration+'%';
   SUM.people={work:c25.E*c25.A, inc:m*GDPPC, incBroad:Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC, conc:S.concentration,
