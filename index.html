@@ -279,7 +279,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
 
   <p style="margin-bottom:8px">The model breaks the big question into a few smaller ones:</p>
   <ol class="qlist">
-    <li>How much work could AI do? How much would actually change, how fast, and how much cheaper would it get?</li>
+    <li>How much work could AI do? How much of it would actually change, how much cheaper would it get, and how fast?</li>
     <li>Could it speed up discovery and invention?</li>
     <li>What could go wrong?</li>
     <li>And what might this mean for people, now and in the future?</li>
@@ -314,21 +314,25 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   </div>
   <div class="preset-note" id="preset-note"></div>
 
-  <h3><span class="step">Step 1</span>How much work could AI do, and how much would actually change?</h3>
+  <h3><span class="step">Step 1</span>How much work could AI do?</h3>
   <div class="group" id="g-reach"></div>
 
-  <h3><span class="step">Step 2</span>How much cheaper would it get?</h3>
+  <h3><span class="step">Step 2</span>How much of that work would ever actually change?</h3>
+  <p class="note">Being able to do a task is not the same as taking it over. Cost, trust, regulation and habit keep some work with people.</p>
+  <div class="group" id="g-switch"></div>
+
+  <h3><span class="step">Step 3</span>How much cheaper would it get?</h3>
   <div class="group" id="g-saving"></div>
 
-  <h3><span class="step">Step 3</span>How fast would it change?</h3>
+  <h3><span class="step">Step 4</span>How fast would it change?</h3>
   <p class="note">Electricity took about forty years to rewire factories. The internet took about ten to reach half of US households.</p>
   <div class="group" id="g-speed"></div>
 
-  <h3><span class="step">Step 4</span>Could it speed up discovery and invention?</h3>
-  <p class="note">Steps 1–3 capture AI making existing work cheaper: a one-time boost to the economy. If AI also speeds up research, it raises the growth rate, so the effect compounds. In this model, it's hard to reach electricity-scale numbers without it.</p>
+  <h3><span class="step">Step 5</span>Could it speed up discovery and invention?</h3>
+  <p class="note">Steps 1–4 capture AI making existing work cheaper: a one-time boost to the economy. If AI also speeds up research, it raises the growth rate, so the effect compounds. In this model, it's hard to reach electricity-scale numbers without it.</p>
   <div class="group" id="g-science"></div>
 
-  <h3><span class="step">Step 5</span>What could go wrong?</h3>
+  <h3><span class="step">Step 6</span>What could go wrong?</h3>
   <p class="note">The red sliders set the risks.</p>
   <div class="group" id="g-risk"></div>
   <details class="more adv">
@@ -530,7 +534,7 @@ function trsWord(v){
 const DEFS = [
   {g:'g-reach',k:'exposure',short:'Work AI can do',label:'Share of the economy\'s work AI can do or substantially assist',unit:'%',min:5,max:100,step:1,torn:true,
    why:'Measured by value, not headcount. Acemoglu uses 20% of tasks. Penn Wharton counts 40% of labor income as exposed. Eloundou et al. (2023) find about 80% of US workers have at least a tenth of their tasks exposed.',ticks:['5%','100%']},
-  {g:'g-reach',k:'amax',short:'Share that switches',label:'Share of that work that ever actually switches to AI',unit:'%',min:5,max:100,step:1,torn:true,
+  {g:'g-switch',k:'amax',short:'Share that switches',label:'Share of that work that ever actually switches to AI',unit:'%',min:5,max:100,step:1,torn:true,
    why:'Not every task AI can do is worth switching over. Acemoglu estimates 23% of exposed tasks are profitable to automate. Regulation, liability and habit also cap this.',ticks:['5%','100%']},
   {g:'g-saving',k:'saving',short:'Cost saving',label:'How much cheaper those tasks get',unit:'%',min:2,max:95,step:1,torn:true,
    why:'Field studies measure time saved: 14% for call-center agents, 40% for writing tasks, 56% for a coding task. Labor is only part of a task\'s cost, so time savings shrink when converted: Acemoglu turns 27% labor savings into 14% cost savings. Full automation would be near the top of the range.',ticks:['2%','95%']},
@@ -704,12 +708,12 @@ function render(){
   const rl=(o,label,sub,v,cls)=>`<div class="rl ${cls||''}"><span class="o">${o}</span><span>${label}${sub?`<small>${sub}</small>`:''}</span><span class="v">${v}</span></div>`;
   $('receipt').innerHTML =
     rl('','Work AI can do','step 1',share(c.E)) +
-    rl('×','Share that switches','step 1',share(c.amax)) +
-    rl('×','How far adoption has got by year 25','step 3',c.prog>0.985&&c.prog<1?(c.prog*100).toFixed(1)+'%':share(c.prog)) +
+    rl('×','Share that switches','step 2',share(c.amax)) +
+    rl('×','How far adoption has got by year 25','step 4',c.prog>0.985&&c.prog<1?(c.prog*100).toFixed(1)+'%':share(c.prog)) +
     rl('=','Share of all work done by AI','',pctS(c.E*c.A),'sub') +
-    rl('×','Cost saving on that work','step 2',share(c.sv)) +
+    rl('×','Cost saving on that work','step 3',share(c.sv)) +
     rl('=','Productivity gain from existing work','share of work × cost saving',signed(Math.exp(c.taskLog)-1),'sub') +
-    rl('+','Productivity gain from faster invention','step 4, accumulated over 25 years',signed(Math.exp(c.sciLog)-1)) +
+    rl('+','Productivity gain from faster invention','step 5, accumulated over 25 years',signed(Math.exp(c.sciLog)-1)) +
     rl('×','Investment','a simple capital-adjustment multiplier; see the math','× 1.54') +
     rl('=','Bigger economy in year 25, before risk','',signed(c.gdp),'total');
 
