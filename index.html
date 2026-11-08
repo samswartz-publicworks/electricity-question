@@ -780,8 +780,8 @@ function render(){
   const broad25=Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC;
   $('people').innerHTML =
     fig('Share of today\'s work done differently',pctS(c25.E*c25.A),pctS(c10.E*c10.A),'Work substantially shifted to AI, at your settings.') +
-    fig('Extra income per person, per year',usd(m*GDPPC),usd(med[10]*GDPPC),`Output per person, if shared evenly. You think ${share(broad)} of the gains reach most people; that portion is about ${usd(broad25)} per person, again if spread evenly. Whether and how it reaches them isn't modeled.`) +
-    fig('Workers who could lose their jobs',nPeople(displaced(c25)*LABOR),nPeople(displaced(c10)*LABOR),`Along the way: ${pctS(displaced(c25))} of about ${(LABOR/1e6).toFixed(0)} million US jobs. Each loses about ${usd(1.4*PAY)} in pay (about 1.4 years, or double in a recession). ${costLine}`) +
+    fig('Extra income per person, per year',usd(m*GDPPC),usd(med[10]*GDPPC),m*GDPPC>=100 ? `Output per person, if shared evenly. You think ${share(broad)} of the gains reach most people; that portion is about ${usd(broad25)} per person, again if spread evenly. Whether and how it reaches them isn't modeled.` : 'Output per person, if shared evenly. Too small for the split to matter.') +
+    fig('Workers who could lose their jobs',nPeople(displaced(c25)*LABOR),nPeople(displaced(c10)*LABOR),displaced(c25)*LABOR<1000 ? 'At your setting, work changes but no jobs are lost.' : `Along the way: ${pctS(displaced(c25))} of about ${(LABOR/1e6).toFixed(0)} million US jobs. Each loses about ${usd(1.4*PAY)} in pay (about 1.4 years, or double in a recession). ${costLine}`) +
     fig('Chance the economy is smaller after 25 years',lowPct(nH/N),lowPct(h10/N),'Than without AI: a recent incident or a catastrophe outweighs the gains. Economic outcomes only; extinction risk and transition costs are shown separately.','harm');
   $('as-displace').textContent=S.displace+'%'; $('as-conc').textContent=S.reach+'%';
   SUM.people={work:c25.E*c25.A, inc:m*GDPPC, incBroad:Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC, reach:S.reach,
@@ -904,7 +904,8 @@ function computeDrivers(){
   // biggest difference from mainstream forecasts
   let diff=null; const ms=PRESETS.mainstream;
   MODEL_KEYS.forEach(k=>{ if(S[k]===ms[k]) return; const d=DEFS.find(x=>x.k===k);
-    const delta=base-sizeMetric(Object.assign({},S,{[k]:ms[k]}));
+    const alt=sizeMetric(Object.assign({},S,{[k]:ms[k]})); if(base<5.5||alt<5.5) return;
+    const delta=base-alt;
     if(!diff||Math.abs(delta)>Math.abs(diff.delta)) diff={d,delta,mine:S[k],theirs:ms[k]}; });
   SUM.diff=diff; SUM.base=base;
   renderSummary();
@@ -918,7 +919,7 @@ function renderSummary(){
   const gapTxt=Math.abs(gap)<0.25?'Your gut said about the same.':gap>0?`Your gut said ${SUM.gut.toFixed(1)}, so your answers imply more economic change than your gut.`:`Your gut said ${SUM.gut.toFixed(1)}, higher than the economic effects captured here.`;
   items.push({t:SUM.neg?`The economic scale implied by your answers is about <b>${SUM.trs.toFixed(1)}</b>, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`The economic scale implied by your answers is about <b>${SUM.trs.toFixed(1)}</b>: ${SUM.where}. ${gapTxt}`});
   if(SUM.driver) items.push({t:`Your answer depends most on <b>${lc(SUM.driver.d.short)}</b>.`});
-  if(P.work!=null) items.push({t:`In 25 years, about <b>${pctS(P.work)}</b> of today's work would be done differently. That's roughly <b>${usd(P.inc)}</b> more output per person each year if shared evenly. You think ${P.reach}% of the gains ultimately reach most people; that portion is equivalent to about <b>${usd(P.incBroad)}</b> per person if spread evenly. Whether and how it reaches people isn't modeled.`});
+  if(P.work!=null) items.push({t:`In 25 years, about <b>${pctS(P.work)}</b> of today's work would be done differently. That's roughly <b>${usd(P.inc)}</b> more output per person each year if shared evenly.`+(P.inc>=100?` You think ${P.reach}% of the gains ultimately reach most people; that portion is equivalent to about <b>${usd(P.incBroad)}</b> per person if spread evenly. Whether and how it reaches people isn't modeled.`:'')});
   if(P.nDisp>0){ const mo=P.yrGain>0?P.cost/P.yrGain*12:null; const n=P.nDisp>=1e6?(P.nDisp/1e6).toFixed(P.nDisp<1e7?1:0)+' million':Math.round(P.nDisp/1e3)+' thousand';
     items.push({t:`About <b>${n}</b> workers could lose their jobs along the way, each losing about ${usd(P.perDisp)} in pay.`+(mo!=null?` Together that's ${mo<1?'':'about '}<b>${mo<1?'under a month':mo<24?Math.round(mo)+' months':Math.round(mo/12)+' years'}</b> of AI's total yearly gains at your settings`+(mo<=12?'. In aggregate the gains are large enough to cover that lost pay, but the model does not assume it happens. The gains and losses may go to different people.':'. That is a large cost next to the gains, and the model does not assume the gains cover it.'):'')}); }
   items.push({t:`Your inputs imply ${(P.harm||0)<0.005?'<b>under a 1%</b>':`about ${aOr(share(P.harm))} <b>${share(P.harm)}</b>`} chance that, 25 years out, the economy is smaller than it would be without AI. That counts economic outcomes only.`,cls:'harm'});
