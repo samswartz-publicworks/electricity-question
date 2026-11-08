@@ -308,7 +308,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   <p class="note">Start from one of these views, then adjust the assumptions to match yours.</p>
   <div class="presets" role="group" aria-label="Starting positions">
     <button class="chip" data-preset="acemoglu" aria-pressed="false">Acemoglu (skeptic)</button>
-    <button class="chip" data-preset="mainstream" aria-pressed="true">Mainstream forecasts</button>
+    <button class="chip" data-preset="mainstream" aria-pressed="true">Mid-range forecasts</button>
     <button class="chip" data-preset="electricity" aria-pressed="false">Electricity-scale</button>
     <button class="chip" data-preset="transformative" aria-pressed="false">Transformative</button>
   </div>
@@ -362,7 +362,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   <h3>What it might mean for people</h3>
   <p class="note">In 25 years, at your settings. Dollar figures use today's US output per person (about $85,000) and average pay (about $65,000).</p>
   <div class="figs" id="people"></div>
-  <p class="assume">These estimates assume <b id="as-displace">25%</b> of the work AI takes over means a lost job, and <b id="as-conc">60%</b> of the gains ultimately reach most people. <button type="button" class="sure-btn" id="adjust-btn" aria-expanded="false" aria-controls="g-people-wrap">Adjust</button></p>
+  <p class="assume">These estimates assume <b id="as-displace">25%</b> of the work shifted to AI means a lost job, and <b id="as-conc">60%</b> of the gains ultimately reach most people. <button type="button" class="sure-btn" id="adjust-btn" aria-expanded="false" aria-controls="g-people-wrap">Adjust</button></p>
   <div id="g-people-wrap" hidden><div class="group" id="g-people"></div></div>
   <p class="note" style="margin-top:12px">The model can't say who gains and who loses: which jobs change, how quickly people find new ones, or how gains are shared. Those depend on choices by businesses and governments, among other things.</p>
 
@@ -464,7 +464,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
       <p><b>Incidents.</b> Each year, a major incident can occur. Its probability is the incident rate you entered, adjusted by the risk-and-footprint setting below. An incident reduces GDP by the severity you chose, then the loss fades with a five-year half-life. Multiple incidents can stack.</p>
       <p><b>Catastrophe.</b> The 25-year catastrophe probability is first converted into a constant annual rate: <code>h</code> is chosen so that <code>1 − (1 − h)^25</code> equals the probability you entered. The risk-and-footprint setting can then scale that rate over time. If a catastrophe occurs, GDP remains permanently below the no-AI baseline by the severity you chose, replacing any gains.</p>
       <p><b>Extinction-level risk.</b> The separate extinction slider is not simulated or priced in GDP terms. A GDP model cannot meaningfully value human extinction or permanent loss of civilization, so the page reports that belief separately instead.</p>
-      <p><b>Risk and AI's footprint.</b> This is a simple scaling assumption. <code>m(t) = (1 − link) + link × F(t) / 20%</code>, where <code>F(t) = exposure × A(t)</code> is the share of the economy's work AI is doing. At zero linkage, the risk probabilities stay fixed. At full linkage, the probabilities you entered are the reference rates when AI is doing 20% of the economy's work, and they scale proportionally with its footprint. Intermediate settings blend the two.</p>
+      <p><b>Risk and AI's footprint.</b> This is a simple weighting assumption. <code>m(t) = (1 − link) + link × F(t) / 20%</code>, where <code>F(t) = exposure × A(t)</code> is the share of the economy's work AI is doing. Yearly hazards are multiplied by <code>m(t)</code>, then rescaled so that, on the central adoption path, the cumulative 25-year catastrophe probability equals the number you entered and the average yearly incident probability equals the number you entered. So the link slider shifts risk toward the years when AI is doing more, without changing the totals. Each simulated run has its own adoption path, so its cumulative risk differs a little from the central one; it is the typical path that matches your input exactly.</p>
       <p><b>Uncertainty.</b> Each run randomly moves five inputs (work AI can do, share that switches, cost saving, years to halfway, and faster invention) around the values you chose, using the certainty setting on each. The draws are log-normal, with <code>σ = 0.15</code> for very sure, <code>0.35</code> for fairly sure (the default) and <code>0.7</code> for not very sure; at not very sure, roughly two-thirds of draws fall between about half and twice your answer. The same 2,000 random draws are reused every time, so moving a slider changes the assumptions, not the dice.</p>
       <p><b>Is it worth it?</b> This is a simple way to explore how the answer changes when you care about who receives the gains and give bad outcomes extra weight; it is not a full welfare model. The share of gains you said does not reach most people is discounted according to your settings, while losses count in full. Transition losses to displaced workers are shown in the people section and not included here. The model then uses a standard CRRA certainty equivalent: <code>CE = (mean[(1 + x)^(1−η)])^(1/(1−η)) − 1</code>; when <code>η = 1</code>, this becomes <code>exp(mean[ln(1 + x)]) − 1</code>. At <code>η = 0</code>, it is just the average outcome. Higher values of <code>η</code> put progressively more weight on bad outcomes. The extinction-level risk above is not included in this calculation.</p>
       <p><b>What the model leaves out.</b></p>
@@ -481,7 +481,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
 
   <div class="actions">
     <button class="btn" id="copy">Copy my answers</button>
-    <button class="btn ghost" id="reset">Reset to mainstream</button>
+    <button class="btn ghost" id="reset">Reset to mid-range</button>
   </div>
   <div class="toast" id="toast"></div>
   <div class="copybox" id="copybox" hidden></div>
@@ -553,8 +553,8 @@ const DEFS = [
   {g:'g-risk-more',k:'sevCat',short:'Catastrophe cost',label:'How bad a catastrophe would be',unit:'% of GDP, permanent',min:10,max:95,step:5,risk:true,torn:true,
    why:'95% means the economy barely survives. Lower values mean a severe but survivable catastrophe.',ticks:['−10%','−95%']},
   {g:'g-risk-more',k:'link',short:'Risk grows with AI',label:'Does risk grow with how much AI is doing?',unit:'%',min:0,max:100,step:5,risk:true,torn:true,
-   why:'At 0, the incident and catastrophe chances stay fixed. At 100%, they are reference probabilities for AI doing a fifth of the economy\'s work, and scale with how much it actually does. Intermediate settings blend the two. Use this if you think a more capable, more widely used AI also carries more risk.',ticks:['fixed','fully linked']},
-  {g:'g-people',k:'displace',label:'Of the work AI takes over, how much means someone loses their job?',unit:'%',min:0,max:100,step:5,
+   why:'This changes when the risk falls, not how much there is. At 0, the yearly chances are the same every year. At 100%, they rise and fall with how much work AI is doing, so most of the risk comes later, once AI is widespread. The totals you entered above are kept either way.',ticks:['fixed','fully linked']},
+  {g:'g-people',k:'displace',label:'Of the work substantially shifted to AI, how much means someone loses their job?',unit:'%',min:0,max:100,step:5,
    why:'The rest is jobs that change but don\'t disappear, like an accountant who now uses AI for the routine parts. Only the job losses below depend on this; it doesn\'t change the size of the economy.',ticks:['0%','100%']},
   {g:'g-values',k:'aversion',short:'Risk aversion',label:'How much extra weight do you give bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>v.toFixed(1)+(v<0.5?' · average only':v<=2?' · typical':v<=3.5?' · cautious':' · very cautious'),valueTorn:true,
    why:'Economists call this risk aversion. At 0, only the average outcome matters. Values around 1 to 2 are common in some household applications; there is no standard right value for society-wide outcomes like these. Higher values give bad tail outcomes more weight.',ticks:['only the average','very cautious']},
@@ -571,7 +571,7 @@ const PRESETS = {
   acemoglu:{exposure:20,amax:23,saving:14,t50:4,science:0,pMajor:2,sevMajor:1,pCat:0.5,sevCat:30,link:50,uncert:0.3,aversion:1,reach:60,discount:30,bInternet:10,bElec:35,
     note:'Acemoglu (2024): 20% of tasks exposed, 23% of those profitable, 14% cheaper, fully adopted within 10 years, no boost to invention.'},
   mainstream:{exposure:40,amax:30,saving:20,t50:10,science:0.05,pMajor:3,sevMajor:1.5,pCat:1,sevCat:50,link:50,uncert:0.5,aversion:1,reach:60,discount:30,bInternet:10,bElec:35,
-    note:'Set to land between the Penn Wharton Budget Model and Goldman Sachs forecasts: broader exposure than Acemoglu, a modest boost to invention.'},
+    note:'A mid-range scenario, set to land between the Penn Wharton Budget Model and Goldman Sachs forecasts: broader exposure than Acemoglu, a modest boost to invention.'},
   electricity:{exposure:50,amax:65,saving:35,t50:8,science:0.3,pMajor:4,sevMajor:2,pCat:3,sevCat:60,link:60,uncert:0.6,aversion:1,reach:60,discount:30,bInternet:10,bElec:35,
     note:'Half the economy\'s work exposed, most of it switches, a real boost to invention. Roughly what it takes, in this model, to reach electricity-scale.'},
   transformative:{exposure:75,amax:80,saving:60,t50:6,science:1,pMajor:6,sevMajor:3,pCat:8,sevCat:80,link:80,uncert:0.5,aversion:1,reach:40,discount:30,bInternet:10,bElec:35,
@@ -650,6 +650,16 @@ function simulate(s, n){
   const cols=[]; for(let t=0;t<=T;t++) cols.push(new Float32Array(n));
   const amax0=s.amax/100, link=s.link/100;
   const h0 = s.pCat>0 ? 1-Math.pow(1-s.pCat/100, 1/T) : 0;
+  // Normalize the footprint weighting on the central path so the entered probabilities keep their meaning:
+  // the 25-year catastrophe chance equals pCat, and the average yearly incident chance equals pMajor.
+  // The link slider then shapes when the risk falls, not how much there is.
+  const mC=[]; { const E0=s.exposure/100; for(let t=1;t<=T;t++) mC.push((1-link)+link*(E0*adoption(t,amax0,s.t50))/FREF); }
+  const mSum=mC.reduce((a,b)=>a+b,0);
+  const kInc = mSum>0 ? T/mSum : 1;
+  let kCat=1;
+  if(h0>0 && mSum>0){ const target=1-s.pCat/100; let lo=0, hi=1e4;
+    for(let it=0;it<60;it++){ const k=(lo+hi)/2; let sv=1; for(const m of mC) sv*=1-Math.min(1,h0*m*k); if(sv>target) lo=k; else hi=k; }
+    kCat=(lo+hi)/2; }
   for(let i=0;i<n;i++){
     const r=Z[i];
     const E = Math.min(1, s.exposure/100*Math.exp(sE*r.z[0]));
@@ -664,8 +674,8 @@ function simulate(s, n){
       if(t>0) sciLog += sci*A/amax;
       const m = (1-link) + link*(E*A)/FREF;
       if(t>0){
-        if(r.u[t-1] < Math.min(1, s.pMajor/100*m)) events.push(t);
-        if(catYear>T){ surv *= 1-Math.min(1,h0*m); if(1-surv > r.cu) catYear=t; }
+        if(r.u[t-1] < Math.min(1, s.pMajor/100*m*kInc)) events.push(t);
+        if(catYear>T){ surv *= 1-Math.min(1,h0*m*kCat); if(1-surv > r.cu) catYear=t; }
       }
       let loss=0; for(const ey of events) loss += s.sevMajor/100*Math.pow(0.5,(t-ey)/5);
       loss=Math.min(0.95,loss);
@@ -710,7 +720,7 @@ function render(){
     rl('','Work AI can do','step 1',share(c.E)) +
     rl('×','Share that switches','step 2',share(c.amax)) +
     rl('×','How far adoption has got by year 25','step 4',c.prog>0.985&&c.prog<1?(c.prog*100).toFixed(1)+'%':share(c.prog)) +
-    rl('=','Share of all work done by AI','',pctS(c.E*c.A),'sub') +
+    rl('=','Share of today\'s work done differently','',pctS(c.E*c.A),'sub') +
     rl('×','Cost saving on that work','step 3',share(c.sv)) +
     rl('=','Productivity gain from existing work','share of work × cost saving',signed(Math.exp(c.taskLog)-1),'sub') +
     rl('+','Productivity gain from faster invention','step 5, accumulated over 25 years',signed(Math.exp(c.sciLog)-1)) +
@@ -725,9 +735,9 @@ function render(){
   $('b-gut').textContent = S.gut.toFixed(1);
   const gap = trsM - S.gut;
   let rv;
-  if(Math.abs(gap)<0.25) rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. Your answers suggest <b class="m">${trsM.toFixed(1)}</b>. They roughly agree.`;
-  else if(gap>0) rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. Your answers suggest <b class="m">${trsM.toFixed(1)}</b>. Your assumptions point ${gap>=1?'about ten times ':''}higher than your gut.`;
-  else rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. Your answers suggest <b class="m">${trsM.toFixed(1)}</b>. Your gut points ${gap<=-1?'about ten times ':''}higher than your assumptions.`;
+  if(Math.abs(gap)<0.25) rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. The economic scale implied by your answers is <b class="m">${trsM.toFixed(1)}</b>. They roughly agree.`;
+  else if(gap>0) rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. The economic scale implied by your answers is <b class="m">${trsM.toFixed(1)}</b>, ${gap>=1?'about ten times ':''}higher than your gut. Your inputs may be more optimistic than you realized, or your gut may understate the economics.`;
+  else rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. The economic scale implied by your answers is <b class="m">${trsM.toFixed(1)}</b>. Your gut is ${gap<=-1?'about ten times ':''}higher than the economic effects captured here. That may mean you expect larger economic effects, or effects this model doesn't measure.`;
   if(neg) rv += ' And in the typical run, the economy ends up smaller.';
   $('reveal').innerHTML = rv;
   const where = trsWord(trsM);
@@ -742,7 +752,7 @@ function render(){
   let nCat=0; const catV=-S.sevCat/100; for(let i=0;i<N;i++){ if(Math.abs(y25[i]-catV)<1e-4) nCat++; }
   SUM.catShare=nCat/N;
   const oneIn=p=>p>=0.5?'more likely than not':'roughly one in '+Math.max(2,Math.round(1/p));
-  { const cs=SUM.catShare; let rl, br;
+  { const cs=S.pCat>0?S.pCat/100:SUM.catShare; let rl, br;
     if(S.pCat===0 && cs<0.005){ rl='with no catastrophe risk entered'; br='no catastrophe risk entered'; }
     else if(cs<0.01){ rl='with under a 1-in-100 chance of catastrophe'; br='under 1-in-100 catastrophe risk'; }
     else if(cs>=0.5){ rl='with a catastrophe more likely than not'; br='catastrophe more likely than not'; }
@@ -769,10 +779,10 @@ function render(){
   const fig=(l,v,v10,sub,cls)=>`<div class="fig ${cls||''}"><div class="l">${l}</div><span class="v">${v} <small>${v10} in 10 years</small></span><div class="s">${sub}</div></div>`;
   const broad25=Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC;
   $('people').innerHTML =
-    fig('Share of today\'s work done differently',pctS(c25.E*c25.A),pctS(c10.E*c10.A),'The work AI is doing, at your settings.') +
+    fig('Share of today\'s work done differently',pctS(c25.E*c25.A),pctS(c10.E*c10.A),'Work substantially shifted to AI, at your settings.') +
     fig('Extra income per person, per year',usd(m*GDPPC),usd(med[10]*GDPPC),`Output per person, if shared evenly. You think ${share(broad)} of the gains reach most people; that portion is about ${usd(broad25)} per person, again if spread evenly. How it reaches them, through pay, prices, ownership or public benefits, isn't modeled.`) +
     fig('Workers who could lose their jobs',nPeople(displaced(c25)*LABOR),nPeople(displaced(c10)*LABOR),`Along the way: ${pctS(displaced(c25))} of about ${(LABOR/1e6).toFixed(0)} million US jobs. Each loses about ${usd(1.4*PAY)} in pay (about 1.4 years, or double in a recession). ${costLine}`) +
-    fig('Chance things are worse than without AI',lowPct(nH/N),lowPct(h10/N),'In that year: a recent incident or a catastrophe outweighs the gains.','harm');
+    fig('Chance the economy is smaller after 25 years',lowPct(nH/N),lowPct(h10/N),'Than without AI: a recent incident or a catastrophe outweighs the gains. Economic outcomes only; extinction risk and transition costs are shown separately.','harm');
   $('as-displace').textContent=S.displace+'%'; $('as-conc').textContent=S.reach+'%';
   SUM.people={work:c25.E*c25.A, inc:m*GDPPC, incBroad:Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC, reach:S.reach,
     nDisp:displaced(c25)*LABOR, perDisp:1.4*PAY, cost:displaced(c25)*LABOR*1.4*PAY, yrGain:m*GDPUS, harm:nH/N};
@@ -905,24 +915,24 @@ function renderSummary(){
   const P=SUM.people||{}; const items=[];
   const usd=v=>{ const a=Math.abs(v); const r=a>=10000?Math.round(a/1000)*1000:a>=1000?Math.round(a/100)*100:Math.round(a/10)*10; return (v<0?'−':'')+'$'+r.toLocaleString(); };
   const gap=SUM.trs-SUM.gut;
-  const gapTxt=Math.abs(gap)<0.25?'Your gut said about the same.':gap>0?`Your gut said ${SUM.gut.toFixed(1)}, so your answers come out higher than your gut.`:`Your gut said ${SUM.gut.toFixed(1)}, so your gut comes out higher than your answers.`;
-  items.push({t:SUM.neg?`Your answers suggest about <b>${SUM.trs.toFixed(1)}</b> in size, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`Your answers suggest about <b>${SUM.trs.toFixed(1)}</b> on the scale: ${SUM.where}. ${gapTxt}`});
+  const gapTxt=Math.abs(gap)<0.25?'Your gut said about the same.':gap>0?`Your gut said ${SUM.gut.toFixed(1)}, so your answers imply more economic change than your gut.`:`Your gut said ${SUM.gut.toFixed(1)}, higher than the economic effects captured here.`;
+  items.push({t:SUM.neg?`The economic scale implied by your answers is about <b>${SUM.trs.toFixed(1)}</b>, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`The economic scale implied by your answers is about <b>${SUM.trs.toFixed(1)}</b>: ${SUM.where}. ${gapTxt}`});
   if(SUM.driver) items.push({t:`Your answer depends most on <b>${lc(SUM.driver.d.short)}</b>.`});
   if(P.work!=null) items.push({t:`In 25 years, about <b>${pctS(P.work)}</b> of today's work would be done differently. That's roughly <b>${usd(P.inc)}</b> more output per person each year if shared evenly. You think ${P.reach}% of the gains ultimately reach most people; that portion is equivalent to about <b>${usd(P.incBroad)}</b> per person if spread evenly. How it reaches people isn't modeled.`});
   if(P.nDisp>0){ const mo=P.yrGain>0?P.cost/P.yrGain*12:null; const n=P.nDisp>=1e6?(P.nDisp/1e6).toFixed(P.nDisp<1e7?1:0)+' million':Math.round(P.nDisp/1e3)+' thousand';
     items.push({t:`About <b>${n}</b> workers could lose their jobs along the way, each losing about ${usd(P.perDisp)} in pay.`+(mo!=null?` Together that's ${mo<1?'':'about '}<b>${mo<1?'under a month':mo<24?Math.round(mo)+' months':Math.round(mo/12)+' years'}</b> of AI's total yearly gains at your settings`+(mo<=12?'. In aggregate the gains are large enough to cover that lost pay, but the model does not assume it happens. The gains and losses may go to different people.':'. That is a large cost next to the gains, and the model does not assume the gains cover it.'):'')}); }
-  items.push({t:`Your inputs imply ${(P.harm||0)<0.005?'<b>under a 1%</b>':`about ${aOr(share(P.harm))} <b>${share(P.harm)}</b>`} chance that, 25 years out, things are worse than without AI.`,cls:'harm'});
-  if(SUM.catShare>=0.01) items.push({t:`Your settings imply about ${aOr(share(SUM.catShare))} <b>${share(SUM.catShare)}</b> chance of an irreversible catastrophe within 25 years, ${SUM.catShare>=0.5?'more likely than not':'roughly one in '+Math.max(2,Math.round(1/SUM.catShare))}. At your severity setting, the economy would end up about ${pctS(S.sevCat/100)} smaller, permanently.`,cls:'harm'});
+  items.push({t:`Your inputs imply ${(P.harm||0)<0.005?'<b>under a 1%</b>':`about ${aOr(share(P.harm))} <b>${share(P.harm)}</b>`} chance that, 25 years out, the economy is smaller than it would be without AI. That counts economic outcomes only.`,cls:'harm'});
+  if(S.pCat>=1) items.push({t:`You put about ${aOr(S.pCat+'%')} <b>${S.pCat}%</b> chance on an irreversible catastrophe within 25 years, ${S.pCat>=50?'more likely than not':'roughly one in '+Math.max(2,Math.round(100/S.pCat))}. At your severity setting, the economy would end up about ${pctS(S.sevCat/100)} smaller, permanently.`,cls:'harm'});
   if(S.pExt>0) items.push({t:`You put ${aOr(S.pExt)} <b>${S.pExt}%</b> chance on human extinction or a permanent loss of civilization within 25 years, ${S.pExt>=50?'more likely than not':'roughly one in '+Math.max(2,Math.round(100/S.pExt))}. The economic numbers here don't try to price that outcome.`,cls:'harm'});
   items.push({t:(SUM.ce>=0?`Counting your caution about risk and who benefits, this would be worth about the same to you as a guaranteed <b>${pctS(SUM.ce)}</b> bigger economy.`:`Counting your caution about risk and who benefits, you'd accept a guaranteed <b>${pctS(SUM.ce)}</b> smaller economy to avoid it.`)+' Transition losses to displaced workers are shown separately and not included here.'+(S.pExt>0?' Nor is the extinction-level risk you entered.':'')});
-  if(activePreset==='mainstream') items.push({t:'Your settings match the mainstream forecasts. Move a slider to see where you differ.'});
-  else if(SUM.diff && Math.abs(SUM.diff.delta)>=0.05){ const D=SUM.diff; items.push({t:`Of the ways you differ from mainstream forecasts, the one that matters most is <b>${lc(D.d.short)}</b> (you: ${fmtVal(D.d,D.mine)}; mainstream: ${fmtVal(D.d,D.theirs)}). That alone moves your answer ${D.delta>0?'up':'down'} by ${Math.abs(D.delta).toFixed(1)} on the scale.`}); }
+  if(activePreset==='mainstream') items.push({t:'Your settings match the mid-range scenario (between Penn Wharton and Goldman). Move a slider to see where you differ.'});
+  else if(SUM.diff && Math.abs(SUM.diff.delta)>=0.05){ const D=SUM.diff; items.push({t:`Of the ways you differ from the mid-range scenario, the one that matters most is <b>${lc(D.d.short)}</b> (you: ${fmtVal(D.d,D.mine)}; mid-range: ${fmtVal(D.d,D.theirs)}). That alone moves your answer ${D.delta>0?'up':'down'} by ${Math.abs(D.delta).toFixed(1)} on the scale.`}); }
   $('summary').innerHTML=items.map(i=>`<li class="${i.cls||''}">${i.t}</li>`).join('');
   // diagnostic questions, not recommendations: at most three, drawn from the user's own numbers
   const qs=[];
   if(P.inc>=500) qs.push(`Your answers imply about ${usd(P.inc)} more per person a year by year 25. What would a year's delay cost, and what would moving faster risk?`);
   if(S.pExt>0) qs.push(`You put roughly a one-in-${Math.max(2,Math.round(100/S.pExt))} chance on extinction or a comparable permanent loss. If that is your belief, how should it weigh against the gains above?`);
-  if((P.harm||0)>=0.01) qs.push(`Your answers imply about ${aOr(share(P.harm))} ${share(P.harm)} chance things end up worse than without AI. How much of the gains would you give up to cut that chance in half?`);
+  if((P.harm||0)>=0.01) qs.push(`Your answers imply about ${aOr(share(P.harm))} ${share(P.harm)} chance the economy ends up smaller than without AI. How much of the gains would you give up to cut that chance in half?`);
   const lowReach = S.reach<=50, bigGain = P.inc>=5000, highDisp = P.nDisp>=5e6;
   if(bigGain && lowReach){ qs.unshift(highDisp ? `You expect very large gains alongside substantial job losses and benefits that mostly don't reach most people. What would have to happen for you to call that transition a success?` : `You expect very large gains but think much of the benefit may not reach most people. What would have to happen for you to call that transition a success?`); }
   else if(P.nDisp>=1e6){ const n=(P.nDisp/1e6).toFixed(P.nDisp<1e7?1:0)+' million'; qs.push(`About ${n} people could lose their jobs along the way. Who should bear that cost, and how?`); }
