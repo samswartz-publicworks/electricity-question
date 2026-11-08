@@ -114,7 +114,12 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .big small{font-size:.45em;color:var(--ink-2);font-weight:400}
 .big.harm{color:var(--harm)}
 .verdict-line{font-family:var(--display);font-size:21px;line-height:1.35;margin:10px 0 14px}
-.reveal{font-family:var(--display);font-size:23px;line-height:1.3;margin:14px 0;padding:14px 16px;background:var(--paper-2);border-radius:8px}
+.reveal{font-family:var(--display);font-size:22px;line-height:1.3;margin:14px 0;padding:14px 16px;background:var(--paper-2);border-radius:8px}
+.rv-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.rv-l{font-family:var(--body);font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);min-width:96px}
+.rv-row b{font-family:var(--mono);font-size:26px}
+.rv-w{font-size:18px;color:var(--ink-2)}
+.rv-s{font-size:18px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
 .reveal b{font-family:var(--mono);font-weight:500}
 .reveal .g{color:var(--gut)} .reveal .m{color:var(--ai)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:8px 0 8px}
@@ -205,7 +210,8 @@ details[open] summary::after{content:"–"}
 .sources a{color:var(--ink-2)}
 
 /* sticky verdict */
-.bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--paper);padding:10px 18px calc(10px + env(safe-area-inset-bottom,0px));z-index:5;box-shadow:0 -6px 24px rgba(0,0,0,.12)}
+.bar.bar-hide{transform:translateY(110%);opacity:0;pointer-events:none}
+.bar{transition:transform .25s ease,opacity .25s ease;position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--paper);padding:10px 18px calc(10px + env(safe-area-inset-bottom,0px));z-index:5;box-shadow:0 -6px 24px rgba(0,0,0,.12)}
 .bar-in{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .bar-l{font-size:13px;opacity:.75;line-height:1.2}
 .bar-n{font-family:var(--mono);font-size:24px;font-weight:500;line-height:1.05;font-variant-numeric:tabular-nums}
@@ -347,7 +353,6 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   <div class="verdict">
     <div class="big" id="v-trs-wrap"><span id="v-trs">–</span><small id="v-trs-sub"> on the scale</small></div>
     <div class="risk-line" id="v-risk"></div>
-    <div style="font-size:14px;color:var(--ink-2)">The typical result across 2,000 runs, 25 years out. The range reflects both uncertainty around your economic assumptions and the risks you entered.</div>
     <div class="reveal" id="reveal">–</div>
     <div class="verdict-line" id="v-line">–</div>
     <p class="tail-note" id="v-tail" hidden></p>
@@ -360,10 +365,10 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   <p class="note"><b>How this is calculated:</b> the model runs your assumptions 2,000 times, varying the five economic inputs according to the certainty setting on each and adding incidents and catastrophes at the rates you set.</p>
 
   <h3>What it might mean for people</h3>
-  <p class="note">In 25 years, at your settings. Dollar figures use today's US output per person (about $85,000) and average pay (about $65,000).</p>
-  <div class="figs" id="people"></div>
-  <p class="assume">These estimates assume <b id="as-displace">25%</b> of the work shifted to AI means a lost job, and <b id="as-conc">60%</b> of the gains ultimately reach most people. <button type="button" class="sure-btn" id="adjust-btn" aria-expanded="false" aria-controls="g-people-wrap">Adjust</button></p>
+  <p class="note">Illustrations of what your assumptions imply in 25 years, in today's dollars. Not predictions about anyone in particular.</p>
+  <p class="assume">Two extra assumptions, which you can change: <b id="as-displace">25%</b> of the work shifted to AI means a job disappears, and <b id="as-conc">60%</b> of the gains reach most people, however they arrive. <button type="button" class="sure-btn" id="adjust-btn" aria-expanded="false" aria-controls="g-people-wrap">Adjust</button></p>
   <div id="g-people-wrap" hidden><div class="group" id="g-people"></div></div>
+  <div class="figs" id="people"></div>
   <p class="note" style="margin-top:12px">The model can't say who gains and who loses: which jobs change, how quickly people find new ones, or how gains are shared. Those depend on choices by businesses and governments, among other things.</p>
 
   <h3>Questions your answers raise</h3>
@@ -422,7 +427,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   <details class="more sec">
     <summary>Is it worth it? Weigh risk and who gets the gains</summary>
     <div class="more-body">
-  <p>The sections above measure how big AI is. Whether that's good depends on your values, especially how much weight you put on bad outcomes and who gets the gains. This is a simple way to explore those judgments, not a full welfare model.</p>
+  <p>A bigger economy isn't automatically a better outcome for everyone. This optional exercise shows how two judgments change the picture: how cautious you are about bad outcomes, and how much it matters if most people don't benefit. The 60% above was a guess about what will happen; these two are about what you value. It is not a complete answer to whether AI is good or bad.</p>
   <div class="group" id="g-values"></div>
   <div class="verdict2">
     <div class="big" id="ce-wrap"><span id="v-ce">–</span><small> as a guaranteed gain</small></div>
@@ -556,12 +561,12 @@ const DEFS = [
    why:'This changes when the risk falls, not how much there is. At 0, the yearly chances are the same every year. At 100%, they rise and fall with how much work AI is doing, so most of the risk comes later, once AI is widespread. The totals you entered above are kept either way.',ticks:['fixed','fully linked']},
   {g:'g-people',k:'displace',label:'Of the work substantially shifted to AI, how much means someone loses their job?',unit:'%',min:0,max:100,step:5,
    why:'The rest is jobs that change but don\'t disappear, like an accountant who now uses AI for the routine parts. Only the job losses below depend on this; it doesn\'t change the size of the economy.',ticks:['0%','100%']},
-  {g:'g-values',k:'aversion',short:'Risk aversion',label:'How much extra weight do you give bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>v.toFixed(1)+(v<0.5?' · average only':v<=2?' · typical':v<=3.5?' · cautious':' · very cautious'),valueTorn:true,
-   why:'Economists call this risk aversion. At 0, only the average outcome matters. Values around 1 to 2 are common in some household applications; there is no standard right value for society-wide outcomes like these. Higher values give bad tail outcomes more weight.',ticks:['only the average','very cautious']},
+  {g:'g-values',k:'aversion',short:'Caution about bad outcomes',label:'How cautious are you about bad outcomes?',unit:'',min:0,max:5,step:0.1,fmt:v=>(v<0.5?'focus on the average':v<=2?'somewhat cautious':v<=3.5?'cautious':'very cautious'),valueTorn:true,
+   why:'At one end, judge by the average outcome. At the other, put much more weight on the chance of severe losses. Economists call this risk aversion; there is no standard right value for society-wide outcomes like these.',ticks:['only the average','very cautious']},
   {g:'g-people',k:'reach',short:'Share reaching most people',label:'How much of AI\'s economic gains do you think will actually reach most people?',unit:'%',min:0,max:100,step:5,valueTorn:true,
    why:'They might reach people through lower prices, higher pay, broader ownership or public benefits. They might not: concentrated ownership, weak competition, weak bargaining power for workers, or no redistribution could keep most of the gain with a few. Set this to what you expect, not what you hope. It doesn\'t change GDP; it changes how much of it counts as broadly shared.',ticks:['almost none','almost all']},
-  {g:'g-values',k:'discount',short:'Discount on concentrated gains',label:'How much less should gains accruing mainly to a smaller group count?',unit:'%',min:0,max:100,step:5,valueTorn:true,
-   why:'At 0, a dollar counts the same wherever it goes. At 100, gains that don\'t reach most people count for nothing.',ticks:['0%','100%']},
+  {g:'g-values',k:'discount',short:'Weight on who benefits',label:'How much should it matter if most people don\'t benefit?',unit:'% less weight',min:0,max:100,step:5,valueTorn:true,
+   why:'Gains that don\'t reach most people count this much less toward your assessment. At 0, all gains count equally. At 100, only gains that reach most people count.',ticks:['all gains count equally','only broad gains count']},
   {g:'g-bench',k:'bInternet',label:'Internet: mature effect on GDP',unit:'%',min:3,max:30,step:1,
    why:'Roughly 0.5–1 point a year of extra productivity growth for 10–15 years around 1995–2010: about 10%. All of computing, back to the 1970s, would be larger.',ticks:['3%','30%']},
   {g:'g-bench',k:'bElec',label:'Electricity: mature effect on GDP',unit:'%',min:10,max:100,step:1,
@@ -717,15 +722,16 @@ function render(){
   const c = central(S,T);
   const rl=(o,label,sub,v,cls)=>`<div class="rl ${cls||''}"><span class="o">${o}</span><span>${label}${sub?`<small>${sub}</small>`:''}</span><span class="v">${v}</span></div>`;
   $('receipt').innerHTML =
-    rl('','Work AI can do','step 1',share(c.E)) +
-    rl('×','Share that switches','step 2',share(c.amax)) +
-    rl('×','How far adoption has got by year 25','step 4',c.prog>0.985&&c.prog<1?(c.prog*100).toFixed(1)+'%':share(c.prog)) +
+    rl('','Work AI can do','from step 1',share(c.E)) +
+    rl('×','Share that switches','from step 2',share(c.amax)) +
+    rl('×','How far adoption has got by year 25','from step 4, years to halfway',c.prog>0.985&&c.prog<1?(c.prog*100).toFixed(1)+'%':share(c.prog)) +
     rl('=','Share of today\'s work done differently','',pctS(c.E*c.A),'sub') +
-    rl('×','Cost saving on that work','step 3',share(c.sv)) +
-    rl('=','Productivity gain from existing work','share of work × cost saving',signed(Math.exp(c.taskLog)-1),'sub') +
-    rl('+','Productivity gain from faster invention','step 5, accumulated over 25 years',signed(Math.exp(c.sciLog)-1)) +
+    rl('×','Cost saving on that work','from step 3',share(c.sv)) +
+    rl('=','Productivity gain from existing work','share of work × cost saving, compounded rather than multiplied; see the math',signed(Math.exp(c.taskLog)-1),'sub') +
+    rl('+','Productivity gain from faster invention','from step 5, accumulated over 25 years',signed(Math.exp(c.sciLog)-1)) +
     rl('×','Investment','a simple capital-adjustment multiplier; see the math','× 1.54') +
-    rl('=','Bigger economy in year 25, before risk','',signed(c.gdp),'total');
+    rl('=','Bigger economy in year 25, before risk','',signed(c.gdp),'total') +
+    (SUM.jobsNote?`<p class="note" style="margin-top:12px"><b>The job-loss scenario, in dollars.</b> ${SUM.jobsNote}</p>`:'');
 
   // headline
   $('v-trs').textContent = trsM.toFixed(1);
@@ -734,16 +740,23 @@ function render(){
   $('b-trs').innerHTML = trsM.toFixed(1) + (neg?' <small>net harm</small>':'');
   $('b-gut').textContent = S.gut.toFixed(1);
   const gap = trsM - S.gut;
-  let rv;
-  if(Math.abs(gap)<0.25) rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. The economic scale implied by your answers is <b class="m">${trsM.toFixed(1)}</b>. They roughly agree.`;
-  else if(gap>0) rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. The economic scale implied by your answers is <b class="m">${trsM.toFixed(1)}</b>, ${gap>=1?'about ten times ':''}higher than your gut. Your inputs may be more optimistic than you realized, or your gut may understate the economics.`;
-  else rv = `Your gut said <b class="g">${S.gut.toFixed(1)}</b>. The economic scale implied by your answers is <b class="m">${trsM.toFixed(1)}</b>. Your gut is ${gap<=-1?'about ten times ':''}higher than the economic effects captured here. That may mean you expect larger economic effects, or effects this model doesn't measure.`;
-  if(neg) rv += ' And in the typical run, the economy ends up smaller.';
-  $('reveal').innerHTML = rv;
   const where = trsWord(trsM);
+  const gutWhere = trsWord(S.gut);
+  const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
+  let rv = `<div class="rv-row"><span class="rv-l">Your gut</span><b class="g">${S.gut.toFixed(1)}</b><span class="rv-w">${cap(gutWhere)}.</span></div>`
+         + `<div class="rv-row"><span class="rv-l">Your answers</span><b class="m">${trsM.toFixed(1)}</b><span class="rv-w">${neg?'Net harm.':cap(where)+'.'}</span></div>`;
+  let rvs;
+  if(neg) rvs = 'In the typical run, the economy ends up smaller than without AI.';
+  else if(Math.abs(gap)<0.25) rvs = 'Your answers and your gut roughly agree.';
+  else if(gap>=1) rvs = 'Your answers point to a much bigger change than your first instinct.';
+  else if(gap>0) rvs = 'Your answers point to a bigger change than your first instinct.';
+  else if(gap<=-1) rvs = 'Your gut points to a much bigger change than the economics captured here. The difference may be effects this model doesn\'t measure.';
+  else rvs = 'Your gut points to a bigger change than the economics captured here.';
+  rv += `<div class="rv-s">${rvs}</div>`;
+  $('reveal').innerHTML = rv;
   $('v-line').textContent = neg
     ? `The typical run is a loss of ${pctS(m)} of GDP. Half the runs land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`
-    : `That would be ${where}: in this model, the economy ends up about ${pctS(m)} bigger than it would be without AI. Half the runs land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`;
+    : `If your assumptions are right, the economy ends up about ${pctS(m)} bigger in 25 years than it would be without AI. That's the typical result of 2,000 runs; half of them land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`;
   $('b-line').textContent = neg ? 'Net harm' : where.charAt(0).toUpperCase()+where.slice(1);
 
   let nNet=0,nEl=0,nH=0; for(let i=0;i<N;i++){ const v=y25[i]; if(v>bi)nNet++; if(v>be)nEl++; if(v<0)nH++; }
@@ -765,23 +778,25 @@ function render(){
   $('v-tail').hidden=!tail.length;
   if(tail.length) $('v-tail').textContent='The typical result above doesn\'t include these risks: '+tail.join(', and ')+'.';
   // what it means for people
-  const GDPPC=85000, broad=S.reach/100, LABOR=170e6, PAY=65000, GDPUS=GDPPC*340e6;
+  const GDPPC=85000, broad=S.reach/100, LABOR=160e6, PAY=65000, GDPUS=GDPPC*340e6;
   const displaced=c=>c.E*c.A*(S.displace/100);
   const bn=v=>v>=1e12?'$'+(v/1e12).toFixed(1)+' trillion':'$'+Math.round(v/1e9)+' billion';
   const c10=central(S,10), c25=central(S,T);
   let h10=0; for(let i=0;i<N;i++){ if(y10[i]<0)h10++; }
   const usd=v=>{ const a=Math.abs(v); const r=a>=10000?Math.round(a/1000)*1000:a>=1000?Math.round(a/100)*100:Math.round(a/10)*10; return (v<0?'−':'')+'$'+r.toLocaleString(); };
   const lowPct=v=>v>0&&v<0.005?'under 1%':share(v);
+  const oneInJobs=f=>f<=0?'none of':f>=0.5?'half of all':'one in '+Math.round(1/f)+' of today\'s';
   const nPeople=n=>n>=1e6?(n/1e6).toFixed(n<1e7?1:0)+' million':n>=1e3?Math.round(n/1e3)+' thousand':'none';
   const cost25=displaced(c25)*LABOR*1.4*PAY, yrGain25=m*GDPUS;
   let costLine='';
-  if(cost25>0){ const mo=cost25/yrGain25*12; costLine = yrGain25<=0 ? `Together about ${bn(cost25)} in lost pay, with no gain to offset it.` : `Together about ${bn(cost25)} in lost pay, ${mo<1?'under a month':'about '+(mo<24?Math.round(mo)+' months':(mo/12).toFixed(0)+' years')} of AI's total yearly gains. The model doesn't assume the gains cover it: the gains and the losses may go to different people.`; }
+  if(cost25>0){ const mo=cost25/yrGain25*12; costLine = yrGain25<=0 ? `Together about ${bn(cost25)} in lost pay, with no gain to offset it.` : `Together about ${bn(cost25)} in lost pay, a one-time transition cost. At your settings AI adds about ${bn(yrGain25)} a year by year 25, so that cost equals ${mo<1?'under a month':'about '+(mo<24?Math.round(mo)+' months':(mo/12).toFixed(0)+' years')} of gains. The model doesn't assume the gains go to the people who lost the jobs. For scale, the Great Recession cut about 9 million jobs, but over two years rather than 25.`; }
+  SUM.jobsNote = displaced(c25)*LABOR>=1000 ? `About ${nPeople(displaced(c25)*LABOR)} workers in this scenario, each losing about ${usd(1.4*PAY)} in pay (about 1.4 years, or double in a recession). ${costLine}` : '';
   const fig=(l,v,v10,sub,cls)=>`<div class="fig ${cls||''}"><div class="l">${l}</div><span class="v">${v} <small>${v10} in 10 years</small></span><div class="s">${sub}</div></div>`;
   const broad25=Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC;
   $('people').innerHTML =
-    fig('Share of today\'s work done differently',pctS(c25.E*c25.A),pctS(c10.E*c10.A),'Work substantially shifted to AI, at your settings.') +
-    fig('Extra income per person, per year',usd(m*GDPPC),usd(med[10]*GDPPC),m*GDPPC>=100 ? `Output per person, if shared evenly. You think ${share(broad)} of the gains reach most people; that portion is about ${usd(broad25)} per person, again if spread evenly. Whether and how it reaches them isn't modeled.` : 'Output per person, if shared evenly. Too small for the split to matter.') +
-    fig('Workers who could lose their jobs',nPeople(displaced(c25)*LABOR),nPeople(displaced(c10)*LABOR),displaced(c25)*LABOR<1000 ? 'At your setting, work changes but no jobs are lost.' : `Along the way: ${pctS(displaced(c25))} of about ${(LABOR/1e6).toFixed(0)} million US jobs. Each loses about ${usd(1.4*PAY)} in pay (about 1.4 years, or double in a recession). ${costLine}`) +
+    fig('Share of today\'s work done differently',pctS(c25.E*c25.A),pctS(c10.E*c10.A),'Work substantially shifted to AI at your settings. Not the same as jobs disappearing.') +
+    fig('More economic output per person, per year',usd(m*GDPPC),usd(med[10]*GDPPC),m*GDPPC>=100 ? `How much more the economy would produce, divided by everyone. Not a prediction of anyone's income: the model doesn't say who receives it. If ${share(broad)} reaches most people, as assumed above, that part is about ${usd(broad25)} per person.` : 'How much more the economy would produce, divided by everyone. Not a prediction of anyone\'s income.') +
+    fig('Job losses, in one scenario',nPeople(displaced(c25)*LABOR),nPeople(displaced(c10)*LABOR),displaced(c25)*LABOR<1000 ? 'At your setting, work changes but no jobs disappear.' : `If ${share(S.displace/100)} of the work shifted to AI means a job disappears, as assumed above, that is roughly ${oneInJobs(displaced(c25))} US jobs over 25 years. An illustration, not a prediction: many jobs change without disappearing, and new ones appear. Lost pay and how it compares with the gains are under Go deeper.`) +
     fig('Chance the economy is smaller after 25 years',lowPct(nH/N),lowPct(h10/N),'Than without AI: a recent incident or a catastrophe outweighs the gains. Economic outcomes only; extinction risk and transition costs are shown separately.','harm');
   $('as-displace').textContent=S.displace+'%'; $('as-conc').textContent=S.reach+'%';
   SUM.people={work:c25.E*c25.A, inc:m*GDPPC, incBroad:Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC, reach:S.reach,
@@ -811,9 +826,11 @@ function render(){
   $('v-ce').textContent = signed(ce);
   $('ce-wrap').classList.toggle('harm', ce<0);
   const eta=S.aversion;
-  $('v-ce-line').textContent = (ce>=0
-    ? `Given how much weight you put on bad outcomes and who gets the gains, this would be worth about the same to you as a guaranteed ${pctS(ce)} bigger economy: a ${trsOf(ce,bi).toFixed(1)} on the scale.`
-    : `Given how much weight you put on bad outcomes and who gets the gains, you'd accept a guaranteed ${pctS(ce)} smaller economy to avoid this.`) + (S.pExt>0 ? ' This does not include the extinction-level risk you entered; the model does not try to put an economic value on that outcome.' : '');
+  { let mean=0; for(let i=0;i<N;i++) mean+=y25[i]; mean/=N;
+    const ref = `The typical run is ${signed(m)}; the average across all runs is ${signed(mean)}${mean>m*1.15?', pulled up by a few very large outcomes':''}.`;
+    $('v-ce-line').textContent = ref + ' ' + (ce>=0
+      ? `Weighing the whole range with your caution and your weight on who benefits, it is worth about the same as a guaranteed ${pctS(ce)} bigger economy.`
+      : `Weighing the whole range with your caution and your weight on who benefits, you would accept a guaranteed ${pctS(ce)} smaller economy to avoid it.`) + ' Transition losses to displaced workers are shown separately and not included here.' + (S.pExt>0 ? ' Nor is the extinction-level risk you entered.' : ''); }
 
   drawScale(S.gut,trsM,trsLo,trsHi,bi,be,neg);
   drawCurve(med,p10,p90,bi,be);
@@ -911,21 +928,23 @@ function computeDrivers(){
   renderSummary();
 }
 function lc(t){ return t.charAt(0).toLowerCase()+t.slice(1); }
+function valuesTouched(){ const sec=[...document.querySelectorAll('details.more')].find(x=>x.querySelector('#g-values')); return (sec&&sec.open) || S.aversion!==1 || S.discount!==30; }
 function renderSummary(){
   if(SUM.trs==null) return;
   const P=SUM.people||{}; const items=[];
   const usd=v=>{ const a=Math.abs(v); const r=a>=10000?Math.round(a/1000)*1000:a>=1000?Math.round(a/100)*100:Math.round(a/10)*10; return (v<0?'−':'')+'$'+r.toLocaleString(); };
+  const bnS=v=>v>=1e12?'$'+(v/1e12).toFixed(1)+' trillion':'$'+Math.round(v/1e9)+' billion';
   const gap=SUM.trs-SUM.gut;
-  const gapTxt=Math.abs(gap)<0.25?'Your gut said about the same.':gap>0?`Your gut said ${SUM.gut.toFixed(1)}, so your answers imply more economic change than your gut.`:`Your gut said ${SUM.gut.toFixed(1)}, higher than the economic effects captured here.`;
-  items.push({t:SUM.neg?`The economic scale implied by your answers is about <b>${SUM.trs.toFixed(1)}</b>, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`The economic scale implied by your answers is about <b>${SUM.trs.toFixed(1)}</b>: ${SUM.where}. ${gapTxt}`});
+  const gapTxt=Math.abs(gap)<0.25?'Your gut said about the same.':gap>0?`Your gut said ${SUM.gut.toFixed(1)}, so your answers point to a bigger change than your first instinct.`:`Your gut said ${SUM.gut.toFixed(1)}, bigger than the economics captured here.`;
+  items.push({t:SUM.neg?`Your answers put AI at about <b>${SUM.trs.toFixed(1)}</b> on the scale, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`Your answers put AI at about <b>${SUM.trs.toFixed(1)}</b> on the scale: ${SUM.where}. ${gapTxt}`});
   if(SUM.driver) items.push({t:`Your answer depends most on <b>${lc(SUM.driver.d.short)}</b>.`});
-  if(P.work!=null) items.push({t:`In 25 years, about <b>${pctS(P.work)}</b> of today's work would be done differently. That's roughly <b>${usd(P.inc)}</b> more output per person each year if shared evenly.`+(P.inc>=100?` You think ${P.reach}% of the gains ultimately reach most people; that portion is equivalent to about <b>${usd(P.incBroad)}</b> per person if spread evenly. Whether and how it reaches people isn't modeled.`:'')});
-  if(P.nDisp>0){ const mo=P.yrGain>0?P.cost/P.yrGain*12:null; const n=P.nDisp>=1e6?(P.nDisp/1e6).toFixed(P.nDisp<1e7?1:0)+' million':Math.round(P.nDisp/1e3)+' thousand';
-    items.push({t:`About <b>${n}</b> workers could lose their jobs along the way, each losing about ${usd(P.perDisp)} in pay.`+(mo!=null?` Together that's ${mo<1?'':'about '}<b>${mo<1?'under a month':mo<24?Math.round(mo)+' months':Math.round(mo/12)+' years'}</b> of AI's total yearly gains at your settings`+(mo<=12?'. In aggregate the gains are large enough to cover that lost pay, but the model does not assume it happens. The gains and losses may go to different people.':'. That is a large cost next to the gains, and the model does not assume the gains cover it.'):'')}); }
+  if(P.work!=null) items.push({t:`In 25 years, about <b>${pctS(P.work)}</b> of today's work would be done differently. That's roughly <b>${usd(P.inc)}</b> more economic output per person each year, divided by everyone. Not a prediction of anyone's income.`+(P.inc>=100?` If ${P.reach}% reaches most people, as assumed, that part is about <b>${usd(P.incBroad)}</b> per person.`:'')});
+  if(P.nDisp>=1000){ const mo=P.yrGain>0?P.cost/P.yrGain*12:null; const n=P.nDisp>=1e6?(P.nDisp/1e6).toFixed(P.nDisp<1e7?1:0)+' million':Math.round(P.nDisp/1e3)+' thousand';
+    items.push({t:`In one scenario, about <b>${n}</b> workers lose their jobs over 25 years (if ${S.displace}% of the work shifted to AI means a job disappears). Their lost pay would come to about ${bnS(P.cost)}`+(mo!=null?`, ${mo<1?'under a month':'about '+(mo<24?Math.round(mo)+' months':Math.round(mo/12)+' years')} of AI's yearly gains by then. The model doesn't assume the gains reach them.`:'.')}); }
   items.push({t:`Your inputs imply ${(P.harm||0)<0.005?'<b>under a 1%</b>':`about ${aOr(share(P.harm))} <b>${share(P.harm)}</b>`} chance that, 25 years out, the economy is smaller than it would be without AI. That counts economic outcomes only.`,cls:'harm'});
   if(S.pCat>=1) items.push({t:`You put about ${aOr(S.pCat+'%')} <b>${S.pCat}%</b> chance on an irreversible catastrophe within 25 years, ${S.pCat>=50?'more likely than not':'roughly one in '+Math.max(2,Math.round(100/S.pCat))}. At your severity setting, the economy would end up about ${pctS(S.sevCat/100)} smaller, permanently.`,cls:'harm'});
   if(S.pExt>0) items.push({t:`You put ${aOr(S.pExt)} <b>${S.pExt}%</b> chance on human extinction or a permanent loss of civilization within 25 years, ${S.pExt>=50?'more likely than not':'roughly one in '+Math.max(2,Math.round(100/S.pExt))}. The economic numbers here don't try to price that outcome.`,cls:'harm'});
-  items.push({t:(SUM.ce>=0?`Counting your caution about risk and who benefits, this would be worth about the same to you as a guaranteed <b>${pctS(SUM.ce)}</b> bigger economy.`:`Counting your caution about risk and who benefits, you'd accept a guaranteed <b>${pctS(SUM.ce)}</b> smaller economy to avoid it.`)+' Transition losses to displaced workers are shown separately and not included here.'+(S.pExt>0?' Nor is the extinction-level risk you entered.':'')});
+  if(valuesTouched()) items.push({t:(SUM.ce>=0?`Weighing the whole range with your caution and your weight on who benefits, this is worth about the same as a guaranteed <b>${pctS(SUM.ce)}</b> bigger economy.`:`Weighing the whole range with your caution and your weight on who benefits, you would accept a guaranteed <b>${pctS(SUM.ce)}</b> smaller economy to avoid it.`)+' Transition losses to displaced workers are not included.'+(S.pExt>0?' Nor is the extinction-level risk you entered.':'')});
   if(activePreset==='mainstream') items.push({t:'Your settings match the mid-range scenario (between Penn Wharton and Goldman). Move a slider to see where you differ.'});
   else if(SUM.diff && Math.abs(SUM.diff.delta)>=0.05){ const D=SUM.diff; items.push({t:`Of the ways you differ from the mid-range scenario, the one that matters most is <b>${lc(D.d.short)}</b> (you: ${fmtVal(D.d,D.mine)}; mid-range: ${fmtVal(D.d,D.theirs)}). That alone moves your answer ${D.delta>0?'up':'down'} by ${Math.abs(D.delta).toFixed(1)} on the scale.`}); }
   $('summary').innerHTML=items.map(i=>`<li class="${i.cls||''}">${i.t}</li>`).join('');
@@ -1020,6 +1039,8 @@ let raf=null;
 function schedule(){ syncInputs(); if(raf) cancelAnimationFrame(raf); raf=requestAnimationFrame(()=>{raf=null; render();}); }
 const h=(location.hash||'').slice(1); if(PRESETS[h]){ applyPreset(h); activePreset=h; }
 syncInputs(); render();
+{ const bar=document.querySelector('div.bar[aria-live]'), res=document.getElementById('results'); if(bar&&res&&'IntersectionObserver' in window){ const vis=new Map(); const io=new IntersectionObserver(es=>{ es.forEach(e=>vis.set(e.target,e.isIntersecting)); bar.classList.toggle('bar-hide', [...vis.values()].some(Boolean)); },{rootMargin:'0px 0px -30% 0px'}); io.observe(res); const v=document.querySelector('.verdict'); if(v) io.observe(v); } }
+{ const sec=[...document.querySelectorAll('details.more')].find(x=>x.querySelector('#g-values')); if(sec) sec.addEventListener('toggle',()=>renderSummary()); }
 })();
 </script>
 
