@@ -113,11 +113,12 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .big{font-family:var(--display);font-size:clamp(34px,9vw,50px);font-weight:600;line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
 .big small{font-size:.45em;color:var(--ink-2);font-weight:400}
 .big.harm{color:var(--harm)}
-.verdict-line{font-family:var(--display);font-size:21px;line-height:1.35;margin:10px 0 14px}
-.reveal{font-family:var(--display);font-size:22px;line-height:1.3;margin:14px 0;padding:14px 16px;background:var(--paper-2);border-radius:8px}
+.verdict-line{font-family:var(--display);font-size:21px;line-height:1.35;margin:10px 0 8px}
+.where-line{font-family:var(--display);font-size:20px;color:var(--ink-2);margin:6px 0 0}
+.reveal{font-family:var(--body);font-size:16px;line-height:1.45;margin:12px 0 14px;padding:10px 14px;background:var(--paper-2);border-radius:8px;color:var(--ink-2)}
+.reveal b{font-family:var(--mono);color:var(--ink)}
 .rv-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
 .rv-l{font-family:var(--body);font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);min-width:96px}
-.rv-row b{font-family:var(--mono);font-size:26px}
 .rv-w{font-size:18px;color:var(--ink-2)}
 .rv-s{font-size:18px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
 .reveal b{font-family:var(--mono);font-weight:500}
@@ -172,6 +173,7 @@ details.more.adv{margin-top:14px}
 .fig .v small{display:inline-block;white-space:nowrap;font-size:14px;color:var(--ink-3);font-weight:400}
 .fig .s{font-size:13px;color:var(--ink-2);line-height:1.4}
 .fig.harm .v{color:var(--harm)}
+.fig.wide{grid-column:1/-1}
 .deeper{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:34px 0 -14px}
 .assume{font-size:14.5px;color:var(--ink-2);margin:4px 0 0;line-height:1.5}
 .assume b{color:var(--ink);font-weight:600}
@@ -342,7 +344,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   <p class="note">The red sliders set the risks.</p>
   <div class="group" id="g-risk"></div>
   <details class="more adv">
-    <summary>More assumptions</summary>
+    <summary>Advanced risk assumptions</summary>
     <div class="more-body">
       <p class="note">These refine the answer rather than drive it. Each has a sensible default; change them if you have a view.</p>
       <div class="group" id="g-risk-more"></div>
@@ -351,20 +353,21 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
 
   <h2 id="results">What your answers suggest</h2>
   <div class="verdict">
+    <div class="rv-l" style="margin-bottom:4px">Your answers</div>
     <div class="big" id="v-trs-wrap"><span id="v-trs">–</span><small id="v-trs-sub"> on the scale</small></div>
+    <div class="where-line" id="v-where"></div>
+    <div class="verdict-line fn-host" id="v-line-wrap"><span id="v-line">–</span><sup class="fn" tabindex="0" role="button" aria-label="Note 2" aria-describedby="fn-runs">2<span class="fn-pop" id="fn-runs" role="tooltip"><span class="fn-num">2</span><span id="fn-runs-t"></span></span></sup></div>
     <div class="risk-line" id="v-risk"></div>
     <div class="reveal" id="reveal">–</div>
-    <div class="verdict-line" id="v-line">–</div>
     <p class="tail-note" id="v-tail" hidden></p>
   </div>
 
   <figure>
     <div class="chart-wrap"><svg id="scale" viewBox="0 0 640 190" role="img" aria-label="Your rating, your model's result, historical benchmarks and published forecasts on the Richter scale"></svg></div>
-    <figcaption>Purple is your gut assessment. Blue is the typical model result, with a band covering the middle 80% of runs. Historical benchmarks are in color below the line; published forecasts are gray. Horizons differ; see the checks below.<span id="scale-fc"></span></figcaption>
+    <figcaption>Blue is your answers, with a band for the middle 80% of runs; purple is your first instinct. Historical benchmarks are in color, published forecasts in gray. <span id="scale-fc"></span></figcaption>
   </figure>
-  <p class="note"><b>How this is calculated:</b> the model runs your assumptions 2,000 times, varying the five economic inputs according to the certainty setting on each and adding incidents and catastrophes at the rates you set.</p>
 
-  <h3>What it might mean for people</h3>
+  <h3>What that would mean</h3>
   <p class="note">What your answers imply in 25 years, in today's dollars. Illustrations, not predictions about anyone in particular.</p>
   <p class="assume">These use two more assumptions you can change: <b id="as-displace">25%</b> of the work shifted to AI means a job disappears, and <b id="as-conc">60%</b> of the gains reach most people, however they arrive. <button type="button" class="sure-btn" id="adjust-btn" aria-expanded="false" aria-controls="g-people-wrap">Adjust</button></p>
   <div id="g-people-wrap" hidden><div class="group" id="g-people"></div></div>
@@ -376,14 +379,14 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
 
   <p class="deeper">Go deeper</p>
   <details class="more">
-    <summary>Your answers, multiplied out</summary>
+    <summary>Break down my numbers</summary>
     <div class="more-body">
       <p class="note">What your settings imply 25 years from now, before accounting for risk.</p>
       <div class="receipt" id="receipt"></div>
     </div>
   </details>
   <details class="more sec">
-    <summary>More detail: the range of outcomes and the path over time</summary>
+    <summary>See the range and path</summary>
     <div class="more-body">
   <div class="stats">
     <div class="stat"><b id="v-median">–</b><span>typical change in GDP, year 25</span></div>
@@ -411,7 +414,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
   </details>
 
   <details class="more sec">
-    <summary>What actually moves the answer</summary>
+    <summary>What moves the answer?</summary>
     <div class="more-body">
   <p class="note">Each assumption is halved and doubled, with everything else held fixed. Longer bars mean the result depends more on that assumption.</p>
   <div class="toggle" role="group" aria-label="Measure">
@@ -425,7 +428,7 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
     </div>
   </details>
   <details class="more sec">
-    <summary>Is it worth it? Weigh risk and who gets the gains</summary>
+    <summary>Is it worth it?</summary>
     <div class="more-body">
   <p>The model above asks how large the change could be. This section asks a different question: how much would you value that outcome, once you account for risk and who benefits? Two judgments, both yours.</p>
   <div class="group" id="g-values"></div>
@@ -436,10 +439,9 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
     </div>
   </details>
 
-  <h2 id="summary-h">In short</h2>
-  <p class="note">Updates as you move the sliders. "Copy my answers" copies this and the questions above.</p>
-  <ul class="summary" id="summary"></ul>
-
+  <details class="more">
+    <summary>How the model works</summary>
+    <div class="more-body">
   <div class="dgroup">
   <details>
     <summary>How the scale is calibrated</summary>
@@ -483,6 +485,13 @@ details.ladder-d summary{font-size:15px;color:var(--ai);padding:8px 0}
     </div>
   </details>
   </div>
+
+    </div>
+  </details>
+
+  <h2 id="summary-h">In short</h2>
+  <p class="note">"Copy my answers" copies a fuller version, with the questions and your settings.</p>
+  <ul class="summary" id="summary"></ul>
 
   <div class="actions">
     <button class="btn" id="copy">Copy my answers</button>
@@ -743,20 +752,16 @@ function render(){
   const where = trsWord(trsM);
   const gutWhere = trsWord(S.gut);
   const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
-  let rv = `<div class="rv-row"><span class="rv-l">Your gut</span><b class="g">${S.gut.toFixed(1)}</b><span class="rv-w">${cap(gutWhere)}.</span></div>`
-         + `<div class="rv-row"><span class="rv-l">Your answers</span><b class="m">${trsM.toFixed(1)}</b><span class="rv-w">${neg?'Net harm.':cap(where)+'.'}</span></div>`;
-  let rvs;
-  if(neg) rvs = 'In the typical run, the economy ends up smaller than without AI.';
-  else if(Math.abs(gap)<0.25) rvs = 'Your answers and your gut roughly agree.';
-  else if(gap>=1) rvs = 'Your answers point to a much bigger change than your first instinct.';
-  else if(gap>0) rvs = 'Your answers point to a bigger change than your first instinct.';
-  else if(gap<=-1) rvs = 'Your gut points to a much bigger change than the economics captured here. The difference may be effects this model doesn\'t measure.';
-  else rvs = 'Your gut points to a bigger change than the economics captured here.';
-  rv += `<div class="rv-s">${rvs}</div>`;
+  $('v-where').textContent = neg ? 'Net harm: the economy ends up smaller.' : cap(where)+'.';
+  let rv = `Your first instinct: <b class="g">${S.gut.toFixed(1)}</b>, ${gutWhere}.`;
+  if(!neg && gap>=1) rv += ' Your answers point to a much bigger change.';
+  else if(!neg && gap<=-1) rv += ' Your instinct points to a much bigger change than the economics here capture.';
   $('reveal').innerHTML = rv;
+  const p25=signed(q(y25.slice().sort(),.25)), p75=signed(q(y25.slice().sort(),.75));
   $('v-line').textContent = neg
-    ? `The typical run is a loss of ${pctS(m)} of GDP. Half the runs land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`
-    : `If your assumptions are right, the economy ends up about ${pctS(m)} bigger in 25 years than it would be without AI. That's the typical result of 2,000 runs; half of them land between ${signed(q(y25.slice().sort(),.25))} and ${signed(q(y25.slice().sort(),.75))}.`;
+    ? `Based on these inputs, the economy ends up about ${pctS(m)} smaller after 25 years than it would be without AI.`
+    : `Based on these inputs, the economy is about ${pctS(m)} larger after 25 years than it would be without AI.`;
+  $('fn-runs-t').textContent = `The typical result across 2,000 runs that vary the five economic inputs according to how sure you said you were, and add incidents and catastrophes at the rates you set. Half the runs fall between ${p25} and ${p75}.`;
   $('b-line').textContent = neg ? 'Net harm' : where.charAt(0).toUpperCase()+where.slice(1);
 
   let nNet=0,nEl=0,nH=0; for(let i=0;i<N;i++){ const v=y25[i]; if(v>bi)nNet++; if(v>be)nEl++; if(v<0)nH++; }
@@ -771,7 +776,7 @@ function render(){
     else if(cs>=0.5){ rl='with a catastrophe more likely than not'; br='catastrophe more likely than not'; }
     else { const n=Math.round(1/cs); rl=`with about a 1-in-${n} chance of catastrophe`; br=`1-in-${n} catastrophe risk`; }
     if(S.pExt>0){ const e=S.pExt>=50?'more likely than not':'1-in-'+Math.max(2,Math.round(100/S.pExt)); rl+=`, and ${S.pExt>=50?'extinction-level loss more likely than not':'a '+e+' chance of extinction-level loss'}`; br+=` · ${e} extinction-level`; }
-    $('v-risk').textContent=rl; $('b-risk').textContent=br; }
+    $('v-risk').textContent=rl.replace(/^with /,'Alongside ').replace(/^Alongside no /,'With no ')+'.'; $('b-risk').textContent=br; }
   const tail=[];
   if(SUM.catShare>=0.01) tail.push(`a catastrophe would leave the economy ${pctS(S.sevCat/100)} smaller for good`);
   if(S.pExt>0) tail.push(`the economic numbers don't try to price extinction-level loss`);
@@ -794,6 +799,7 @@ function render(){
   const fig=(l,v,v10,sub,cls)=>`<div class="fig ${cls||''}"><div class="l">${l}</div><span class="v">${v} <small>${v10} in 10 years</small></span><div class="s">${sub}</div></div>`;
   const broad25=Math.max(0,m)*broad*GDPPC+Math.min(0,m)*GDPPC;
   $('people').innerHTML =
+    fig('The economy',(neg?'':'+')+pctS(m),signed(med[10]),'Larger after 25 years than it would be without AI. The typical run.','wide') +
     fig('Work done differently',pctS(c25.E*c25.A),pctS(c10.E*c10.A),'The share of today\'s work substantially changed by AI, at your settings. Not the same as jobs disappearing.') +
     fig('More economic output per person, per year',usd(m*GDPPC),usd(med[10]*GDPPC),'The extra output if the total gain were divided evenly. Not a prediction of anyone\'s income: the model doesn\'t say who receives it.') +
     fig('Jobs displaced, in one scenario: the equivalent of',nPeople(displaced(c25)*LABOR),(displaced(c25)*LABOR<1000?'none':'of today\'s jobs; '+nPeople(displaced(c10)*LABOR)),displaced(c25)*LABOR<1000 ? 'At your setting, work changes but no jobs disappear.' : `If ${share(S.displace/100)} of the work shifted to AI means a job disappears, that is roughly ${oneInJobs(displaced(c25))} US jobs over 25 years. An illustration of scale, not a forecast that ${nPeople(displaced(c25)*LABOR)} particular people lose their jobs. Lost pay is under Go deeper.`) +
@@ -937,18 +943,19 @@ function renderSummary(){
   const bnS=v=>v>=1e12?'$'+(v/1e12).toFixed(1)+' trillion':'$'+Math.round(v/1e9)+' billion';
   const gap=SUM.trs-SUM.gut;
   const gapTxt=Math.abs(gap)<0.25?'Your gut said about the same.':gap>0?`Your gut said ${SUM.gut.toFixed(1)}, so your answers point to a bigger change than your first instinct.`:`Your gut said ${SUM.gut.toFixed(1)}, bigger than the economics captured here.`;
-  items.push({t:SUM.neg?`Your answers put AI at about <b>${SUM.trs.toFixed(1)}</b> on the scale, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`Your answers put AI at about <b>${SUM.trs.toFixed(1)}</b> on the scale: ${SUM.where}. ${gapTxt}`});
+  items.push({core:1,t:SUM.neg?`Your answers put AI at about <b>${SUM.trs.toFixed(1)}</b> on the scale, but in the typical outcome the economy ends up smaller. ${gapTxt}`:`Your answers put AI at about <b>${SUM.trs.toFixed(1)}</b> on the scale: ${SUM.where}. ${gapTxt}`});
   if(SUM.driver) items.push({t:`Your answer depends most on <b>${lc(SUM.driver.d.short)}</b>.`});
-  if(P.work!=null) items.push({t:`In 25 years, about <b>${pctS(P.work)}</b> of today's work would be done differently. That's roughly <b>${usd(P.inc)}</b> more economic output per person each year if divided evenly, not a prediction of anyone's income.`+(P.inc>=100&&P.reach<100?` You assume ${P.reach}% of the gains reach most people.`:'')});
+  if(P.work!=null) items.push({core:1,t:`In 25 years, about <b>${pctS(P.work)}</b> of today's work would be done differently. That's roughly <b>${usd(P.inc)}</b> more economic output per person each year if divided evenly, not a prediction of anyone's income.`+(P.inc>=100&&P.reach<100?` You assume ${P.reach}% of the gains reach most people.`:'')});
   if(P.nDisp>=1000){ const mo=P.yrGain>0?P.cost/P.yrGain*12:null; const n=P.nDisp>=1e6?(P.nDisp/1e6).toFixed(P.nDisp<1e7?1:0)+' million':Math.round(P.nDisp/1e3)+' thousand';
-    items.push({t:`In one scenario, work equivalent to about <b>${n}</b> of today's jobs is displaced over 25 years (if ${S.displace}% of the work shifted to AI means a job disappears).`}); }
-  items.push({t:`Your inputs imply ${(P.harm||0)<0.005?'<b>under a 1%</b>':`about ${aOr(share(P.harm))} <b>${share(P.harm)}</b>`} chance that, 25 years out, the economy is smaller than it would be without AI. That counts economic outcomes only.`,cls:'harm'});
+    items.push({core:1,t:`In one scenario, work equivalent to about <b>${n}</b> of today's jobs is displaced over 25 years (if ${S.displace}% of the work shifted to AI means a job disappears).`}); }
+  items.push({core:1,t:`Your inputs imply ${(P.harm||0)<0.005?'<b>under a 1%</b>':`about ${aOr(share(P.harm))} <b>${share(P.harm)}</b>`} chance that, 25 years out, the economy is smaller than it would be without AI. That counts economic outcomes only.`,cls:'harm'});
   if(S.pCat>=1) items.push({t:`You put about ${aOr(S.pCat+'%')} <b>${S.pCat}%</b> chance on an irreversible catastrophe within 25 years, ${S.pCat>=50?'more likely than not':'roughly one in '+Math.max(2,Math.round(100/S.pCat))}. At your severity setting, the economy would end up about ${pctS(S.sevCat/100)} smaller, permanently.`,cls:'harm'});
   if(S.pExt>0) items.push({t:`You put ${aOr(S.pExt)} <b>${S.pExt}%</b> chance on human extinction or a permanent loss of civilization within 25 years, ${S.pExt>=50?'more likely than not':'roughly one in '+Math.max(2,Math.round(100/S.pExt))}. The economic numbers here don't try to price that outcome.`,cls:'harm'});
   if(valuesTouched()) items.push({t:(SUM.ce>=0?`Weighing the whole range with your caution and your weight on who benefits, this is worth about the same as a certain <b>${pctS(SUM.ce)}</b> bigger economy.`:`Weighing the whole range with your caution and your weight on who benefits, you would accept a certain <b>${pctS(SUM.ce)}</b> smaller economy to avoid it.`)+' Transition losses to displaced workers are not included.'+(S.pExt>0?' Nor is the extinction-level risk you entered.':'')});
   if(activePreset==='mainstream') items.push({t:'Your settings match the mid-range scenario (between Penn Wharton and Goldman). Move a slider to see where you differ.'});
   else if(SUM.diff && Math.abs(SUM.diff.delta)>=0.05){ const D=SUM.diff; items.push({t:`Of the ways you differ from the mid-range scenario, the one that matters most is <b>${lc(D.d.short)}</b> (you: ${fmtVal(D.d,D.mine)}; mid-range: ${fmtVal(D.d,D.theirs)}). That alone moves your answer ${D.delta>0?'up':'down'} by ${Math.abs(D.delta).toFixed(1)} on the scale.`}); }
-  $('summary').innerHTML=items.map(i=>`<li class="${i.cls||''}">${i.t}</li>`).join('');
+  window.__fullSummary = items.map(i=>'• '+i.t.replace(/<[^>]+>/g,'')).join('\n');
+  $('summary').innerHTML=items.filter(i=>i.core).map(i=>`<li class="${i.cls||''}">${i.t}</li>`).join('');
   // diagnostic questions, not recommendations: at most three, drawn from the user's own numbers
   const qs=[];
   const gapQ = SUM.trs-SUM.gut;
@@ -1022,7 +1029,7 @@ function drawTornado(){
 // copy
 $('copy').addEventListener('click',()=>{
   const lines = DEFS.map(d=>`${d.label}: ${fmtVal(d,S[d.k])}`+(SURE_KEYS.includes(d.k)?` (${SURE_LEVELS.find(l=>l[0]===sureOf(d.k))[1]})`:''));
-  const bullets=[...document.querySelectorAll('#summary li')].map(li=>'• '+li.textContent).join('\n')+'\n\nQuestions my answers raise:\n'+[...document.querySelectorAll('#implic li')].map(li=>'• '+li.textContent).join('\n');
+  const bullets=(window.__fullSummary||'')+'\n\nQuestions my answers raise:\n'+[...document.querySelectorAll('#implic li')].map(li=>'• '+li.textContent).join('\n');
   const txt = `My answers to The Electricity Question\n${location.href.split('#')[0]}\n\n${bullets}\n\nMy settings:\n`+lines.join('\n');
   const box=$('copybox');
   const done=()=>{ $('toast').textContent='Copied. Send it to whoever you\'re arguing with.'; };
